@@ -21,7 +21,9 @@ class ResolveIn(BaseModel):
 
 def _own_box(db: Session, user: User, box_id: str) -> Box:
     box = db.scalar(
-        select(Box).options(selectinload(Box.items), selectinload(Box.media)).where(Box.id == box_id, Box.user_id == user.id)
+        select(Box)
+        .options(selectinload(Box.items), selectinload(Box.media))
+        .where(Box.id == box_id, Box.user_id == user.id)
     )
     if not box:
         raise HTTPException(404, "box not found")

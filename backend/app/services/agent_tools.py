@@ -109,6 +109,9 @@ async def execute(db: Session, user: User, name: str, args: dict, ctx: dict) -> 
         return await fn(db, user, args, ctx)
     except _ToolError as e:
         return {"ok": False, "error": str(e)}
+    except KeyError as e:
+        # 模型漏传/错传参数(或 arguments 不是合法 JSON)时,把问题回灌给模型而不是让整个请求 500
+        return {"ok": False, "error": f"缺少参数 {e.args[0]}"}
 
 
 class _ToolError(Exception):
@@ -156,7 +159,11 @@ async def _add_items(db, user, args, ctx):
         name, _ = dedup_name(db, user, args["box"].strip())
         box = boxes_service.create_box(db, user, name, source="text")
         created = True
-    items = [{"name": it["name"], "qty_text": it.get("qty_text") or "若干"} for it in args.get("items", []) if it.get("name")]
+    items = [
+        {"name": it["name"], "qty_text": it.get("qty_text") or "若干"}
+        for it in args.get("items", [])
+        if it.get("name")
+    ]
     if not items:
         raise _ToolError("没有要添加的物品")
     await boxes_service.add_items(db, box, items)

@@ -36,13 +36,13 @@ def request_code(body: RequestCodeIn, db: Session = Depends(get_db)):
     try:
         code = email_code.issue(db, email)
     except ValueError:
-        raise HTTPException(429, "请求过于频繁,请稍后再试")
+        raise HTTPException(429, "请求过于频繁,请稍后再试") from None
     if email_code.dev_mode():
         return {"sent": True, "dev_mode": True, "dev_code": code}
     try:
         email_code.send_email(email, code)
     except Exception as e:  # noqa: BLE001
-        raise HTTPException(502, f"邮件发送失败: {e}")
+        raise HTTPException(502, f"邮件发送失败: {e}") from e
     return {"sent": True, "dev_mode": False}
 
 
@@ -54,7 +54,7 @@ def verify_code(body: VerifyCodeIn, db: Session = Depends(get_db)):
         email_code.verify(db, email, body.code)
     except ValueError as e:
         msg = {"code_invalid": "验证码错误", "code_expired": "验证码已过期", "too_many": "尝试次数过多,请重新获取"}
-        raise HTTPException(400, msg.get(str(e), "验证失败"))
+        raise HTTPException(400, msg.get(str(e), "验证失败")) from e
     user = db.scalar(select(User).where(User.email == email))
     if not user:
         user = User(device_id=f"email:{email}", email=email)

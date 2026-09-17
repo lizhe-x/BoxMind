@@ -28,9 +28,9 @@ async def recognize(
         result = await llm.recognize_image(base64.b64encode(img).decode(), mime)
     except httpx.HTTPStatusError as e:
         detail = e.response.text[:300] if e.response is not None else str(e)
-        raise HTTPException(502, f"vision_upstream_error: {detail}")
+        raise HTTPException(502, f"vision_upstream_error: {detail}") from e
     except Exception as e:  # noqa: BLE001
-        raise HTTPException(502, f"vision_error: {e}")
+        raise HTTPException(502, f"vision_error: {e}") from e
 
     box_label = result.get("box_label")
     box = boxes_service.find_box_by_label(db, user.id, box_label) if box_label else None

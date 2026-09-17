@@ -6,7 +6,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
 from .config import settings
-
 from .db import init_db
 from .routers import (
     agent_router,

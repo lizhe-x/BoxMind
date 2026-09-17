@@ -23,7 +23,7 @@ async def transcribe(
     except httpx.HTTPStatusError as e:
         # 把网关错误透传成可读信息(如模型通道未开通的 503)
         detail = e.response.text[:300] if e.response is not None else str(e)
-        raise HTTPException(502, f"asr_upstream_error: {detail}")
+        raise HTTPException(502, f"asr_upstream_error: {detail}") from e
     except Exception as e:  # noqa: BLE001
-        raise HTTPException(502, f"asr_error: {e}")
+        raise HTTPException(502, f"asr_error: {e}") from e
     return {"text": text}

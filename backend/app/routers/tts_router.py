@@ -22,7 +22,7 @@ async def synthesize(body: TTSIn, user: User = Depends(get_current_user)):
         audio, mime = await tts.synthesize(body.text, body.voice)
     except httpx.HTTPStatusError as e:
         detail = e.response.text[:300] if e.response is not None else str(e)
-        raise HTTPException(502, f"tts_upstream_error: {detail}")
+        raise HTTPException(502, f"tts_upstream_error: {detail}") from e
     except Exception as e:  # noqa: BLE001
-        raise HTTPException(502, f"tts_error: {e}")
+        raise HTTPException(502, f"tts_error: {e}") from e
     return Response(content=audio, media_type=mime, headers={"Cache-Control": "no-store"})

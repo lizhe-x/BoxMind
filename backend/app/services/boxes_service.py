@@ -13,7 +13,7 @@ def find_box_by_label(db: Session, user_id: str, raw_label: str) -> Box | None:
 
 def next_num_label(db: Session, user_id: str) -> str:
     labels = db.scalars(select(Box.label).where(Box.user_id == user_id)).all()
-    nums = [n for n in (extract_number(l) for l in labels) if n]
+    nums = [n for n in (extract_number(lb) for lb in labels) if n]
     return f"{(max(nums) if nums else 0) + 1}号"
 
 
@@ -53,7 +53,7 @@ async def add_items(db: Session, box: Box, items: list[dict]) -> None:
         return
     vectors = await embeddings.embed([it["name"] for it in items])
     existing = {it.name: it for it in box.items}
-    for it, vec in zip(items, vectors):
+    for it, vec in zip(items, vectors, strict=True):
         if it["name"] in existing:
             old = existing[it["name"]]
             old.qty_text = it.get("qty_text") or old.qty_text

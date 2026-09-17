@@ -1,7 +1,7 @@
 """邮箱验证码:生成/限频/校验,以及发送(SMTP 配了就真发,否则开发模式)。"""
 import secrets
 import smtplib
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from email.message import EmailMessage
 
 from sqlalchemy.orm import Session
@@ -11,7 +11,7 @@ from ..models import EmailCode
 
 
 def _now() -> datetime:
-    return datetime.now(timezone.utc)
+    return datetime.now(UTC)
 
 
 def dev_mode() -> bool:
@@ -42,7 +42,8 @@ def send_email(email: str, code: str) -> None:
     msg["Subject"] = "BoxMind 登录验证码"
     msg["From"] = settings.smtp_from or settings.smtp_user
     msg["To"] = email
-    msg.set_content(f"你的 BoxMind 登录验证码是:{code}\n\n{settings.code_ttl_seconds // 60} 分钟内有效。若非本人操作请忽略。")
+    minutes = settings.code_ttl_seconds // 60
+    msg.set_content(f"你的 BoxMind 登录验证码是:{code}\n\n{minutes} 分钟内有效。若非本人操作请忽略。")
     with smtplib.SMTP(settings.smtp_host, settings.smtp_port, timeout=20) as s:
         s.starttls()
         s.login(settings.smtp_user, settings.smtp_password)

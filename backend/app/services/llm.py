@@ -1,6 +1,6 @@
 import json
 import re
-from typing import AsyncIterator
+from collections.abc import AsyncIterator
 
 import httpx
 
@@ -25,11 +25,13 @@ _INTERPRET_SYSTEM = """你是 BoxMind(箱子物品管理应用)的解析引擎�
   删箱/删物品("删掉钳子")、移动("把电钻移到5号")、清空、绑码、记录当前GPS位置、
   撤销/还原/撤回("撤销""撤销上一步""还原")
 - qty_text 格式: "×3"、"×2 双"、"×1 袋";数量不明确用 "若干"
-- box_label 归一化: "1号箱"/"Box 1"/"一号" 都写成 "1号";字母/中文编号原样保留(去掉末尾的"箱"字,如"红色大箱"→"红色大箱"保留原样)
+- box_label 归一化: "1号箱"/"Box 1"/"一号" 都写成 "1号";
+  字母/中文编号原样保留(去掉末尾的"箱"字,如"红色大箱"→"红色大箱"保留原样)
 - 物品名称保持用户用语,不要翻译
 - 录入语句里的位置描述放 location_text,不要混进 items"""
 
-_VISION_SYSTEM = """你是 BoxMind 的拍照识别引擎。用户拍了一张「打开的收纳箱」照片,你要识别箱内物品,并尽量读出箱子上的手写编号。
+_VISION_SYSTEM = """你是 BoxMind 的拍照识别引擎。用户拍了一张「打开的收纳箱」照片,
+你要识别箱内物品,并尽量读出箱子上的手写编号。
 只输出一个 JSON 对象,不要任何其他文字。结构:
 
 {
@@ -138,7 +140,11 @@ class LLM:
                 {"role": "system", "content": _ANSWER_SYSTEM},
                 {
                     "role": "user",
-                    "content": f"箱子数据:\n{context_json}\n\n相关度参考(向量检索 top 命中): {relevant_hint}\n\n用户提问: {question}",
+                    "content": (
+                        f"箱子数据:\n{context_json}\n\n"
+                        f"相关度参考(向量检索 top 命中): {relevant_hint}\n\n"
+                        f"用户提问: {question}"
+                    ),
                 },
             ],
             "temperature": 0.3,

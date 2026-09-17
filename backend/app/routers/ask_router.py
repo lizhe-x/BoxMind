@@ -1,5 +1,5 @@
 import json
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from fastapi import APIRouter, Depends
 from fastapi.responses import StreamingResponse
@@ -20,7 +20,7 @@ MAX_CONTEXT_ITEMS = 400  # MVP 数据量小,整库上下文;超限时仅保留�
 
 def _fmt_time(dt: datetime) -> str:
     local = dt.astimezone()
-    today = datetime.now(timezone.utc).astimezone().date()
+    today = datetime.now(UTC).astimezone().date()
     d = local.date()
     if d == today:
         return "今天 " + local.strftime("%H:%M")

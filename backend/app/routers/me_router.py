@@ -77,7 +77,9 @@ def export_csv(user: User = Depends(get_current_user), db: Session = Depends(get
         if not b.items:
             w.writerow([b.label, b.name, b.location_text or "", "", "", "", b.updated_at.isoformat()])
         for it in b.items:
-            w.writerow([b.label, b.name, b.location_text or "", it.name, it.qty_text, it.note or "", b.updated_at.isoformat()])
+            w.writerow(
+                [b.label, b.name, b.location_text or "", it.name, it.qty_text, it.note or "", b.updated_at.isoformat()]
+            )
     return Response(
         "﻿" + buf.getvalue(),  # BOM,Excel 中文不乱码
         media_type="text/csv",

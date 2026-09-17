@@ -36,7 +36,7 @@ async def agent_endpoint(body: AgentIn, user: User = Depends(get_current_user), 
         return await agent.run(db, user, history, body.message, gps)
     except httpx.HTTPStatusError as e:
         detail = e.response.text[:300] if e.response is not None else str(e)
-        raise HTTPException(502, f"agent_upstream_error: {detail}")
+        raise HTTPException(502, f"agent_upstream_error: {detail}") from e
 
 
 class ExecuteIn(BaseModel):

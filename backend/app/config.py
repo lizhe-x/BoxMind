@@ -1,14 +1,14 @@
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
     database_url: str = "postgresql+psycopg://boxmind:boxmind@127.0.0.1:5434/boxmind"
 
-    # OpenAI-compatible gateway (getbot.me)
+    # OpenAI-compatible gateway. Default is getbot.me (my own gateway); any compatible endpoint works.
     llm_base_url: str = "https://api.getbot.me/v1"
     llm_api_key: str = ""
-    llm_model: str = "kimi-k2.6"
-    vision_model: str = "kimi-k2.6"  # 拍照识别(图片输入),走 /v1/chat/completions
+    llm_model: str = "kimi-k2.5"
+    vision_model: str = "kimi-k2.5"  # 拍照识别(图片输入),走 /v1/chat/completions
     asr_model: str = "qwen3-asr-flash-realtime"  # 语音转写,走 /v1/audio/transcriptions
     tts_model: str = "qwen3-tts-flash"  # 语音合成,走 /v1/audio/speech
     tts_voice: str = "alloy"
@@ -35,9 +35,7 @@ class Settings(BaseSettings):
     smtp_password: str = ""
     smtp_from: str = ""               # 发件人,默认用 smtp_user
 
-    class Config:
-        env_file = ".env"
-        env_prefix = "BOXMIND_"
+    model_config = SettingsConfigDict(env_file=".env", env_prefix="BOXMIND_")
 
 
 settings = Settings()

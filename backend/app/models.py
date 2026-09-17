@@ -1,5 +1,5 @@
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from pgvector.sqlalchemy import Vector
 from sqlalchemy import DateTime, Float, ForeignKey, Integer, String, Text
@@ -14,7 +14,7 @@ def _uuid() -> str:
 
 
 def _now() -> datetime:
-    return datetime.now(timezone.utc)
+    return datetime.now(UTC)
 
 
 class User(Base):
