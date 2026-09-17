@@ -35,3 +35,9 @@ __pycache__/
 .idea/
 .DS_Store
 Thumbs.db
+
+# ───── 测试产物 ─────
+.coverage
+htmlcov/
+coverage/
+frontend/coverage/
