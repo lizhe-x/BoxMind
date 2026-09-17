@@ -1,0 +1,37 @@
+# ───── 密钥 / 证书 / 环境变量(绝不提交)─────
+# TLS 证书(含私钥)
+certs/
+# API key / SMTP 凭证
+backend/.env
+frontend/.env
+.env
+
+# ───── 用户数据 ─────
+# 用户上传的图片/音频
+backend/media/
+
+# ───── 依赖与虚拟环境 ─────
+node_modules/
+backend/.venv/
+.venv/
+
+# ───── 构建产物(部署时由源码重新构建)─────
+frontend/dist/
+
+# ───── Python 缓存 ─────
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# ───── 运行日志 / 工具产物 ─────
+*.log
+.playwright-mcp/
+
+# ───── 编辑器 / 系统 ─────
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
