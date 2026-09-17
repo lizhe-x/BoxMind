@@ -37,10 +37,21 @@ async def run(db: Session, user: User, history: list[dict], message: str, gps: d
         if not tool_calls:
             return {"type": "message", "text": (msg.get("content") or "好的。").strip()}
 
-        # 破坏性工具 → 暂停,交前端确认(M14 填充 DESTRUCTIVE)
+        # 破坏性工具 → 暂停,交前端确认。同一轮里夹带的非破坏性调用(如"先移动再合并")照常执行,
+        # 否则它们会随着暂停被静默丢弃,用户看到的只有确认卡。
         pending = [tc for tc in tool_calls if tc["function"]["name"] in agent_tools.DESTRUCTIVE]
         if pending:
             from . import agent_destructive
+            executed = []
+            for tc in tool_calls:
+                if tc["function"]["name"] in agent_tools.DESTRUCTIVE:
+                    continue
+                try:
+                    args = json.loads(tc["function"]["arguments"] or "{}")
+                except json.JSONDecodeError:
+                    args = {}
+                result = await agent_tools.execute(db, user, tc["function"]["name"], args, ctx)
+                executed.append({"tool": tc["function"]["name"], "result": result})
             actions = []
             for tc in pending:
                 try:
@@ -52,7 +63,7 @@ async def run(db: Session, user: User, history: list[dict], message: str, gps: d
                     "args": args,
                     "summary": agent_destructive.summarize(db, user, tc["function"]["name"], args),
                 })
-            return {"type": "confirm", "actions": actions,
+            return {"type": "confirm", "actions": actions, "executed": executed,
                     "text": (msg.get("content") or "").strip()}
 
         # 直接执行类

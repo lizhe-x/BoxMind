@@ -106,8 +106,10 @@ async def test_mixed_turn_only_surfaces_destructive_calls(db, user, llm: Scripte
     ]))
     res = await agent.run(db, user, [], "...", None)
     assert res["type"] == "confirm" and [a["tool"] for a in res["actions"]] == ["empty_box"]
-    # the whole turn is held back: the non-destructive sibling is not executed either
-    assert agent_tools.resolve_box(db, user, "7号").location_text is None
+    # the non-destructive sibling runs immediately; only the destructive call waits for the user
+    assert agent_tools.resolve_box(db, user, "7号").location_text == "阳台"
+    assert res["executed"] == [{"tool": "set_box_location", "result": {"ok": True, "box": "7号", "location": "阳台"}}]
+    assert len(agent_tools.resolve_box(db, user, "5号").items) == 1  # empty_box not executed
 
 
 async def test_malformed_arguments_do_not_crash(db, user, llm: ScriptedLLM) -> None:
