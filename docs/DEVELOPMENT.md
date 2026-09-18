@@ -14,6 +14,7 @@ reports of June 2026; the reports themselves are not in the repo.
 | 3 | 2026-06-13 | Media persistence: photos become box covers, voice notes are stored per box and replayable. Camera / scan entry points made consistent across screens. |
 | 4 | 2026-06-14 | The intent classifier was replaced as the operation path by a **function-calling agent** over the app's own API, with confirm-before-destroy and single-step undo. Deployment collapsed to a single process. |
 | 5 | 2026-09-17 | Open-source preparation: test suites, CI, docs. |
+| 6 | 2026-09-18 | Internationalisation: English becomes the default UI language, Chinese stays available; the backend localises everything it generates. |
 
 ## Decision log
 
@@ -89,6 +90,31 @@ input, `/audio/transcriptions`, `/audio/speech`, `/embeddings`). Switching gatew
 or model is a `.env` change. Embeddings default to a local fastembed model
 (multilingual MiniLM, 384-d) so the RAG path has no external dependency and no per-
 call cost.
+
+### Language is a per-account setting, and the server honours it
+
+The MVP shipped Chinese-only: strings were hard-coded in the UI, the server produced
+Chinese box names and summaries, and the `lang` setting was stored but unused. Making
+English the default meant deciding where language lives:
+
+- **Matching stays language-neutral.** "Box 1", "1", "1号" and "一号" all normalise to
+  the key `#1`, so a box created in one language is found in the other.
+- **Display is decided at creation time, by the user's language.** An English user's
+  box is stored as label `1`, name `Box 1`; a Chinese user's as `1号` / `1号箱`. Text
+  labels ("Kitchen spare") are stored verbatim and the UI shrinks the badge font.
+- **Everything the server says to the user goes through one table** (`app/i18n.py`):
+  tool results the model relays, confirmation-card summaries, undo messages, dates in
+  the RAG context, the "some" quantity placeholder. Prompts are written in English and
+  told which language to answer in; item names are never translated.
+- **Auth errors are codes, not sentences.** The UI translates `code_invalid`,
+  `too_soon`, etc.; the sign-in email is bilingual because the language is not known
+  before sign-in.
+- **The client owns the choice until sign-in, the server after.** The toggle on the
+  login screen writes to localStorage; on sign-in that choice is pushed to the account;
+  on later loads the account value wins.
+
+Spanish, listed in the original PRD, was dropped from the toggle: it had never been
+implemented and a half-translated third language is worse than none.
 
 ### Single process in production
 

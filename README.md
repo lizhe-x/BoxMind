@@ -12,7 +12,7 @@ BoxMind is an AI inventory assistant for the boxes people pack into garages, sto
 
 The interesting part is not that an LLM was used to write code. It is that the LLM is the runtime: a small classifier routes each sentence, an agent decides which backend operations to call and in what order, a vision model reads photos into structured items, and a RAG loop answers questions. Everything the models do is bounded by tool schemas, confirmation gates and tests.
 
-Built solo in June 2026 as an MVP. The UI is Chinese-first; code comments are partly Chinese; this README and the docs are English.
+Built solo in June 2026 as an MVP. The UI is English by default with Chinese available in Settings; everything the server generates (box names, confirmation summaries, tool results) follows the user's language, and the models answer in whatever language you ask in. Code comments are partly Chinese.
 
 <p align="center">
   <img src="docs/screenshots/home.png" width="230" alt="Home: one big talk button">
@@ -34,6 +34,7 @@ Built solo in June 2026 as an MVP. The UI is Chinese-first; code comments are pa
 | Read-aloud | TTS on any answer. |
 | Media | Photos become box covers; photos and voice notes are stored per box. |
 | Login | Email verification code (SMTP), with a dev mode that returns the code from the API so the app runs without mail setup. |
+| Languages | UI in English (default) or Chinese, switchable before sign-in and in Settings. The choice is stored on the account so the backend localises what it generates: default box names ("Box 4" / "4号箱"), confirmation summaries, tool results the model relays, dates. Models are told which language to answer in; item names are never translated. |
 
 ## How one sentence is handled
 
@@ -46,22 +47,22 @@ sequenceDiagram
     participant LLM as LLM gateway
     participant DB as Postgres + pgvector
 
-    U->>FE: "把4号的电钻移到2号，然后把厨房备用并到5号"
+    U->>FE: "Move the power drill from box 4 to box 2, then merge Kitchen spare into box 5"
     FE->>API: POST /api/interpret
     API->>LLM: JSON-mode classify: ingest | query | operation
     LLM-->>API: {"intent": "operation"}
     FE->>API: POST /api/agent {message, history, gps}
-    API->>LLM: chat + 15 tool schemas + snapshot of the user's boxes
-    LLM-->>API: tool_calls: move_items(4号→2号, [电钻]), merge_boxes([厨房备用]→5号)
+    API->>LLM: chat + 15 tool schemas + snapshot of the user's boxes + "answer in English"
+    LLM-->>API: tool_calls: move_items(4→2, [Power drill]), merge_boxes([Kitchen spare]→5)
     API->>DB: move_items executed
     Note over API: merge_boxes is destructive → do not execute
     API-->>FE: {type: "confirm", actions: [{tool, args, summary}], executed: [...]}
-    FE-->>U: red card: "把「厨房备用」的物品并入「5号」，并删除清空后的来源箱"
-    U->>FE: 确认执行
+    FE-->>U: red card: "Move everything from “Kitchen spare” into “5” and delete the emptied source boxes"
+    U->>FE: Confirm
     FE->>API: POST /api/agent/execute {tool, args}
     API->>DB: snapshot affected boxes → merge → commit
-    API-->>FE: "已把「厨房备用」并入「5号箱」"
-    U->>FE: "撤销"
+    API-->>FE: "Merged “Kitchen spare” into “Box 5”"
+    U->>FE: "undo"
     FE->>API: POST /api/agent → LLM picks undo_last
     API->>DB: restore boxes, items, media ownership from snapshot (same ids)
 ```
@@ -106,8 +107,8 @@ Tests were written to make the AI orchestration checkable without a model in the
 
 | Suite | Count | What is real, what is faked |
 |---|---|---|
-| Backend `pytest` | 148 | Real PostgreSQL + pgvector (throwaway `boxmind_test` database, created on demand), real FastAPI app through `TestClient`, real cascades and undo snapshots. Faked: embeddings (deterministic hash vectors, so nothing is downloaded and exact names always match) and the LLM gateway (a scripted client that replays tool calls and records every request). Warnings are errors. |
-| Frontend `vitest` | 39 | Store logic (routing of a sentence, confirm-card flow, photo-intake selection, scan fallback, display helpers) with the API module mocked; API client (auth header, 401 → logout, SSE parser across arbitrary chunk boundaries). |
+| Backend `pytest` | 163 | Real PostgreSQL + pgvector (throwaway `boxmind_test` database, created on demand), real FastAPI app through `TestClient`, real cascades and undo snapshots. Faked: embeddings (deterministic hash vectors, so nothing is downloaded and exact names always match) and the LLM gateway (a scripted client that replays tool calls and records every request). Warnings are errors. |
+| Frontend `vitest` | 47 | Store logic (routing of a sentence, confirm-card flow, photo-intake selection, scan fallback, language handling, display helpers) with the API module mocked; API client (auth header, 401 → logout, SSE parser across arbitrary chunk boundaries). |
 
 The agent loop is tested turn by turn: which tools were called, what was fed back to the model, when the loop paused for confirmation, what happens on malformed arguments, that non-destructive siblings of a destructive call still run, and that the six-step cap holds. Undo is tested to restore boxes with the same ids, items re-embedded and media rows moved back.
 
@@ -167,11 +168,13 @@ backend/
       agent_destructive.py  summaries, snapshot, execute, undo
       llm.py              prompts and the OpenAI-compatible client
       embeddings.py       local fastembed or remote /embeddings
-    normalize.py    "1号" = "Box 1" = "一号" label normalisation
+    normalize.py    "1" = "Box 1" = "1号" = "一号" label normalisation
+    i18n.py         every user-facing string the server produces, en / zh
   tests/            pytest suite (see above)
 frontend/
   src/
     store.ts        zustand state machine for intake / ask / agent / camera / scan
+    i18n.ts         UI strings, en / zh, with the language toggle helpers
     api.ts          API client + SSE parser
     screens/        Home, Ask, Boxes, BoxDetail, Camera, Scan, Settings, Login, Onboarding
   tests/            vitest suite
