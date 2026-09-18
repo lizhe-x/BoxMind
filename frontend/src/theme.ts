@@ -35,3 +35,10 @@ export const KRAFT: [string, string][] = [
   ['#8A6A48', '#66503A'],
   ['#8F744E', '#6B5638'],
 ]
+
+/** 徽章里放手写编号:短编号用原字号,长文字(如 "Kitchen spare")缩小并省略,避免撑破徽章。 */
+export function badgeFit(label: string, base: number): { fontSize: number; maxWidth: string; overflow: 'hidden'; textOverflow: 'ellipsis'; whiteSpace: 'nowrap'; padding: string } {
+  const n = [...label].length
+  const fontSize = n <= 2 ? base : n <= 4 ? Math.round(base * 0.78) : Math.round(base * 0.5)
+  return { fontSize, maxWidth: '92%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', padding: '0 3px' }
+}

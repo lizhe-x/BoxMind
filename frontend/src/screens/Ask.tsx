@@ -5,7 +5,7 @@ import { BackIcon, CameraIcon, ChevronIcon, MicIcon, ScanIcon, SpeakerIcon } fro
 import { api } from '../api'
 import { makeT } from '../i18n'
 import { distText, plainText, useStore } from '../store'
-import { T } from '../theme'
+import { T, badgeFit } from '../theme'
 import { useVoice } from '../voice'
 
 export function Ask() {
@@ -182,7 +182,7 @@ export function Ask() {
                           width: 46, height: 40, borderRadius: 8,
                           background: `linear-gradient(140deg,${box.color_a},${box.color_b})`,
                           display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
-                          fontFamily: T.fontNum, fontWeight: 700, fontSize: 15, color: T.ink, transform: 'rotate(-2deg)',
+                          fontFamily: T.fontNum, fontWeight: 700, color: T.ink, transform: 'rotate(-2deg)', ...badgeFit(box.label, 15),
                         }}
                       >
                         {box.label}

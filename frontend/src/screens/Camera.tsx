@@ -3,7 +3,7 @@ import { BackIcon, CheckIcon, SparkleIcon } from '../components/Icons'
 import { boxNameFor, makeT } from '../i18n'
 import type { Key } from '../i18n'
 import { useStore } from '../store'
-import { T } from '../theme'
+import { T, badgeFit } from '../theme'
 
 const CONF: Record<string, { key: Key; color: string; bg: string }> = {
   high: { key: 'conf_high', color: T.green, bg: 'rgba(124,255,178,0.12)' },
@@ -151,7 +151,7 @@ export function Camera() {
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: 12, background: T.card2, border: `1px solid ${T.border}`, borderRadius: 16, padding: '12px 14px' }}>
-            <div style={{ width: 44, height: 38, borderRadius: 8, background: 'linear-gradient(140deg,#94714B,#6F5639)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontFamily: T.fontNum, fontWeight: 700, fontSize: 14, color: T.ink, transform: 'rotate(-2deg)' }}>
+            <div style={{ width: 44, height: 38, borderRadius: 8, background: 'linear-gradient(140deg,#94714B,#6F5639)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontFamily: T.fontNum, fontWeight: 700, color: T.ink, transform: 'rotate(-2deg)', ...badgeFit(targetLabel, 14) }}>
               {targetLabel}
             </div>
             <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 2 }}>

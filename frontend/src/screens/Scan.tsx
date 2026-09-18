@@ -3,7 +3,7 @@ import { BrowserMultiFormatReader, type IScannerControls } from '@zxing/browser'
 import { BackIcon, CheckIcon, ChevronIcon } from '../components/Icons'
 import { makeT } from '../i18n'
 import { distText, fmtTime, useStore } from '../store'
-import { T } from '../theme'
+import { T, badgeFit } from '../theme'
 
 export function Scan() {
   const lang = useStore((s) => s.lang)
@@ -105,7 +105,7 @@ export function Scan() {
             <span style={{ fontSize: 12.5, color: T.green, fontFamily: T.fontNum }}>{t('scan_found', { code: foundBox.barcode || foundBox.label })}</span>
           </div>
           <div onClick={() => { openBox(foundBox.id) }} style={{ display: 'flex', alignItems: 'center', gap: 14, background: T.card2, border: `1px solid ${T.border8}`, borderRadius: 18, padding: 14, cursor: 'pointer' }}>
-            <div style={{ width: 56, height: 48, borderRadius: 10, background: `linear-gradient(140deg,${foundBox.color_a},${foundBox.color_b})`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontFamily: T.fontNum, fontWeight: 700, fontSize: 18, color: T.ink, transform: 'rotate(-2deg)' }}>
+            <div style={{ width: 56, height: 48, borderRadius: 10, background: `linear-gradient(140deg,${foundBox.color_a},${foundBox.color_b})`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontFamily: T.fontNum, fontWeight: 700, color: T.ink, transform: 'rotate(-2deg)', ...badgeFit(foundBox.label, 18) }}>
               {foundBox.label}
             </div>
             <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 3, minWidth: 0 }}>

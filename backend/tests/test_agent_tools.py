@@ -135,7 +135,7 @@ async def test_rename_box_keeps_it_resolvable_and_dedups(db: Session, user: User
     res = await agent_tools.execute(db, user, "rename_box", {"box": "7", "new_name": "Camping"}, {})
     assert res["ok"] and res["renamed_from"] == "7"
     assert agent_tools.resolve_box(db, user, "7") is None
-    assert agent_tools.resolve_box(db, user, "camping").label == "Campin"  # 6-char badge
+    assert agent_tools.resolve_box(db, user, "camping").label == "Camping"
     res = await agent_tools.execute(db, user, "rename_box", {"box": "5", "new_name": "Liam"}, {})
     assert res["box"] == "Liam2" and res["note"] == "name already taken, renamed to “Liam2”"
 

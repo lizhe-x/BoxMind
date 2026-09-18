@@ -3,7 +3,7 @@ import { GradButton, ThinkingDots } from './common'
 import { CheckIcon, PencilIcon, PinIcon, SparkleIcon } from './Icons'
 import { boxNameFor, makeT } from '../i18n'
 import { useStore } from '../store'
-import { KRAFT, T } from '../theme'
+import { KRAFT, T, badgeFit } from '../theme'
 import type { ItemDraft } from '../types'
 
 function ItemRows({ items, pad = '11px 2px' }: { items: ItemDraft[]; pad?: string }) {
@@ -144,7 +144,7 @@ export function EntryOverlay() {
                   width: 48, height: 42, borderRadius: 9,
                   background: `linear-gradient(140deg,${badgeColors[0]},${badgeColors[1]})`,
                   display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
-                  fontFamily: T.fontNum, fontWeight: 700, fontSize: 16, color: T.ink, transform: 'rotate(-2deg)',
+                  fontFamily: T.fontNum, fontWeight: 700, color: T.ink, transform: 'rotate(-2deg)', ...badgeFit(boxLabel || '?', 16),
                 }}
               >
                 {boxLabel || '?'}
@@ -213,7 +213,7 @@ export function EntryOverlay() {
                 style={{
                   width: 44, height: 38, borderRadius: 8, background: 'linear-gradient(140deg,#9C7A52,#7A5E3E)',
                   display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
-                  fontFamily: T.fontNum, fontWeight: 700, fontSize: 14, color: T.ink, transform: 'rotate(-2deg)',
+                  fontFamily: T.fontNum, fontWeight: 700, color: T.ink, transform: 'rotate(-2deg)', ...badgeFit(parsed.next_label, 14),
                 }}
               >
                 {parsed.next_label}
@@ -239,7 +239,7 @@ export function EntryOverlay() {
                     width: 44, height: 38, borderRadius: 8,
                     background: `linear-gradient(140deg,${p.color_a},${p.color_b})`,
                     display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
-                    fontFamily: T.fontNum, fontWeight: 700, fontSize: 14, color: T.ink, transform: 'rotate(-2deg)',
+                    fontFamily: T.fontNum, fontWeight: 700, color: T.ink, transform: 'rotate(-2deg)', ...badgeFit(p.label, 14),
                   }}
                 >
                   {p.label}

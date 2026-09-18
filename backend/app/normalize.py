@@ -14,9 +14,6 @@ _FULLWIDTH = str.maketrans("０１２３４５６７８９ＡＢＣＤＥＦＧ�
 _CN_DIGITS = {"零": 0, "一": 1, "二": 2, "两": 2, "三": 3, "四": 4, "五": 5,
               "六": 6, "七": 7, "八": 8, "九": 9, "十": 10}
 
-_CJK = re.compile(r"[㐀-鿿]")
-
-
 def _cn_to_int(s: str) -> int | None:
     if not s or any(c not in _CN_DIGITS for c in s):
         return None
@@ -51,12 +48,11 @@ def normalize_label(raw: str, lang: str | None = None) -> tuple[str, str, str]:
     n = extract_number(s)
     if n is not None:
         return f"#{n}", tr(lang, "label_num", n=n), tr(lang, "name_num", n=n)
-    # 非数字: 去掉尾部 "箱" / "box" 做匹配键(红色大箱 = 红色大, kitchen box = kitchen), 显示保留原样
+    # 非数字: 去掉尾部 "箱" / "box" 做匹配键(红色大箱 = 红色大, kitchen box = kitchen);
+    # label 与 name 都保留原样,徽章里放不下由前端缩小字号/省略
     key = re.sub(r"\s+", "", s).lower()
     key = re.sub(r"(箱子|箱|box)$", "", key) or key
-    max_len = 4 if _CJK.search(s) else 6  # 徽章宽度有限:中文 4 字,拉丁 6 字
-    label = s if len(s) <= max_len else s[:max_len]
-    return key, label, s
+    return key, s, s
 
 
 KRAFT_PALETTE = [

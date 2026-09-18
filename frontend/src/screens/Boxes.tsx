@@ -2,7 +2,7 @@ import { api } from '../api'
 import { PinIcon } from '../components/Icons'
 import { makeT } from '../i18n'
 import { fmtTime, isNewBox, useStore } from '../store'
-import { T } from '../theme'
+import { T, badgeFit } from '../theme'
 
 export function Boxes() {
   const lang = useStore((s) => s.lang)
@@ -61,7 +61,7 @@ export function Boxes() {
               )}
               <div
                 style={{
-                  fontFamily: T.fontNum, fontSize: 26, fontWeight: 700, color: T.ink, transform: 'rotate(-2deg)',
+                  fontFamily: T.fontNum, fontWeight: 700, color: T.ink, transform: 'rotate(-2deg)', ...badgeFit(b.label, 26),
                   ...(cover
                     ? { position: 'absolute', left: 8, bottom: 6, fontSize: 18, color: '#fff', textShadow: '0 1px 6px rgba(0,0,0,0.7)' }
                     : {}),

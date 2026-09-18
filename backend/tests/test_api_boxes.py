@@ -138,5 +138,5 @@ def test_resolve_by_code_label_and_create(client, auth) -> None:
     r = client.post("/api/boxes/resolve", json={"code": "BX-2", "label": "2", "create": True}, headers=auth).json()
     assert r["created"] is True and (r["box"]["label"], r["box"]["barcode"], r["box"]["source"]) == ("2", "BX-2", "scan")
     r = client.post("/api/boxes/resolve", json={"code": "QR-XYZ-42", "create": True}, headers=auth).json()
-    assert r["created"] is True and (r["box"]["label"], r["box"]["name"]) == ("QR-XYZ", "QR-XYZ-42")  # code as label
+    assert r["created"] is True and (r["box"]["label"], r["box"]["name"]) == ("QR-XYZ-42", "QR-XYZ-42")  # code as label
     assert client.post("/api/boxes/resolve", json={"create": True}, headers=auth).status_code == 404

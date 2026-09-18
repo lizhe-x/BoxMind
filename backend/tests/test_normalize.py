@@ -38,22 +38,22 @@ def test_non_numeric_returns_none(raw: str) -> None:
 def test_text_label_strips_trailing_box_word_for_matching_only() -> None:
     norm, label, name = normalize_label("红色大箱")
     assert norm == "红色大"  # matching key
-    assert label == "红色大箱"  # display kept verbatim (≤4 CJK chars)
+    assert label == "红色大箱"  # display kept verbatim
     assert name == "红色大箱"
     assert normalize_label("红色大")[0] == norm  # "红色大" and "红色大箱" are the same box
 
     norm, label, name = normalize_label("Kitchen box")
     assert norm == "kitchen" and normalize_label("kitchen")[0] == norm
-    assert (label, name) == ("Kitche", "Kitchen box")  # badge keeps 6 latin chars, name is verbatim
+    assert (label, name) == ("Kitchen box", "Kitchen box")  # text labels are kept verbatim
 
 
 def test_text_label_is_case_and_space_insensitive() -> None:
     assert normalize_label("Kitchen Box")[0] == normalize_label("kitchenbox")[0]
 
 
-def test_long_cjk_label_is_truncated_for_display_but_name_kept() -> None:
+def test_long_cjk_label_is_kept_verbatim() -> None:
     norm, label, name = normalize_label("露营装备大箱子")
-    assert label == "露营装备"  # 4-char badge
+    assert label == "露营装备大箱子"
     assert name == "露营装备大箱子"
     assert norm == "露营装备大"  # "箱子" suffix removed from key
 

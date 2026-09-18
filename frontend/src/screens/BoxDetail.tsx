@@ -6,7 +6,7 @@ import { BackIcon, MicIcon, PinIcon, SpeakerIcon, SparkleIcon } from '../compone
 import { makeT } from '../i18n'
 import type { Lang } from '../i18n'
 import { distText, fmtTime, isNewBox, useStore } from '../store'
-import { T } from '../theme'
+import { T, badgeFit } from '../theme'
 
 function AudioRow({ url, index, lang }: { url: string; index: number; lang: Lang }) {
   const t = makeT(lang)
@@ -115,8 +115,8 @@ export function BoxDetail() {
             />
             <div
               style={{
-                fontFamily: T.fontNum, fontSize: 54, fontWeight: 700,
-                color: 'rgba(43,31,18,0.85)', transform: 'rotate(-2deg)', marginTop: 14,
+                fontFamily: T.fontNum, fontWeight: 700,
+                color: 'rgba(43,31,18,0.85)', transform: 'rotate(-2deg)', marginTop: 14, ...badgeFit(b.label, 54),
               }}
             >
               {b.label}
