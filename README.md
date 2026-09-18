@@ -149,6 +149,12 @@ For production, `npm run build` and start the backend; it serves `frontend/dist`
 
 All settings are environment variables prefixed `BOXMIND_`, documented in [backend/.env.example](backend/.env.example). Model names (`LLM_MODEL`, `VISION_MODEL`, `ASR_MODEL`, `TTS_MODEL`, `EMBEDDING_MODEL`) are configuration, not code. The default gateway is [getbot.me](https://api.getbot.me), an OpenAI-compatible gateway I also run; any compatible endpoint works.
 
+Data created before the English default (Chinese box names such as 5号箱, 若干 quantities) can be re-localised in place; it is a dry run unless `--apply` is given, and it never touches text the user typed:
+
+```bash
+cd backend && python -m app.maintenance.relabel --lang en --apply
+```
+
 Things to know before exposing an instance:
 
 - `BOXMIND_JWT_SECRET` has a development default. Set it.
