@@ -20,13 +20,6 @@ Tool schemas, database validation, confirmation gates, snapshots, undo, and test
 
 Built solo as an MVP in June 2026.
 
-<p align="center">
-  <img src="docs/screenshots/home.png" width="230" alt="Home screen">
-  <img src="docs/screenshots/entry-confirm.png" width="230" alt="Structured intake confirmation">
-  <img src="docs/screenshots/ask.png" width="230" alt="Natural-language answer">
-  <img src="docs/screenshots/agent-confirm.png" width="230" alt="Agent confirmation before destructive action">
-</p>
-
 ## Why this project
 
 BoxMind is less about building a chatbot and more about exploring **reliable AI application architecture**.
@@ -83,10 +76,23 @@ PostgreSQL 17 + pgvector
 A typical operation follows:
 
 ```text
-Natural-language request → intent classification → typed tool calls
-                         → validate → execute
-                         → destructive action: confirm → snapshot → execute
-                         → undo
+Natural-language request
+        │
+        ▼
+Intent classification
+        │
+        ▼
+LLM proposes typed tool calls
+        │
+        ├── non-destructive → validate → execute
+        │
+        └── destructive → summarize → user confirms
+                                      │
+                                      ▼
+                               snapshot → execute
+                                      │
+                                      ▼
+                                     undo
 ```
 
 ### The classifier is a router, not the application brain
@@ -125,8 +131,6 @@ npm test
 npm run build
 ```
 
-CI runs backend and frontend checks on every push.
-
 ## Run locally
 
 ```bash
@@ -135,7 +139,7 @@ docker compose up -d
 cd backend
 python -m venv .venv
 source .venv/bin/activate
-# Windows: .venv\Scripts\activate
+# Windows: .venv\\Scripts\\activate
 pip install -r requirements.txt
 cp .env.example .env
 # Set BOXMIND_LLM_API_KEY
@@ -146,13 +150,14 @@ npm install
 npm run dev
 ```
 
-The frontend runs on http://localhost:5173 and proxies /api to the backend.
-
 ## Stack
 
 **Backend:** Python 3.11, FastAPI, SQLAlchemy 2, PostgreSQL 17, pgvector, fastembed, PyJWT
+
 **Frontend:** React 19, TypeScript, Vite, zustand, PWA, ZXing
+
 **AI:** LLM function calling, vision, ASR, TTS, multilingual embeddings, RAG
+
 **Infrastructure:** Docker, GitHub Actions
 
 Approximately 6K lines of application code plus 2K lines of tests.
@@ -160,6 +165,8 @@ Approximately 6K lines of application code plus 2K lines of tests.
 ## Status
 
 MVP / single-user application.
+
+Current limitations:
 
 - Single user per account; no sharing
 - Single-step undo
