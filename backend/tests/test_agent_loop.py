@@ -79,7 +79,7 @@ async def test_multi_step_search_then_move(db, user, llm: ScriptedLLM) -> None:
     res = await agent.run(db, user, [], "move the headlamp to box 7", None)
     assert res["type"] == "message"
     db.expire_all()
-    assert [i.name for i in agent_tools.resolve_box(db, user, "7").items] == ["tent", "headlamp"]
+    assert sorted(i.name for i in agent_tools.resolve_box(db, user, "7").items) == ["headlamp", "tent"]  # order = created_at, not stable
     assert len(llm.calls) == 3
     search_result = json.loads(llm.calls[1]["messages"][-1]["content"])
     assert search_result["results"][0]["box_label"] == "5"

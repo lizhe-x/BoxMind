@@ -2,7 +2,11 @@
 testpaths = ["tests"]
 pythonpath = ["."]  # `pytest` (not only `python -m pytest`) must find the `app` package
 asyncio_mode = "auto"
-filterwarnings = ["error"]  # a new deprecation or SQLAlchemy warning fails the suite instead of hiding in the log
+filterwarnings = [
+    "error",  # a new deprecation or SQLAlchemy warning fails the suite instead of hiding in the log
+    # third-party noise we cannot fix here: starlette's TestClient uses an alias that newer anyio deprecates
+    "ignore:The anyio\\.abc\\..* alias is deprecated:DeprecationWarning",
+]
 
 [tool.ruff]
 line-length = 120
