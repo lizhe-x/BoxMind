@@ -1,5 +1,6 @@
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+pythonpath = ["."]  # `pytest` (not only `python -m pytest`) must find the `app` package
 asyncio_mode = "auto"
 filterwarnings = ["error"]  # a new deprecation or SQLAlchemy warning fails the suite instead of hiding in the log
 
