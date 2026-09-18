@@ -1,24 +1,14 @@
 import { useState } from 'react'
 import { T } from '../theme'
 import { MicIcon, SparkleIcon } from '../components/Icons'
+import { makeT } from '../i18n'
+import type { Key } from '../i18n'
 import { useStore } from '../store'
 
-const OB = [
-  {
-    tag: '01 · 零门槛',
-    title: '一支马克笔,就能开始',
-    desc: '在箱子上写个编号 —「1号」「ABC」「红色大箱」都行。不用贴纸、不用打印,说出编号就能建箱。',
-  },
-  {
-    tag: '02 · 按住说话',
-    title: '说一句话,AI 全记住',
-    desc: '「1号箱放了羽绒服三件、雪地靴两双」— 松开手指,物品、数量、位置自动整理入库。无表单、无分类。',
-  },
-  {
-    tag: '03 · 开口就找到',
-    title: '东西在哪,问一句就知道',
-    desc: '「我的雪地靴在哪?」中文录入、英文提问也能查到。AI 告诉你在哪个箱子、哪层货架、离你多远。',
-  },
+const OB: { tag: Key; title: Key; desc: Key }[] = [
+  { tag: 'ob1_tag', title: 'ob1_title', desc: 'ob1_desc' },
+  { tag: 'ob2_tag', title: 'ob2_title', desc: 'ob2_desc' },
+  { tag: 'ob3_tag', title: 'ob3_title', desc: 'ob3_desc' },
 ]
 
 const WAVE = [
@@ -30,6 +20,8 @@ const WAVE = [
 ]
 
 export function Onboarding() {
+  const lang = useStore((s) => s.lang)
+  const t = makeT(lang)
   const [slide, setSlide] = useState(0)
   const go = useStore((s) => s.go)
   const ob = OB[slide]
@@ -49,7 +41,7 @@ export function Onboarding() {
     >
       <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
         <div onClick={finish} style={{ fontSize: 14, color: T.textWeak, cursor: 'pointer', padding: '6px 10px' }}>
-          跳过
+          {t('ob_skip')}
         </div>
       </div>
 
@@ -70,7 +62,7 @@ export function Onboarding() {
               }}
             />
             <div style={{ fontFamily: T.fontNum, fontSize: 46, fontWeight: 700, color: T.ink, transform: 'rotate(-1deg)' }}>
-              1号
+              {t('label_sample')}
             </div>
           </div>
         )}
@@ -99,14 +91,14 @@ export function Onboarding() {
           </div>
         )}
         {slide === 2 && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 12, width: 250 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12, width: 260 }}>
             <div
               style={{
                 alignSelf: 'flex-end', background: '#273048', borderRadius: '16px 16px 4px 16px',
                 padding: '10px 14px', fontSize: 14, color: T.text,
               }}
             >
-              雪地靴在哪?
+              {t('ob_demo_q')}
             </div>
             <div
               style={{
@@ -123,7 +115,7 @@ export function Onboarding() {
               >
                 <SparkleIcon size={10} />
               </span>
-              <span>在 1号箱 · 车库左侧货架</span>
+              <span>{t('ob_demo_a')}</span>
             </div>
           </div>
         )}
@@ -137,12 +129,12 @@ export function Onboarding() {
             fontFamily: T.fontNum,
           }}
         >
-          {ob.tag}
+          {t(ob.tag)}
         </div>
         <div style={{ fontSize: 28, fontWeight: 700, lineHeight: 1.35, textWrap: 'pretty', color: T.text }}>
-          {ob.title}
+          {t(ob.title)}
         </div>
-        <div style={{ fontSize: 15, lineHeight: 1.75, color: T.textSub55, textWrap: 'pretty' }}>{ob.desc}</div>
+        <div style={{ fontSize: 15, lineHeight: 1.75, color: T.textSub55, textWrap: 'pretty' }}>{t(ob.desc)}</div>
         <div style={{ display: 'flex', gap: 7, marginTop: 6 }}>
           {OB.map((_, i) => (
             <div
@@ -164,7 +156,7 @@ export function Onboarding() {
             boxShadow: '0 10px 36px rgba(99,102,241,0.4)',
           }}
         >
-          {slide >= 2 ? '开始使用' : '继续'}
+          {slide >= 2 ? t('ob_start') : t('ob_continue')}
         </div>
       </div>
     </div>

@@ -1,6 +1,7 @@
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
+from ..i18n import tr
 from ..models import Box, Item, UsageLog, User
 from ..normalize import KRAFT_PALETTE, extract_number, normalize_label
 from . import embeddings
@@ -11,10 +12,11 @@ def find_box_by_label(db: Session, user_id: str, raw_label: str) -> Box | None:
     return db.scalar(select(Box).where(Box.user_id == user_id, Box.norm_label == norm))
 
 
-def next_num_label(db: Session, user_id: str) -> str:
-    labels = db.scalars(select(Box.label).where(Box.user_id == user_id)).all()
+def next_num_label(db: Session, user: User) -> str:
+    """下一个空闲的数字编号,按用户界面语言显示("4" / "4号")。"""
+    labels = db.scalars(select(Box.label).where(Box.user_id == user.id)).all()
     nums = [n for n in (extract_number(lb) for lb in labels) if n]
-    return f"{(max(nums) if nums else 0) + 1}号"
+    return tr(user.lang, "label_num", n=(max(nums) if nums else 0) + 1)
 
 
 def create_box(
@@ -27,7 +29,7 @@ def create_box(
     gps_lng: float | None = None,
     source: str = "text",
 ) -> Box:
-    norm, label, default_name = normalize_label(raw_label)
+    norm, label, default_name = normalize_label(raw_label, user.lang)
     count = db.scalar(select(func.count(Box.id)).where(Box.user_id == user.id)) or 0
     color_a, color_b = KRAFT_PALETTE[count % len(KRAFT_PALETTE)]
     box = Box(

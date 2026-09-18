@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session, selectinload
 
 from ..auth import get_current_user
 from ..db import get_db
+from ..i18n import tr
 from ..models import Box, User
 from ..schemas import IngestIn, IngestOut, InterpretIn, InterpretOut
 from ..services import boxes_service
@@ -16,7 +17,7 @@ router = APIRouter(prefix="/api", tags=["ingest"])
 async def interpret(body: InterpretIn, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     """一段话 → 意图 + 结构化抽取。不入库、不计量。"""
     labels = db.scalars(select(Box.label).where(Box.user_id == user.id)).all()
-    parsed = await llm.interpret(body.text, list(labels))
+    parsed = await llm.interpret(body.text, list(labels), user.lang)
 
     box = None
     box_label = parsed.get("box_label")
@@ -30,18 +31,19 @@ async def interpret(body: InterpretIn, user: User = Depends(get_current_user), d
     elif box_label:
         box = boxes_service.find_box_by_label(db, user.id, box_label)
 
+    some = tr(user.lang, "qty_some")
     return InterpretOut(
         intent=parsed["intent"],
         box_label=box_label,
         box=box,
         items=[
-            {"name": it.get("name", ""), "qty_text": it.get("qty_text") or "若干"}
+            {"name": it.get("name", ""), "qty_text": it.get("qty_text") or some}
             for it in parsed.get("items", [])
             if it.get("name")
         ],
         location_text=parsed.get("location_text"),
-        language=parsed.get("language", "zh"),
-        next_label=boxes_service.next_num_label(db, user.id),
+        language=parsed.get("language", user.lang),
+        next_label=boxes_service.next_num_label(db, user),
     )
 
 

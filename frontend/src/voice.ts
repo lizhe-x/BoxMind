@@ -1,5 +1,7 @@
 import { useRef } from 'react'
 import { api } from './api'
+import { speechLocale } from './i18n'
+import { useStore } from './store'
 
 /**
  * 按住说话语音输入。
@@ -35,6 +37,7 @@ function getSRClass(): SRCtor | null {
 }
 
 export function useVoice() {
+  const lang = useStore((s) => s.lang)
   const recRef = useRef<SpeechRecognitionLike | null>(null)
   const mediaRef = useRef<MediaRecorder | null>(null)
   const streamRef = useRef<MediaStream | null>(null)
@@ -57,7 +60,7 @@ export function useVoice() {
     if (SR) {
       try {
         const rec = new SR()
-        rec.lang = 'zh-CN'
+        rec.lang = speechLocale(lang)
         rec.interimResults = true
         rec.continuous = true
         rec.onresult = (e) => {

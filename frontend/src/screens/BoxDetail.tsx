@@ -3,10 +3,13 @@ import type { ChangeEvent } from 'react'
 import { api } from '../api'
 import { compressImage } from '../image'
 import { BackIcon, MicIcon, PinIcon, SpeakerIcon, SparkleIcon } from '../components/Icons'
+import { makeT } from '../i18n'
+import type { Lang } from '../i18n'
 import { distText, fmtTime, isNewBox, useStore } from '../store'
 import { T } from '../theme'
 
-function AudioRow({ url, index }: { url: string; index: number }) {
+function AudioRow({ url, index, lang }: { url: string; index: number; lang: Lang }) {
+  const t = makeT(lang)
   const [playing, setPlaying] = useState(false)
   const ref = useRef<HTMLAudioElement | null>(null)
   const toggle = () => {
@@ -30,12 +33,14 @@ function AudioRow({ url, index }: { url: string; index: number }) {
       <div style={{ width: 34, height: 34, borderRadius: '50%', background: T.grad, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
         <SpeakerIcon size={16} color="#fff" />
       </div>
-      <div style={{ fontSize: 14, color: T.text }}>{playing ? '播放中…' : `录入语音 ${index + 1}`}</div>
+      <div style={{ fontSize: 14, color: T.text }}>{playing ? t('playing') : t('voice_note_n', { n: index + 1 })}</div>
     </div>
   )
 }
 
 export function BoxDetail() {
+  const lang = useStore((s) => s.lang)
+  const t = makeT(lang)
   const boxes = useStore((s) => s.boxes)
   const activeBoxId = useStore((s) => s.activeBoxId)
   const userPos = useStore((s) => s.userPos)
@@ -53,13 +58,13 @@ export function BoxDetail() {
   if (!b) {
     return (
       <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: T.textSub }}>
-        箱子不存在
+        {t('box_missing')}
       </div>
     )
   }
 
   const isNew = isNewBox(b)
-  const dist = distText(userPos, b.gps_lat, b.gps_lng)
+  const dist = distText(userPos, b.gps_lat, b.gps_lng, lang)
   const hasGps = b.gps_lat != null
   const cover = b.photo_url || b.photos[0]
 
@@ -135,7 +140,7 @@ export function BoxDetail() {
             background: 'rgba(10,13,21,0.45)', backdropFilter: 'blur(10px)', borderRadius: 999, padding: '8px 12px',
           }}
         >
-          {cover ? '箱子照片' : '箱子照片 · 占位'}
+          {cover ? t('cover_photo') : t('cover_placeholder')}
         </div>
       </div>
 
@@ -146,13 +151,13 @@ export function BoxDetail() {
             <div style={{ fontSize: 24, fontWeight: 700, color: T.text }}>{b.name}</div>
             {isNew && (
               <div style={{ background: 'rgba(124,255,178,0.12)', color: T.green, fontSize: 11, fontWeight: 600, borderRadius: 999, padding: '4px 10px' }}>
-                新箱子
+                {t('new_box_badge')}
               </div>
             )}
           </div>
           <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'rgba(242,192,120,0.1)', border: '1px solid rgba(242,192,120,0.3)', borderRadius: 999, padding: '6px 12px', fontSize: 12, color: T.amber }}>
-              手写编号 {b.label}
+              {t('handwritten', { label: b.label })}
             </div>
             {b.barcode && (
               <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'rgba(124,140,255,0.1)', border: '1px solid rgba(124,140,255,0.3)', borderRadius: 999, padding: '6px 12px', fontSize: 12, color: T.blue2 }}>
@@ -160,7 +165,7 @@ export function BoxDetail() {
               </div>
             )}
             <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.09)', borderRadius: 999, padding: '6px 12px', fontSize: 12, color: T.textSub }}>
-              更新于 {fmtTime(b.updated_at)}
+              {t('updated_at', { time: fmtTime(b.updated_at, lang) })}
             </div>
           </div>
         </div>
@@ -187,9 +192,9 @@ export function BoxDetail() {
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '13px 15px' }}>
             <PinIcon size={14} />
             <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 2 }}>
-              <div style={{ fontSize: 14, fontWeight: 500, color: T.text }}>{b.location_text || '位置待补充'}</div>
+              <div style={{ fontSize: 14, fontWeight: 500, color: T.text }}>{b.location_text || t('location_pending')}</div>
               <div style={{ fontSize: 11.5, color: T.textWeak }}>
-                {hasGps ? 'GPS 已记录,仅自己可见' : '未记录 GPS'}
+                {hasGps ? t('gps_recorded') : t('gps_none')}
               </div>
             </div>
           </div>
@@ -197,8 +202,8 @@ export function BoxDetail() {
 
         {/* 物品 */}
         <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginTop: 2 }}>
-          <div style={{ fontSize: 16, fontWeight: 600, color: T.text }}>箱内物品</div>
-          <div style={{ fontSize: 12.5, color: T.textWeak }}>{b.items.length} 类</div>
+          <div style={{ fontSize: 16, fontWeight: 600, color: T.text }}>{t('items_title')}</div>
+          <div style={{ fontSize: 12.5, color: T.textWeak }}>{t('items_count', { n: b.items.length })}</div>
         </div>
         <div style={{ background: T.card, border: `1px solid ${T.border}`, borderRadius: 20, overflow: 'hidden', display: 'flex', flexDirection: 'column', marginTop: -6 }}>
           {b.items.map((it) => (
@@ -241,11 +246,11 @@ export function BoxDetail() {
               onKeyDown={(e) => {
                 if (e.key === 'Enter') doAddItem()
               }}
-              placeholder="添加物品(输入名称)"
+              placeholder={t('add_item_ph')}
               style={{ flex: 1, minWidth: 0, fontSize: 15, color: T.text, background: 'transparent', border: 'none', fontFamily: T.font, padding: '8px 0' }}
             />
             {newItem.trim() && (
-              <div onClick={doAddItem} style={{ fontSize: 13, color: T.blue2, cursor: 'pointer', padding: '4px 8px', flexShrink: 0 }}>添加</div>
+              <div onClick={doAddItem} style={{ fontSize: 13, color: T.blue2, cursor: 'pointer', padding: '4px 8px', flexShrink: 0 }}>{t('add')}</div>
             )}
           </div>
         </div>
@@ -255,15 +260,15 @@ export function BoxDetail() {
             <span style={{ display: 'inline-flex', width: 16, height: 16, borderRadius: '50%', background: T.grad, alignItems: 'center', justifyContent: 'center' }}>
               <SparkleIcon size={9} />
             </span>
-            来自{b.source === 'voice' ? '语音' : '文字'}录入 · AI 自动整理
+            {t('from_source', { source: t(b.source === 'voice' ? 'source_voice' : 'source_text') })}
           </div>
         )}
 
         {/* 箱子照片:添加 + 点选设为封面 */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <div style={{ fontSize: 16, fontWeight: 600, color: T.text }}>箱子照片</div>
-            {b.photos.length > 0 && <div style={{ fontSize: 12, color: T.textWeak }}>点照片设为封面</div>}
+            <div style={{ fontSize: 16, fontWeight: 600, color: T.text }}>{t('photos_title')}</div>
+            {b.photos.length > 0 && <div style={{ fontSize: 12, color: T.textWeak }}>{t('tap_cover')}</div>}
           </div>
           <div style={{ display: 'flex', gap: 8, overflowX: 'auto', paddingBottom: 4 }}>
             {b.photos.map((p, i) => {
@@ -277,7 +282,7 @@ export function BoxDetail() {
                   />
                   {isCover && (
                     <div style={{ position: 'absolute', left: 5, bottom: 5, background: T.grad, color: '#fff', fontSize: 10, fontWeight: 600, borderRadius: 6, padding: '2px 6px' }}>
-                      封面
+                      {t('cover_badge')}
                     </div>
                   )}
                 </div>
@@ -287,7 +292,7 @@ export function BoxDetail() {
               style={{ width: 92, height: 92, borderRadius: 12, border: '1.5px dashed rgba(124,140,255,0.4)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 3, flexShrink: 0, cursor: 'pointer', color: T.blue }}
             >
               <span style={{ fontSize: 22, fontWeight: 300 }}>+</span>
-              <span style={{ fontSize: 11 }}>添加照片</span>
+              <span style={{ fontSize: 11 }}>{t('add_photo')}</span>
               <input type="file" accept="image/*" multiple style={{ display: 'none' }} onChange={onAddPhotos} />
             </label>
           </div>
@@ -295,9 +300,9 @@ export function BoxDetail() {
 
         {b.audios.length > 0 && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-            <div style={{ fontSize: 16, fontWeight: 600, color: T.text }}>录入语音</div>
+            <div style={{ fontSize: 16, fontWeight: 600, color: T.text }}>{t('voice_notes')}</div>
             {b.audios.map((a, i) => (
-              <AudioRow key={i} url={api.mediaUrl(a)} index={i} />
+              <AudioRow key={i} url={api.mediaUrl(a)} index={i} lang={lang} />
             ))}
           </div>
         )}
@@ -312,7 +317,7 @@ export function BoxDetail() {
           }}
         >
           <MicIcon size={18} />
-          录入到此箱
+          {t('record_here')}
         </div>
       </div>
     </div>

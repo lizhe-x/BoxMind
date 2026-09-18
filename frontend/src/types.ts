@@ -61,6 +61,7 @@ export interface AgentResp {
   type: 'message' | 'confirm'
   text: string
   actions?: AgentAction[]
+  executed?: { tool: string; result: Record<string, unknown> }[] // non-destructive calls already run in this turn
 }
 
 export interface BoxRef {

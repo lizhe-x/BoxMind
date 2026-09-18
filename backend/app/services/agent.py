@@ -3,28 +3,35 @@ import json
 
 from sqlalchemy.orm import Session
 
+from ..i18n import lang_name, tr
 from ..models import User
 from . import agent_tools
 from .llm import llm
 
-_SYSTEM = """你是 BoxMind 的智能仓储助手。用户用自然语言下达操作指令
-(改位置、改名、加/删物品、移动物品、合并箱子、删箱、绑码等),你要调用合适的工具完成。
+_SYSTEM = """You are BoxMind's storage assistant. The user gives instructions in natural language about their
+storage boxes (change a location, rename, add or remove items, move items, merge boxes, delete a box,
+bind a barcode, ...). Call the right tools to carry them out.
 
-规则:
-- 能做就调工具做;一句话需要多步(如先搜物品在哪、再移动)就连续调用多个工具。
-- 指代不清时(例如多个箱子都有同名物品)不要乱猜,用一句话向用户反问澄清(直接回复文字、不调工具)。
-- 数量填最终值:用户说"再加3个"而当前是2个,你要算好填 ×5。
-- 全部做完后用一句简短中文汇报你做了什么。
-- 破坏性操作(删除/合并/清空)直接调对应工具即可,系统会向用户二次确认,你无需自己确认或追问。
+Rules:
+- If it can be done, do it with tools. One sentence may need several steps (e.g. search where an item is,
+  then move it): chain tool calls.
+- If a reference is ambiguous (e.g. several boxes hold an item with that name) do not guess; ask one short
+  clarifying question in plain text instead of calling a tool.
+- Quantities are final values: if the user says "add 3 more" and the box has 2, send ×5.
+- When everything is done, report what you did in one short sentence.
+- Destructive operations (delete / merge / empty) are fine to call directly; the app asks the user to
+  confirm them, you do not need to ask.
+- Answer in {lang}. Keep item names exactly as the user wrote them.
 
-下面是该用户当前所有箱子的快照(用于解析"7号""Liam""厨房箱"等指代,以及计算数量):
+Snapshot of the user's boxes (to resolve references like "box 7", "Liam", "the kitchen box" and to compute
+quantities):
 """
 
 
 async def run(db: Session, user: User, history: list[dict], message: str, gps: dict | None) -> dict:
     boxes = agent_tools.all_boxes(db, user)
     index = json.dumps([agent_tools.box_brief(b) for b in boxes], ensure_ascii=False)
-    messages: list[dict] = [{"role": "system", "content": _SYSTEM + index}]
+    messages: list[dict] = [{"role": "system", "content": _SYSTEM.format(lang=lang_name(user.lang)) + index}]
     for m in history or []:
         if m.get("role") in ("user", "assistant") and m.get("content"):
             messages.append({"role": m["role"], "content": m["content"]})
@@ -35,7 +42,7 @@ async def run(db: Session, user: User, history: list[dict], message: str, gps: d
         msg = await llm.chat_with_tools(messages, agent_tools.TOOLS)
         tool_calls = msg.get("tool_calls") or []
         if not tool_calls:
-            return {"type": "message", "text": (msg.get("content") or "好的。").strip()}
+            return {"type": "message", "text": (msg.get("content") or tr(user.lang, "agent_default_reply")).strip()}
 
         # 破坏性工具 → 暂停,交前端确认。同一轮里夹带的非破坏性调用(如"先移动再合并")照常执行,
         # 否则它们会随着暂停被静默丢弃,用户看到的只有确认卡。
@@ -46,18 +53,11 @@ async def run(db: Session, user: User, history: list[dict], message: str, gps: d
             for tc in tool_calls:
                 if tc["function"]["name"] in agent_tools.DESTRUCTIVE:
                     continue
-                try:
-                    args = json.loads(tc["function"]["arguments"] or "{}")
-                except json.JSONDecodeError:
-                    args = {}
-                result = await agent_tools.execute(db, user, tc["function"]["name"], args, ctx)
+                result = await agent_tools.execute(db, user, tc["function"]["name"], _args(tc), ctx)
                 executed.append({"tool": tc["function"]["name"], "result": result})
             actions = []
             for tc in pending:
-                try:
-                    args = json.loads(tc["function"]["arguments"] or "{}")
-                except json.JSONDecodeError:
-                    args = {}
+                args = _args(tc)
                 actions.append({
                     "tool": tc["function"]["name"],
                     "args": args,
@@ -73,15 +73,18 @@ async def run(db: Session, user: User, history: list[dict], message: str, gps: d
             "tool_calls": tool_calls,
         })
         for tc in tool_calls:
-            try:
-                args = json.loads(tc["function"]["arguments"] or "{}")
-            except json.JSONDecodeError:
-                args = {}
-            result = await agent_tools.execute(db, user, tc["function"]["name"], args, ctx)
+            result = await agent_tools.execute(db, user, tc["function"]["name"], _args(tc), ctx)
             messages.append({
                 "role": "tool",
                 "tool_call_id": tc["id"],
                 "content": json.dumps(result, ensure_ascii=False),
             })
 
-    return {"type": "message", "text": "已尽力处理完。"}
+    return {"type": "message", "text": tr(user.lang, "agent_step_cap")}
+
+
+def _args(tc: dict) -> dict:
+    try:
+        return json.loads(tc["function"]["arguments"] or "{}")
+    except json.JSONDecodeError:
+        return {}

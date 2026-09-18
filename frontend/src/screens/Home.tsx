@@ -2,10 +2,13 @@ import { useMemo, useRef, useState } from 'react'
 import type { PointerEvent as ReactPointerEvent } from 'react'
 import { T } from '../theme'
 import { CameraIcon, CheckIcon, ChevronIcon, MicIcon, ScanIcon } from '../components/Icons'
+import { makeT } from '../i18n'
 import { fmtItems, fmtTime, useStore } from '../store'
 import { useVoice } from '../voice'
 
 export function Home() {
+  const lang = useStore((s) => s.lang)
+  const t = makeT(lang)
   const me = useStore((s) => s.me)
   const boxes = useStore((s) => s.boxes)
   const go = useStore((s) => s.go)
@@ -88,7 +91,7 @@ export function Home() {
             BoxMind
           </div>
           <div style={{ fontSize: 12.5, color: T.textSub }}>
-            {boxCount} 个箱子 · {itemCount} 类物品已记住
+            {t('home_stats', { boxes: boxCount, items: itemCount })}
           </div>
         </div>
         <div
@@ -99,7 +102,7 @@ export function Home() {
           }}
         >
           <span style={{ width: 6, height: 6, borderRadius: '50%', background: T.green, display: 'inline-block' }} />
-          <span style={{ fontSize: 12.5, color: T.blue2, fontFamily: T.fontNum }}>无限次</span>
+          <span style={{ fontSize: 12.5, color: T.blue2, fontFamily: T.fontNum }}>{t('unlimited')}</span>
         </div>
       </div>
 
@@ -118,10 +121,10 @@ export function Home() {
               flexShrink: 0, fontFamily: T.fontNum, fontWeight: 700, fontSize: 17, color: T.ink,
             }}
           >
-            1号
+            {t('label_sample')}
           </div>
           <div style={{ fontSize: 13.5, lineHeight: 1.7, color: 'rgba(235,240,250,0.65)', textWrap: 'pretty' }}>
-            用马克笔在箱子上写个编号(如「1号」),点击下方按钮,说说里面装了什么。
+            {t('home_tip')}
           </div>
         </div>
       )}
@@ -144,7 +147,7 @@ export function Home() {
           </div>
           <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 3, minWidth: 0 }}>
             <div style={{ fontSize: 14, fontWeight: 600, color: T.text }}>
-              已记录到 {lastBox.name} · {fmtTime(lastBox.updated_at)}
+              {t('home_last', { name: lastBox.name, time: fmtTime(lastBox.updated_at, lang) })}
             </div>
             <div
               style={{
@@ -168,7 +171,7 @@ export function Home() {
             borderRadius: 999, padding: '7px 8px 7px 14px',
           }}
         >
-          <span style={{ fontSize: 12.5, color: T.amber }}>录入到 {targetBox.name}</span>
+          <span style={{ fontSize: 12.5, color: T.amber }}>{t('home_target', { name: targetBox.name })}</span>
           <span
             onClick={() => setTargetBox(null)}
             style={{
@@ -212,9 +215,9 @@ export function Home() {
             <MicIcon />
           </div>
         </div>
-        <div style={{ marginTop: 14, fontSize: 17, fontWeight: 600, color: T.text }}>按住说话</div>
-        <div style={{ marginTop: 5, fontSize: 13, color: targetBox ? T.amber : T.textWeak }}>
-          {targetBox ? `直接说物品,自动归入 ${targetBox.name}` : '录入物品,或直接提问 — AI 自动听懂'}
+        <div style={{ marginTop: 14, fontSize: 17, fontWeight: 600, color: T.text }}>{t('hold_to_talk')}</div>
+        <div style={{ marginTop: 5, fontSize: 13, color: targetBox ? T.amber : T.textWeak, textAlign: 'center', padding: '0 12px' }}>
+          {targetBox ? t('home_hint_target', { name: targetBox.name }) : t('home_hint')}
         </div>
       </div>
 
@@ -226,7 +229,7 @@ export function Home() {
           onKeyDown={(e) => {
             if (e.key === 'Enter') submitInput()
           }}
-          placeholder="输入文字录入或提问…"
+          placeholder={t('input_placeholder')}
           style={{
             flex: 1, height: 52, background: T.card, border: `1px solid ${T.border8}`,
             borderRadius: 999, padding: '0 18px', fontSize: 14.5, color: T.text,
@@ -273,7 +276,7 @@ export function Home() {
 
       {/* 示例芯片 */}
       <div style={{ display: 'flex', gap: 8, justifyContent: 'center', marginTop: 16, flexWrap: 'wrap' }}>
-        {['电钻在哪个箱子?', '我一共有几个箱子?'].map((q) => (
+        {[t('chip_where_drill'), t('chip_how_many')].map((q) => (
           <div
             key={q}
             onClick={() => {

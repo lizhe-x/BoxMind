@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { GradButton, ThinkingDots } from './common'
 import { CheckIcon, PencilIcon, PinIcon, SparkleIcon } from './Icons'
+import { boxNameFor, makeT } from '../i18n'
 import { useStore } from '../store'
 import { KRAFT, T } from '../theme'
 import type { ItemDraft } from '../types'
@@ -25,6 +26,8 @@ function ItemRows({ items, pad = '11px 2px' }: { items: ItemDraft[]; pad?: strin
 }
 
 export function EntryOverlay() {
+  const lang = useStore((s) => s.lang)
+  const t = makeT(lang)
   const phase = useStore((s) => s.entryPhase)
   const rawText = useStore((s) => s.rawText)
   const liveTranscript = useStore((s) => s.liveTranscript)
@@ -49,7 +52,7 @@ export function EntryOverlay() {
   const items = parsed?.items ?? []
   const matchedBox = targetBox || parsed?.box || null
   const boxLabel = matchedBox?.label || parsed?.box_label || ''
-  const boxName = matchedBox?.name || (boxLabel ? `${boxLabel}箱` : '新箱子')
+  const boxName = matchedBox?.name || (boxLabel ? boxNameFor(boxLabel, lang) : t('new_box_generic'))
   const isNewTarget = !matchedBox
   const badgeColors: [string, string] = matchedBox
     ? [matchedBox.color_a, matchedBox.color_b]
@@ -84,7 +87,7 @@ export function EntryOverlay() {
           <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 30 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'rgba(255,90,90,0.1)', border: '1px solid rgba(255,90,90,0.3)', borderRadius: 999, padding: '7px 16px' }}>
               <span style={{ width: 8, height: 8, borderRadius: '50%', background: T.red, display: 'inline-block', animation: 'bm-blink 1s infinite' }} />
-              <span style={{ fontSize: 13, color: T.red2 }}>正在听…</span>
+              <span style={{ fontSize: 13, color: T.red2 }}>{t('listening')}</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 6, height: 44 }}>
               {[
@@ -100,11 +103,11 @@ export function EntryOverlay() {
               ))}
             </div>
             <div style={{ fontSize: 20, lineHeight: 1.8, textAlign: 'center', minHeight: 120, textWrap: 'pretty', color: T.text }}>
-              {liveTranscript || <span style={{ color: T.textWeak }}>说出物品和位置,或问我找东西…</span>}
+              {liveTranscript || <span style={{ color: T.textWeak }}>{t('rec_ph')}</span>}
               <span style={{ display: 'inline-block', width: 2.5, height: 20, background: T.blue, marginLeft: 3, verticalAlign: 'middle', animation: 'bm-blink 0.8s infinite' }} />
             </div>
           </div>
-          <div style={{ textAlign: 'center', fontSize: 13, color: T.textWeak }}>松开手指结束 · AI 自动整理</div>
+          <div style={{ textAlign: 'center', fontSize: 13, color: T.textWeak }}>{t('rec_release')}</div>
         </>
       )}
 
@@ -119,7 +122,7 @@ export function EntryOverlay() {
             <div style={{ width: 28, height: 28, borderRadius: '50%', background: T.grad, display: 'flex', alignItems: 'center', justifyContent: 'center', animation: 'bm-glow 1.1s infinite' }}>
               <SparkleIcon size={14} />
             </div>
-            <span style={{ fontSize: 16, fontWeight: 500, color: T.blue2 }}>AI 正在整理…</span>
+            <span style={{ fontSize: 16, fontWeight: 500, color: T.blue2 }}>{t('parsing')}</span>
             <ThinkingDots size={5} />
           </div>
         </div>
@@ -132,7 +135,7 @@ export function EntryOverlay() {
             <span style={{ display: 'inline-flex', width: 24, height: 24, borderRadius: '50%', background: T.grad, alignItems: 'center', justifyContent: 'center' }}>
               <SparkleIcon size={12} />
             </span>
-            <span style={{ fontSize: 16, fontWeight: 600, color: T.text }}>AI 已整理,确认入库?</span>
+            <span style={{ fontSize: 16, fontWeight: 600, color: T.text }}>{t('confirm_title')}</span>
           </div>
           <div style={{ background: T.card, border: `1px solid ${T.border8}`, borderRadius: 22, padding: 18, display: 'flex', flexDirection: 'column', gap: 14, animation: 'bm-pop 0.35s ease both' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
@@ -149,7 +152,7 @@ export function EntryOverlay() {
               <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
                 <div style={{ fontSize: 16, fontWeight: 600, color: T.text }}>{boxName}</div>
                 <div style={{ fontSize: 11.5, color: isNewTarget ? T.green : T.textSub }}>
-                  {isNewTarget ? '新箱子 · 自动创建' : '已有箱子 · 追加入库'}
+                  {isNewTarget ? t('new_box_auto') : t('existing_append')}
                 </div>
               </div>
             </div>
@@ -165,7 +168,7 @@ export function EntryOverlay() {
               </div>
             )}
           </div>
-          <div style={{ fontSize: 12, color: T.textWeak35, lineHeight: 1.6, padding: '0 4px' }}>原话:{rawText}</div>
+          <div style={{ fontSize: 12, color: T.textWeak35, lineHeight: 1.6, padding: '0 4px' }}>{t('original', { text: rawText })}</div>
           <div style={{ display: 'flex', gap: 10, marginTop: 4 }}>
             <div
               onClick={toEdit}
@@ -175,10 +178,10 @@ export function EntryOverlay() {
                 color: 'rgba(235,240,250,0.7)', cursor: 'pointer',
               }}
             >
-              修正
+              {t('fix')}
             </div>
             <GradButton onClick={confirmEntry} flex={2} style={{ opacity: busy ? 0.6 : 1 }}>
-              {busy ? '入库中…' : '确认入库'}
+              {busy ? t('saving') : t('confirm_save')}
             </GradButton>
           </div>
         </div>
@@ -191,12 +194,12 @@ export function EntryOverlay() {
             <span style={{ display: 'inline-flex', width: 24, height: 24, borderRadius: '50%', background: T.grad, alignItems: 'center', justifyContent: 'center' }}>
               <SparkleIcon size={12} />
             </span>
-            <span style={{ fontSize: 16, fontWeight: 600, color: T.text }}>已整理 {items.length} 类物品 — 放进哪个箱子?</span>
+            <span style={{ fontSize: 16, fontWeight: 600, color: T.text }}>{t('askbox_title', { n: items.length })}</span>
           </div>
           <div style={{ background: T.card, border: `1px solid ${T.border8}`, borderRadius: 18, padding: '6px 16px', animation: 'bm-pop 0.35s ease both' }}>
             <ItemRows items={items} pad="10px 0" />
           </div>
-          <div style={{ fontSize: 12.5, color: T.textWeak }}>你这次没说箱号 — 选一个已有的,或让我自动起号</div>
+          <div style={{ fontSize: 12.5, color: T.textWeak }}>{t('askbox_hint')}</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 9 }}>
             <div
               onClick={pickNewBox}
@@ -216,10 +219,10 @@ export function EntryOverlay() {
                 {parsed.next_label}
               </div>
               <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 2 }}>
-                <div style={{ fontSize: 14.5, fontWeight: 600, color: T.amber }}>新建 {parsed.next_label}箱</div>
-                <div style={{ fontSize: 11.5, color: T.textWeak }}>自动取下一个编号 · GPS 同时记录</div>
+                <div style={{ fontSize: 14.5, fontWeight: 600, color: T.amber }}>{t('new_box_n', { name: boxNameFor(parsed.next_label, lang) })}</div>
+                <div style={{ fontSize: 11.5, color: T.textWeak }}>{t('new_box_desc')}</div>
               </div>
-              <div style={{ fontSize: 10.5, color: T.amber, background: 'rgba(242,192,120,0.12)', borderRadius: 999, padding: '3px 9px' }}>推荐</div>
+              <div style={{ fontSize: 10.5, color: T.amber, background: 'rgba(242,192,120,0.12)', borderRadius: 999, padding: '3px 9px' }}>{t('recommended')}</div>
             </div>
             {recent.map((p) => (
               <div
@@ -244,14 +247,14 @@ export function EntryOverlay() {
                 <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 2, minWidth: 0 }}>
                   <div style={{ fontSize: 14.5, fontWeight: 600, color: T.text }}>{p.name}</div>
                   <div style={{ fontSize: 11.5, color: T.textWeak, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                    {p.location_text || '位置待补充'}
+                    {p.location_text || t('location_pending')}
                   </div>
                 </div>
               </div>
             ))}
           </div>
           <div onClick={closeEntry} style={{ alignSelf: 'center', fontSize: 13, color: T.textWeak, cursor: 'pointer', padding: '2px 10px' }}>
-            取消
+            {t('cancel')}
           </div>
         </div>
       )}
@@ -259,7 +262,7 @@ export function EntryOverlay() {
       {/* ── 修正文本 ── */}
       {phase === 'edit' && (
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 14 }}>
-          <div style={{ fontSize: 16, fontWeight: 600, color: T.text }}>修正内容</div>
+          <div style={{ fontSize: 16, fontWeight: 600, color: T.text }}>{t('edit_title')}</div>
           <textarea
             defaultValue={rawText}
             autoFocus
@@ -279,7 +282,7 @@ export function EntryOverlay() {
                 color: 'rgba(235,240,250,0.7)', cursor: 'pointer',
               }}
             >
-              取消
+              {t('cancel')}
             </div>
             <GradButton
               onClick={() => {
@@ -288,7 +291,7 @@ export function EntryOverlay() {
               }}
               flex={2}
             >
-              重新解析
+              {t('reparse')}
             </GradButton>
           </div>
         </div>
@@ -306,7 +309,7 @@ export function EntryOverlay() {
           >
             <CheckIcon size={40} color="#fff" width={3} />
           </div>
-          <div style={{ fontSize: 21, fontWeight: 700, color: T.text }}>{doneInfo.title}</div>
+          <div style={{ fontSize: 21, fontWeight: 700, color: T.text, textAlign: 'center' }}>{doneInfo.title}</div>
           <div style={{ fontSize: 13.5, lineHeight: 1.9, color: T.textSub55, textAlign: 'center' }}>
             {doneInfo.line1}
             <br />
@@ -336,10 +339,10 @@ export function EntryOverlay() {
                 color: T.blue2, cursor: 'pointer',
               }}
             >
-              查看箱子
+              {t('view_box')}
             </div>
             <GradButton onClick={closeEntry} flex={1}>
-              完成
+              {t('done')}
             </GradButton>
           </div>
         </div>

@@ -5,57 +5,61 @@ from collections.abc import AsyncIterator
 import httpx
 
 from ..config import settings
+from ..i18n import lang_name, tr
 
-_INTERPRET_SYSTEM = """你是 BoxMind(箱子物品管理应用)的解析引擎。用户会说一句话,可能是「录入物品」或「查询/提问」。
-你必须只输出一个 JSON 对象,不要输出任何其他文字。结构:
+_INTERPRET_SYSTEM = """You are the parsing engine of BoxMind, an app that remembers what is stored in which box.
+The user says one sentence. Classify it and extract structure. Output exactly one JSON object and nothing else:
 
-{
+{{
   "intent": "ingest" | "query" | "operation",
-  "box_label": string | null,      // 用户提到的箱子编号/名字,原样保留,如 "1号"、"A2"、"红色大箱";没提到则 null
-  "items": [{"name": string, "qty_text": string}],   // intent=ingest 时的物品列表,否则 []
-  "location_text": string | null,  // 用户描述的存放位置,如 "车库左侧第二层货架";没说则 null
-  "language": "zh" | "en" | "es"   // 用户这句话的语言
-}
+  "box_label": string | null,      // box label/name as the user said it ("1", "1号", "A2", "red box"); null if none
+  "items": [{{"name": string, "qty_text": string}}],   // items when intent=ingest, otherwise []
+  "location_text": string | null,  // where the box is, e.g. "garage, left shelf, second tier"; null if not said
+  "language": "zh" | "en" | "es"   // the language of this sentence
+}}
 
-规则:
-- 只有"把东西放进箱子" 才是 ingest: "1号箱我放了羽绒服三件" → intent=ingest, box_label="1号"
-- 提问/找东西/统计 → query: "我的雪地靴在哪" / "3号箱里有什么" / "我有几个箱子"
-- 其它对箱子/物品的"操作"一律 → operation(这类只需返回 intent=operation,其它字段可空):
-  改位置("7号箱在厨房水槽下面")、改名("3号箱改名叫工具箱")、合并("把6号并到7号")、
-  删箱/删物品("删掉钳子")、移动("把电钻移到5号")、清空、绑码、记录当前GPS位置、
-  撤销/还原/撤回("撤销""撤销上一步""还原")
-- qty_text 格式: "×3"、"×2 双"、"×1 袋";数量不明确用 "若干"
-- box_label 归一化: "1号箱"/"Box 1"/"一号" 都写成 "1号";
-  字母/中文编号原样保留(去掉末尾的"箱"字,如"红色大箱"→"红色大箱"保留原样)
-- 物品名称保持用户用语,不要翻译
-- 录入语句里的位置描述放 location_text,不要混进 items"""
+Rules:
+- ingest = putting things into a box: "box 1 has three down jackets" → intent=ingest, box_label="1"
+- query = asking / looking for / counting: "where are my snow boots", "what is in box 3", "how many boxes do I have"
+- everything else that changes boxes or items → operation (only intent matters, other fields may be empty):
+  change location ("box 7 is under the kitchen sink"), rename ("call box 3 the tool box"), merge ("merge 6 into 7"),
+  delete a box or item ("remove the pliers"), move ("move the drill to box 5"), empty, bind a code,
+  record the current GPS position, undo / revert / restore.
+- qty_text format: "×3", "×2 pairs", "×1 bag"; use "{some}" when the quantity is unclear
+- box_label: normalise numeric labels to the bare number ("box 1" / "1号箱" / "一号" → "1");
+  keep letter or word labels as written, dropping a trailing "box"/"箱"
+- keep item names in the user's own words, do not translate them
+- a location mentioned in an ingest sentence goes to location_text, not into items"""
 
-_VISION_SYSTEM = """你是 BoxMind 的拍照识别引擎。用户拍了一张「打开的收纳箱」照片,
-你要识别箱内物品,并尽量读出箱子上的手写编号。
-只输出一个 JSON 对象,不要任何其他文字。结构:
+_VISION_SYSTEM = """You are BoxMind's photo intake engine. The user photographed an open storage box. Identify the items
+inside and, if visible, read the handwritten label on the box. Output exactly one JSON object and nothing else:
 
-{
-  "box_label": string | null,   // 照片里箱子上的手写编号(如 "2号"、"A2");看不到则 null
+{{
+  "box_label": string | null,   // handwritten label on the box, e.g. "2", "A2"; null if not visible
   "items": [
-    {"name": string, "qty_text": string, "confidence": "high" | "medium" | "low"}
+    {{"name": string, "qty_text": string, "confidence": "high" | "medium" | "low"}}
   ]
-}
+}}
 
-规则:
-- 只识别能看清的实物;每类物品一行,name 用中文常见叫法
-- qty_text 格式 "×3"、"×2 双";数量不确定用 "若干"
-- confidence: 清楚可辨 high,较模糊 medium,猜测 low
-- 看不出任何物品时 items 为空数组"""
+Rules:
+- only list physical items you can actually see; one line per kind of item; item names in {lang}
+- qty_text format "×3", "×2 pairs"; use "{some}" when unsure
+- confidence: clearly visible → high, partly visible → medium, a guess → low
+- if nothing recognisable is in the photo, items is an empty array"""
 
-_ANSWER_SYSTEM = """你是 BoxMind 的 AI 助手,帮用户找到存放在箱子里的物品。下面提供了该用户的全部箱子数据(JSON)。
+_ANSWER_SYSTEM = """You are BoxMind's assistant. You help the user find things stored in their boxes.
+Below is all of the user's box data as JSON.
 
-回答规则:
-- 用用户提问的语言回答(中文问答中文,英文问答英文,西语问答西语);物品名保留录入时的原文
-- 跨语言语义匹配: 比如用户问 "snow boots"、数据里是 "雪地靴",要能对上;"保暖的衣服" 能匹配 "羽绒服"
-- 回答要具体: 在哪个箱子、数量、位置描述、最后更新时间;聚合问题(几个箱子、哪些没记位置)直接基于数据统计
-- 找不到就如实说没有记录,并提示用户可能没录入过
-- 口语化、简洁,2~3 句话以内,不用列表不用 markdown
-- 「相关度参考」是向量检索的提示,仅供参考,以完整数据为准"""
+Rules:
+- answer in the language the question was asked in (Chinese → Chinese, English → English, Spanish → Spanish); keep
+  item names exactly as they were recorded
+- match meaning across languages: a question about "snow boots" matches an item recorded as "雪地靴";
+  "warm clothes" matches "down jacket"
+- be specific: which box, how many, the location description, when it was last updated; for aggregate questions
+  (how many boxes, which boxes have no location) count from the data
+- if there is no record, say so and suggest the item may never have been recorded
+- conversational, at most 2–3 sentences, plain text only: no lists, no markdown, no bold
+- the "relevance hints" come from vector search and are only hints; the full data is authoritative"""
 
 
 class LLM:
@@ -66,13 +70,14 @@ class LLM:
         }
         self._url = f"{settings.llm_base_url}/chat/completions"
 
-    async def interpret(self, text: str, known_labels: list[str]) -> dict:
-        hint = f"该用户已有的箱子编号: {', '.join(known_labels)}" if known_labels else "该用户还没有任何箱子"
+    async def interpret(self, text: str, known_labels: list[str], lang: str | None = None) -> dict:
+        hint = f"The user's existing box labels: {', '.join(known_labels)}" if known_labels \
+            else "The user has no boxes yet"
         payload = {
             "model": settings.llm_model,
             "messages": [
-                {"role": "system", "content": _INTERPRET_SYSTEM},
-                {"role": "user", "content": f"{hint}\n\n用户的话: {text}"},
+                {"role": "system", "content": _INTERPRET_SYSTEM.format(some=tr(lang, "qty_some"))},
+                {"role": "user", "content": f"{hint}\n\nUser said: {text}"},
             ],
             "temperature": 0,
             "response_format": {"type": "json_object"},
@@ -88,19 +93,20 @@ class LLM:
         parsed.setdefault("box_label", None)
         parsed.setdefault("items", [])
         parsed.setdefault("location_text", None)
-        parsed.setdefault("language", "zh")
+        parsed.setdefault("language", lang or "en")
         parsed["_tokens"] = usage
         return parsed
 
-    async def recognize_image(self, image_b64: str, mime: str = "image/jpeg") -> dict:
+    async def recognize_image(self, image_b64: str, mime: str = "image/jpeg", lang: str | None = None) -> dict:
         payload = {
             "model": settings.vision_model,
             "messages": [
-                {"role": "system", "content": _VISION_SYSTEM},
+                {"role": "system", "content": _VISION_SYSTEM.format(lang=lang_name(lang), some=tr(lang, "qty_some"))},
                 {
                     "role": "user",
                     "content": [
-                        {"type": "text", "text": "识别这张收纳箱照片里的物品和手写编号,按要求输出 JSON。"},
+                        {"type": "text", "text": "Identify the items and the handwritten label in this photo of a "
+                                                 "storage box. Output JSON as instructed."},
                         {"type": "image_url", "image_url": {"url": f"data:{mime};base64,{image_b64}"}},
                     ],
                 },
@@ -141,9 +147,9 @@ class LLM:
                 {
                     "role": "user",
                     "content": (
-                        f"箱子数据:\n{context_json}\n\n"
-                        f"相关度参考(向量检索 top 命中): {relevant_hint}\n\n"
-                        f"用户提问: {question}"
+                        f"Box data:\n{context_json}\n\n"
+                        f"Relevance hints (top vector-search hits): {relevant_hint}\n\n"
+                        f"Question: {question}"
                     ),
                 },
             ],

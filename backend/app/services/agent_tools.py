@@ -1,11 +1,12 @@
 """Agent 工具注册表:模型可调用的底层操作(读/增量/修改)。
 
 破坏性工具(删/合并/清空)在 agent_destructive.py,由 agent 暂停确认后再执行。
-这里的执行器都是「直接执行」类。
+这里的执行器都是「直接执行」类。工具结果里的文字用用户界面语言(模型会照着转述)。
 """
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session, selectinload
 
+from ..i18n import tr
 from ..models import Box, Item, User
 from ..normalize import normalize_label
 from . import boxes_service, embeddings
@@ -41,10 +42,10 @@ def dedup_name(db: Session, user: User, name: str) -> tuple[str, bool]:
 
 def box_brief(box: Box) -> dict:
     return {
-        "编号": box.label,
-        "名字": box.name,
-        "位置": box.location_text or "未记录",
-        "物品": [{"名称": it.name, "数量": it.qty_text} for it in box.items],
+        "label": box.label,
+        "name": box.name,
+        "location": box.location_text or None,
+        "items": [{"name": it.name, "qty": it.qty_text} for it in box.items],
     }
 
 
@@ -64,37 +65,41 @@ def _f(name, desc, props, required):
 
 _S = {"type": "string"}
 _SA = {"type": "array", "items": {"type": "string"}}
+_BOX = {**_S, "description": "box label or name, e.g. 7, 7号, Liam, kitchen box"}
 
 TOOLS = [
-    _f("search_items", "按关键词语义搜索用户所有箱子里的物品,返回命中物品及所在箱子",
-       {"query": {**_S, "description": "要找的物品关键词"}}, ["query"]),
-    _f("get_box", "查看某个箱子的详情(物品、位置)", {"box": {**_S, "description": "箱子编号或名字"}}, ["box"]),
-    _f("create_box", "新建一个空箱子(可带位置)",
-       {"name": {**_S, "description": "箱子名字/编号,如 7号 或 Liam"},
-        "location_text": {**_S, "description": "可选,位置描述"}}, ["name"]),
-    _f("add_items", "往某箱子加物品(箱子不存在则自动新建);同名物品会更新为给定数量",
-       {"box": _S, "items": {"type": "array", "items": {"type": "object", "properties": {
-           "name": _S, "qty_text": {**_S, "description": "如 ×3、×2 双、若干"}}, "required": ["name"]}}},
+    _f("search_items", "Semantic search over all of the user's items; returns matching items and the box they are in",
+       {"query": {**_S, "description": "what to look for"}}, ["query"]),
+    _f("get_box", "Show one box: its items and location", {"box": _BOX}, ["box"]),
+    _f("create_box", "Create a new empty box (optionally with a location)",
+       {"name": {**_S, "description": "box label or name, e.g. 7 or Liam"},
+        "location_text": {**_S, "description": "optional location description"}}, ["name"]),
+    _f("add_items", "Add items to a box (the box is created if it does not exist); an item with the same name "
+                    "is updated to the given quantity",
+       {"box": _BOX, "items": {"type": "array", "items": {"type": "object", "properties": {
+           "name": _S, "qty_text": {**_S, "description": "e.g. ×3, ×2 pairs, some"}}, "required": ["name"]}}},
        ["box", "items"]),
-    _f("set_box_location", "设置/更新箱子的文字位置描述",
-       {"box": _S, "location_text": _S}, ["box", "location_text"]),
-    _f("set_box_gps", "把用户当前 GPS 位置记录到某箱子(用户说'记一下我现在的位置'时用)",
-       {"box": _S}, ["box"]),
-    _f("rename_box", "修改箱子的名字/编号(重名会自动加后缀)",
-       {"box": {**_S, "description": "当前编号或名字"}, "new_name": {**_S, "description": "新名字"}},
+    _f("set_box_location", "Set or update the box's location description",
+       {"box": _BOX, "location_text": _S}, ["box", "location_text"]),
+    _f("set_box_gps", "Store the user's current GPS position on a box (when the user says 'remember where I am')",
+       {"box": _BOX}, ["box"]),
+    _f("rename_box", "Rename a box (a duplicate name gets a numeric suffix)",
+       {"box": {**_S, "description": "current label or name"}, "new_name": {**_S, "description": "new name"}},
        ["box", "new_name"]),
-    _f("update_item", "修改箱子里某个物品的名称或数量(数量为最终值,累加/覆盖由你算好)",
-       {"box": _S, "item_name": _S, "new_name": _S, "qty_text": _S}, ["box", "item_name"]),
-    _f("move_items", "把若干物品从一个箱子移到另一个箱子",
-       {"from_box": _S, "to_box": _S, "item_names": _SA}, ["from_box", "to_box", "item_names"]),
-    _f("set_barcode", "给箱子绑定条码/二维码码值", {"box": _S, "code": _S}, ["box", "code"]),
-    _f("undo_last", "撤销上一步破坏性操作(删除/合并/清空),把数据还原(用户说'撤销''撤回''还原'时用)", {}, []),
+    _f("update_item", "Change an item's name or quantity in a box (quantity is the final value; you compute "
+                      "additions yourself)",
+       {"box": _BOX, "item_name": _S, "new_name": _S, "qty_text": _S}, ["box", "item_name"]),
+    _f("move_items", "Move items from one box to another",
+       {"from_box": _BOX, "to_box": _BOX, "item_names": _SA}, ["from_box", "to_box", "item_names"]),
+    _f("set_barcode", "Bind a barcode / QR code value to a box", {"box": _BOX, "code": _S}, ["box", "code"]),
+    _f("undo_last", "Undo the last destructive operation (delete / merge / empty) and restore the data "
+                    "(when the user says undo / revert / restore)", {}, []),
     # ── 破坏性(系统会向用户二次确认后才执行) ──
-    _f("delete_item", "从某箱子删除一个物品", {"box": _S, "item_name": _S}, ["box", "item_name"]),
-    _f("delete_box", "删除整个箱子(连同里面的物品)", {"box": _S}, ["box"]),
-    _f("empty_box", "清空箱子里的所有物品,但保留箱子本身", {"box": _S}, ["box"]),
-    _f("merge_boxes", "把若干来源箱子合并到目标箱子(来源物品并入目标,来源空箱删除)",
-       {"source_boxes": _SA, "target_box": _S}, ["source_boxes", "target_box"]),
+    _f("delete_item", "Delete one item from a box", {"box": _BOX, "item_name": _S}, ["box", "item_name"]),
+    _f("delete_box", "Delete a whole box including its items", {"box": _BOX}, ["box"]),
+    _f("empty_box", "Remove all items from a box but keep the box", {"box": _BOX}, ["box"]),
+    _f("merge_boxes", "Merge source boxes into a target box (items move to the target, emptied sources are deleted)",
+       {"source_boxes": _SA, "target_box": _BOX}, ["source_boxes", "target_box"]),
 ]
 
 DESTRUCTIVE: set[str] = {"delete_item", "delete_box", "empty_box", "merge_boxes"}
@@ -104,14 +109,14 @@ DESTRUCTIVE: set[str] = {"delete_item", "delete_box", "empty_box", "merge_boxes"
 async def execute(db: Session, user: User, name: str, args: dict, ctx: dict) -> dict:
     fn = _EXEC.get(name)
     if not fn:
-        return {"ok": False, "error": f"未知工具 {name}"}
+        return {"ok": False, "error": tr(user.lang, "tool_unknown", name=name)}
     try:
         return await fn(db, user, args, ctx)
     except _ToolError as e:
         return {"ok": False, "error": str(e)}
     except KeyError as e:
         # 模型漏传/错传参数(或 arguments 不是合法 JSON)时,把问题回灌给模型而不是让整个请求 500
-        return {"ok": False, "error": f"缺少参数 {e.args[0]}"}
+        return {"ok": False, "error": tr(user.lang, "tool_missing_arg", arg=e.args[0])}
 
 
 class _ToolError(Exception):
@@ -121,7 +126,7 @@ class _ToolError(Exception):
 def _need_box(db, user, ref):
     box = resolve_box(db, user, ref)
     if not box:
-        raise _ToolError(f"没找到箱子「{ref}」")
+        raise _ToolError(tr(user.lang, "box_not_found", ref=ref))
     return box
 
 
@@ -135,7 +140,7 @@ async def _search_items(db, user, args, ctx):
         .order_by("d").limit(8)
     ).all()
     return {"ok": True, "results": [
-        {"物品": r.name, "数量": r.qty_text, "箱子编号": r.label, "箱名": r[3], "相似度": round(1 - r.d, 2)}
+        {"item": r.name, "qty": r.qty_text, "box_label": r.label, "box_name": r[3], "similarity": round(1 - r.d, 2)}
         for r in rows
     ]}
 
@@ -149,7 +154,7 @@ async def _create_box(db, user, args, ctx):
     box = boxes_service.create_box(db, user, name, location_text=args.get("location_text"))
     db.commit()
     return {"ok": True, "created": box.label, "renamed_to": name if duped else None,
-            "note": f"名字重复,已建为「{name}」" if duped else None}
+            "note": tr(user.lang, "dup_created", name=name) if duped else None}
 
 
 async def _add_items(db, user, args, ctx):
@@ -159,13 +164,14 @@ async def _add_items(db, user, args, ctx):
         name, _ = dedup_name(db, user, args["box"].strip())
         box = boxes_service.create_box(db, user, name, source="text")
         created = True
+    some = tr(user.lang, "qty_some")
     items = [
-        {"name": it["name"], "qty_text": it.get("qty_text") or "若干"}
+        {"name": it["name"], "qty_text": it.get("qty_text") or some}
         for it in args.get("items", [])
         if it.get("name")
     ]
     if not items:
-        raise _ToolError("没有要添加的物品")
+        raise _ToolError(tr(user.lang, "no_items"))
     await boxes_service.add_items(db, box, items)
     db.commit()
     return {"ok": True, "box": box.label, "created_box": created, "added": [i["name"] for i in items]}
@@ -181,7 +187,7 @@ async def _set_box_location(db, user, args, ctx):
 async def _set_box_gps(db, user, args, ctx):
     gps = ctx.get("gps")
     if not gps or gps.get("lat") is None:
-        return {"ok": False, "error": "当前没有可用的 GPS 位置(用户未授权定位)"}
+        return {"ok": False, "error": tr(user.lang, "gps_unavailable")}
     box = _need_box(db, user, args["box"])
     box.gps_lat, box.gps_lng = gps["lat"], gps["lng"]
     db.commit()
@@ -191,11 +197,11 @@ async def _set_box_gps(db, user, args, ctx):
 async def _rename_box(db, user, args, ctx):
     box = _need_box(db, user, args["box"])
     new_name, duped = dedup_name(db, user, args["new_name"].strip())
-    norm, label, _ = normalize_label(new_name)
+    norm, label, _ = normalize_label(new_name, user.lang)
     box.norm_label, box.label, box.name = norm, label, new_name
     db.commit()
     return {"ok": True, "box": new_name, "renamed_from": args["box"],
-            "note": f"名字重复,已改为「{new_name}」" if duped else None}
+            "note": tr(user.lang, "dup_renamed", name=new_name) if duped else None}
 
 
 async def _update_item(db, user, args, ctx):
@@ -205,7 +211,7 @@ async def _update_item(db, user, args, ctx):
     if not item:
         item = next((it for it in box.items if target in it.name or it.name in target), None)
     if not item:
-        raise _ToolError(f"「{box.label}」里没找到物品「{target}」")
+        raise _ToolError(tr(user.lang, "item_not_found", item=target, box=box.label))
     if args.get("new_name"):
         item.name = args["new_name"]
     if args.get("qty_text"):
@@ -226,7 +232,7 @@ async def _move_items(db, user, args, ctx):
             moved.append(it.name)
     db.commit()
     return {"ok": True, "from": src.label, "to": dst.label, "moved": moved} if moved \
-        else {"ok": False, "error": "没找到要移动的物品"}
+        else {"ok": False, "error": tr(user.lang, "move_none")}
 
 
 async def _set_barcode(db, user, args, ctx):

@@ -3,13 +3,14 @@ import type { PointerEvent as ReactPointerEvent } from 'react'
 import { AiAvatar, Cursor, ThinkingDots } from '../components/common'
 import { BackIcon, CameraIcon, ChevronIcon, MicIcon, ScanIcon, SpeakerIcon } from '../components/Icons'
 import { api } from '../api'
+import { makeT } from '../i18n'
 import { distText, plainText, useStore } from '../store'
 import { T } from '../theme'
 import { useVoice } from '../voice'
 
-const SUGGESTED = ['电钻在哪个箱子?', '我一共有几个箱子?', '哪些箱子还没记位置?']
-
 export function Ask() {
+  const lang = useStore((s) => s.lang)
+  const t = makeT(lang)
   const askMsgs = useStore((s) => s.askMsgs)
   const thinking = useStore((s) => s.thinking)
   const ask = useStore((s) => s.ask)
@@ -29,7 +30,9 @@ export function Ask() {
   const voice = useVoice()
   const recordingRef = useRef(false)
 
-  const speak = async (idx: number, t: string) => {
+  const suggested = [t('chip_where_drill'), t('chip_how_many'), t('chip_no_location')]
+
+  const speak = async (idx: number, txt: string) => {
     if (audioRef.current) {
       audioRef.current.pause()
       audioRef.current = null
@@ -40,7 +43,7 @@ export function Ask() {
     }
     setSpeakingIdx(idx)
     try {
-      const blob = await api.tts(t)
+      const blob = await api.tts(txt)
       const url = URL.createObjectURL(blob)
       const audio = new Audio(url)
       audioRef.current = audio
@@ -52,7 +55,7 @@ export function Ask() {
       await audio.play()
     } catch {
       setSpeakingIdx(null)
-      showToast('语音合成失败')
+      showToast(t('tts_failed'))
     }
   }
 
@@ -61,7 +64,7 @@ export function Ask() {
   }, [askMsgs, thinking])
 
   const asked = new Set(askMsgs.filter((m) => m.who === 'user').map((m) => m.text))
-  const chips = SUGGESTED.filter((q) => !asked.has(q))
+  const chips = suggested.filter((q) => !asked.has(q))
 
   const send = async (q: string) => {
     const v = q.trim()
@@ -91,9 +94,9 @@ export function Ask() {
       if (!recordingRef.current) return
       recordingRef.current = false
       setListening(false)
-      void voice.stop().then(({ text }) => {
-        if (text.trim()) send(text)
-        else showToast('没听清,直接打字问我吧')
+      void voice.stop().then(({ text: heard }) => {
+        if (heard.trim()) send(heard)
+        else showToast(t('not_heard_type'))
       })
     }
     window.addEventListener('pointerup', onUp)
@@ -102,7 +105,7 @@ export function Ask() {
         window.removeEventListener('pointerup', onUp)
         recordingRef.current = false
         setListening(false)
-        showToast('麦克风不可用,直接打字问我吧')
+        showToast(t('mic_unavailable'))
       }
     })
   }
@@ -122,8 +125,8 @@ export function Ask() {
           <BackIcon />
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-          <div style={{ fontSize: 16, fontWeight: 600, color: T.text }}>问 BoxMind</div>
-          <div style={{ fontSize: 11.5, color: T.textWeak }}>中 / 英 / 西 · 跨语言都能查</div>
+          <div style={{ fontSize: 16, fontWeight: 600, color: T.text }}>{t('ask_title')}</div>
+          <div style={{ fontSize: 11.5, color: T.textWeak }}>{t('ask_sub')}</div>
         </div>
       </div>
 
@@ -158,12 +161,12 @@ export function Ask() {
                   >
                     <SpeakerIcon color={speakingIdx === i ? T.blue2 : T.textSub} />
                     <span style={{ fontSize: 12, color: speakingIdx === i ? T.blue2 : T.textSub }}>
-                      {speakingIdx === i ? '播放中…' : '朗读'}
+                      {speakingIdx === i ? t('playing') : t('read_aloud')}
                     </span>
                   </div>
                 )}
                 {m.boxes?.map((box) => {
-                  const dist = distText(userPos, box.gps_lat, box.gps_lng)
+                  const dist = distText(userPos, box.gps_lat, box.gps_lng, lang)
                   return (
                     <div
                       key={box.id}
@@ -187,7 +190,7 @@ export function Ask() {
                       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 2, minWidth: 0 }}>
                         <div style={{ fontSize: 14.5, fontWeight: 600, color: T.text }}>{box.name}</div>
                         <div style={{ fontSize: 12, color: T.textSub, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                          {[box.location_text, dist].filter(Boolean).join(' · ') || '位置待补充'}
+                          {[box.location_text, dist].filter(Boolean).join(' · ') || t('location_pending')}
                         </div>
                       </div>
                       <ChevronIcon />
@@ -196,7 +199,7 @@ export function Ask() {
                 })}
                 {m.confirm && m.confirm.length > 0 && (
                   <div style={{ background: T.card, border: '1px solid rgba(255,90,90,0.3)', borderRadius: 16, padding: '13px 15px', display: 'flex', flexDirection: 'column', gap: 10, animation: 'bm-fadeUp 0.3s ease both' }}>
-                    <div style={{ fontSize: 12.5, color: T.red2 }}>以下操作需要确认:</div>
+                    <div style={{ fontSize: 12.5, color: T.red2 }}>{t('confirm_needed')}</div>
                     {m.confirm.map((a, ai) => (
                       <div key={ai} style={{ fontSize: 14, color: T.text, lineHeight: 1.5 }}>· {a.summary}</div>
                     ))}
@@ -205,14 +208,14 @@ export function Ask() {
                         onClick={agentCancel}
                         style={{ flex: 1, height: 42, borderRadius: 999, border: '1px solid rgba(255,255,255,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, color: 'rgba(235,240,250,0.7)', cursor: 'pointer' }}
                       >
-                        取消
+                        {t('cancel')}
                       </div>
                       <div
                         className="bm-press98"
                         onClick={() => agentConfirm(m.confirm!)}
                         style={{ flex: 1, height: 42, borderRadius: 999, background: 'linear-gradient(135deg,#FF5A5A,#FF8A8A)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 600, color: '#fff', cursor: 'pointer' }}
                       >
-                        确认执行
+                        {t('confirm_run')}
                       </div>
                     </div>
                   </div>
@@ -257,7 +260,7 @@ export function Ask() {
             onKeyDown={(e) => {
               if (e.key === 'Enter') send(text)
             }}
-            placeholder={listening ? '正在听…' : '问我东西在哪…'}
+            placeholder={listening ? t('listening') : t('ask_ph')}
             style={{
               flex: 1, height: 46, background: T.card,
               border: `1px solid ${listening ? 'rgba(255,90,90,0.4)' : T.border8}`,

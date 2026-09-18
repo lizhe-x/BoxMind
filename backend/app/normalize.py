@@ -1,15 +1,20 @@
 """箱子编号归一化: "1号" = "1号箱" = "Box 1" = "box1" = "1" 指向同一个箱子。
 
-norm_label 是匹配键;display label 保留用户原始风格(数字统一为 "N号")。
+norm_label 是匹配键(语言无关);display label / 默认名字按用户界面语言生成:
+en → label "1", name "Box 1";zh → label "1号", name "1号箱"。
 """
 
 import re
+
+from .i18n import tr
 
 _FULLWIDTH = str.maketrans("０１２３４５６７８９ＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺ",
                            "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ")
 
 _CN_DIGITS = {"零": 0, "一": 1, "二": 2, "两": 2, "三": 3, "四": 4, "五": 5,
               "六": 6, "七": 7, "八": 8, "九": 9, "十": 10}
+
+_CJK = re.compile(r"[㐀-鿿]")
 
 
 def _cn_to_int(s: str) -> int | None:
@@ -31,7 +36,7 @@ def _cn_to_int(s: str) -> int | None:
 def extract_number(raw: str) -> int | None:
     """从任意写法里抽出纯数字编号;非纯数字编号返回 None。"""
     s = raw.strip().translate(_FULLWIDTH)
-    m = re.fullmatch(r"(?:box|箱子?|no\.?|#)?\s*(\d+)\s*(?:号箱?|号|箱)?", s, re.IGNORECASE)
+    m = re.fullmatch(r"(?:box|箱子?|no\.?|#)?\s*(\d+)\s*(?:号箱?|号|箱|box)?", s, re.IGNORECASE)
     if m:
         return int(m.group(1))
     m = re.fullmatch(r"([零一二两三四五六七八九十]+)\s*号?箱?", s)
@@ -40,18 +45,18 @@ def extract_number(raw: str) -> int | None:
     return None
 
 
-def normalize_label(raw: str) -> tuple[str, str, str]:
+def normalize_label(raw: str, lang: str | None = None) -> tuple[str, str, str]:
     """返回 (norm_label 匹配键, display label, 默认箱子名)。"""
     s = raw.strip().translate(_FULLWIDTH)
     n = extract_number(s)
     if n is not None:
-        return f"#{n}", f"{n}号", f"{n}号箱"
-    # 非数字: 去掉尾部"箱"字做匹配键(红色大箱 = 红色大), 但保留显示原样
+        return f"#{n}", tr(lang, "label_num", n=n), tr(lang, "name_num", n=n)
+    # 非数字: 去掉尾部 "箱" / "box" 做匹配键(红色大箱 = 红色大, kitchen box = kitchen), 显示保留原样
     key = re.sub(r"\s+", "", s).lower()
-    key = re.sub(r"(箱子|箱)$", "", key) or key
-    label = s if len(s) <= 4 else s[:4]
-    name = s if s.endswith("箱") else s
-    return key, label, name
+    key = re.sub(r"(箱子|箱|box)$", "", key) or key
+    max_len = 4 if _CJK.search(s) else 6  # 徽章宽度有限:中文 4 字,拉丁 6 字
+    label = s if len(s) <= max_len else s[:max_len]
+    return key, label, s
 
 
 KRAFT_PALETTE = [

@@ -42,7 +42,7 @@ def list_boxes(user: User = Depends(get_current_user), db: Session = Depends(get
 
 @router.get("/next-label")
 def next_label(user: User = Depends(get_current_user), db: Session = Depends(get_db)):
-    return {"next_label": boxes_service.next_num_label(db, user.id)}
+    return {"next_label": boxes_service.next_num_label(db, user)}
 
 
 @router.post("/resolve")
@@ -109,7 +109,7 @@ def update_box(
     box = _own_box(db, user, box_id)
     data = body.model_dump(exclude_unset=True)
     if "label" in data and data["label"]:
-        norm, label, default_name = normalize_label(data.pop("label"))
+        norm, label, default_name = normalize_label(data.pop("label"), user.lang)
         other = boxes_service.find_box_by_label(db, user.id, label)
         if other and other.id != box.id:
             raise HTTPException(409, "box with this label already exists")
@@ -173,7 +173,7 @@ async def set_cover(box_id: str, body: CoverIn, user: User = Depends(get_current
     """把箱子的某张已有照片设为封面(url 必须属于该箱)。"""
     box = _own_box(db, user, box_id)
     if body.url not in box.photos:
-        raise HTTPException(400, "该照片不属于此箱子")
+        raise HTTPException(400, "photo does not belong to this box")
     box.photo_url = body.url
     db.commit()
     return _own_box(db, user, box.id)

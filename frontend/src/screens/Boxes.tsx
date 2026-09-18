@@ -1,9 +1,12 @@
 import { api } from '../api'
 import { PinIcon } from '../components/Icons'
+import { makeT } from '../i18n'
 import { fmtTime, isNewBox, useStore } from '../store'
 import { T } from '../theme'
 
 export function Boxes() {
+  const lang = useStore((s) => s.lang)
+  const t = makeT(lang)
   const boxes = useStore((s) => s.boxes)
   const openBox = useStore((s) => s.openBox)
   const go = useStore((s) => s.go)
@@ -11,7 +14,7 @@ export function Boxes() {
 
   const newBoxHint = () => {
     go('home')
-    showToast('回到主页,说一句「N号箱放了…」就能建箱')
+    showToast(t('new_box_hint'))
   }
 
   return (
@@ -22,7 +25,7 @@ export function Boxes() {
       }}
     >
       <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginBottom: 18 }}>
-        <div style={{ fontSize: 28, fontWeight: 700, color: T.text }}>我的箱子</div>
+        <div style={{ fontSize: 28, fontWeight: 700, color: T.text }}>{t('my_boxes')}</div>
         <div style={{ fontSize: 14, color: T.blue, fontFamily: T.fontNum }}>{boxes.length}</div>
       </div>
 
@@ -73,7 +76,7 @@ export function Boxes() {
                     color: '#0A2C18', fontSize: 10, fontWeight: 700, borderRadius: 999, padding: '3px 8px',
                   }}
                 >
-                  新
+                  {t('new_badge')}
                 </div>
               )}
             </div>
@@ -87,11 +90,11 @@ export function Boxes() {
                     overflow: 'hidden', textOverflow: 'ellipsis',
                   }}
                 >
-                  {b.location_text || '位置待补充'}
+                  {b.location_text || t('location_pending')}
                 </span>
               </div>
               <div style={{ fontSize: 11, color: T.textWeak35 }}>
-                {b.items.length > 0 ? `${b.items.length} 类物品` : '空箱'} · {fmtTime(b.updated_at)}
+                {b.items.length > 0 ? t('items_n', { n: b.items.length }) : t('empty_box')} · {fmtTime(b.updated_at, lang)}
               </div>
             </div>
           </div>
@@ -116,16 +119,16 @@ export function Boxes() {
             +
           </div>
           <div style={{ fontSize: 12.5, color: T.textWeak, textAlign: 'center', lineHeight: 1.6, padding: '0 12px' }}>
-            写个编号
+            {t('new_box_l1')}
             <br />
-            开口即建
+            {t('new_box_l2')}
           </div>
         </div>
       </div>
 
       {boxes.length === 0 && (
         <div style={{ marginTop: 18, fontSize: 13, color: T.textWeak, textAlign: 'center', lineHeight: 1.8 }}>
-          还没有箱子 — 回主页说一句「1号箱放了…」即可建第一个箱子
+          {t('no_boxes')}
         </div>
       )}
     </div>

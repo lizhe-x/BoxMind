@@ -1,6 +1,7 @@
 import type { CSSProperties, ReactNode } from 'react'
 import { T } from '../theme'
 import { BoxTabIcon, GearTabIcon, HomeTabIcon, SparkleIcon } from './Icons'
+import { makeT } from '../i18n'
 import { useStore } from '../store'
 
 /** 牛皮纸渐变 + 旋转手写编号徽章 */
@@ -89,12 +90,14 @@ export function Cursor({ h = 15 }: { h?: number }) {
 export function TabBar() {
   const screen = useStore((s) => s.screen)
   const go = useStore((s) => s.go)
+  const lang = useStore((s) => s.lang)
+  const t = makeT(lang)
   const on = '#C3CEFF'
   const off = 'rgba(235,240,250,0.4)'
   const tabs = [
-    { key: 'home' as const, label: '首页', Icon: HomeTabIcon },
-    { key: 'boxes' as const, label: '箱子', Icon: BoxTabIcon },
-    { key: 'settings' as const, label: '我的', Icon: GearTabIcon },
+    { key: 'home' as const, label: t('tab_home'), Icon: HomeTabIcon },
+    { key: 'boxes' as const, label: t('tab_boxes'), Icon: BoxTabIcon },
+    { key: 'settings' as const, label: t('tab_me'), Icon: GearTabIcon },
   ]
   return (
     <div

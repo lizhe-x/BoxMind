@@ -1,5 +1,5 @@
 import json
-from datetime import UTC, datetime
+import re
 
 from fastapi import APIRouter, Depends
 from fastapi.responses import StreamingResponse
@@ -8,6 +8,7 @@ from sqlalchemy.orm import Session, selectinload
 
 from ..auth import get_current_user
 from ..db import get_db
+from ..i18n import fmt_time, tr
 from ..models import Box, Item, User
 from ..schemas import AskIn
 from ..services import boxes_service, embeddings
@@ -18,28 +19,17 @@ router = APIRouter(prefix="/api", tags=["ask"])
 MAX_CONTEXT_ITEMS = 400  # MVP 数据量小,整库上下文;超限时仅保留向量命中
 
 
-def _fmt_time(dt: datetime) -> str:
-    local = dt.astimezone()
-    today = datetime.now(UTC).astimezone().date()
-    d = local.date()
-    if d == today:
-        return "今天 " + local.strftime("%H:%M")
-    if d.year == today.year:
-        return f"{d.month}月{d.day}日"
-    return f"{d.year}年{d.month}月{d.day}日"
-
-
-def _build_context(boxes: list[Box]) -> str:
+def _build_context(boxes: list[Box], lang: str) -> str:
     data = []
     for b in boxes:
         data.append({
-            "箱子编号": b.label,
-            "箱子名": b.name,
-            "位置描述": b.location_text or "未记录",
-            "GPS": "已记录" if b.gps_lat is not None else "未记录",
-            "绑定的码": b.barcode or None,
-            "更新时间": _fmt_time(b.updated_at),
-            "物品": [{"名称": it.name, "数量": it.qty_text} for it in b.items],
+            "label": b.label,
+            "name": b.name,
+            "location": b.location_text or tr(lang, "not_recorded"),
+            "gps": tr(lang, "recorded") if b.gps_lat is not None else tr(lang, "not_recorded"),
+            "code": b.barcode or None,
+            "updated": fmt_time(b.updated_at, lang),
+            "items": [{"name": it.name, "qty": it.qty_text} for it in b.items],
         })
     return json.dumps(data, ensure_ascii=False)
 
@@ -52,8 +42,9 @@ async def ask(body: AskIn, user: User = Depends(get_current_user), db: Session =
     ).all()
 
     # 向量检索:跨语言语义命中提示
-    hint = "无"
+    hint = tr(user.lang, "hint_none")
     total_items = sum(len(b.items) for b in boxes)
+    rows = []
     if total_items:
         qvec = (await embeddings.embed([body.question]))[0]
         rows = db.execute(
@@ -62,13 +53,13 @@ async def ask(body: AskIn, user: User = Depends(get_current_user), db: Session =
             .where(Box.user_id == user.id, Item.embedding.is_not(None))
             .order_by("d").limit(8)
         ).all()
-        hint = "; ".join(f"{r.name}(在{r.label}, 相似度{1 - r.d:.2f})" for r in rows) or "无"
+        hint = "; ".join(tr(user.lang, "hint_item", name=r.name, label=r.label, sim=1 - r.d) for r in rows) or hint
 
     if total_items > MAX_CONTEXT_ITEMS:
         hit_labels = {r.label for r in rows}
         boxes = [b for b in boxes if b.label in hit_labels]
 
-    context = _build_context(boxes)
+    context = _build_context(boxes, user.lang)
     user_id = user.id
 
     async def gen():
@@ -83,7 +74,7 @@ async def ask(body: AskIn, user: User = Depends(get_current_user), db: Session =
         # 回答中提到的箱子 → 可点卡片
         refs = []
         for b in boxes:
-            if b.label in full or b.name in full:
+            if _mentions(full, b):
                 refs.append({
                     "id": b.id, "label": b.label, "name": b.name,
                     "location_text": b.location_text, "color_a": b.color_a, "color_b": b.color_b,
@@ -98,6 +89,15 @@ async def ask(body: AskIn, user: User = Depends(get_current_user), db: Session =
 
     return StreamingResponse(gen(), media_type="text/event-stream",
                              headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"})
+
+
+def _mentions(answer: str, box: Box) -> bool:
+    """箱子被回答提到:名字或编号出现,且不是更长数字的一部分("box 12" 不能命中 "Box 1" / "1")。"""
+    low = answer.lower()
+    return any(
+        re.search(rf"(?<!\d)(?<!\d\.){re.escape(t)}(?!\d)(?!\.\d)", low) is not None
+        for t in (box.name.lower(), box.label.lower())
+    )
 
 
 def _fresh_session():

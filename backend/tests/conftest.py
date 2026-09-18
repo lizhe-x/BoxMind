@@ -151,12 +151,12 @@ class ScriptedLLM:
             raise AssertionError("ScriptedLLM: no scripted reply left for chat_with_tools")
         return self.tool_replies.pop(0)
 
-    async def interpret(self, text_: str, known_labels: list[str]) -> dict:
-        self.interpret_calls.append((text_, list(known_labels)))
+    async def interpret(self, text_: str, known_labels: list[str], lang: str | None = None) -> dict:
+        self.interpret_calls.append((text_, list(known_labels), lang))
         return dict(self.interpret_reply)
 
-    async def recognize_image(self, image_b64: str, mime: str = "image/jpeg") -> dict:
-        self.vision_calls.append((image_b64, mime))
+    async def recognize_image(self, image_b64: str, mime: str = "image/jpeg", lang: str | None = None) -> dict:
+        self.vision_calls.append((image_b64, mime, lang))
         return dict(self.vision_reply)
 
     async def answer_stream(self, question: str, context_json: str, relevant_hint: str):

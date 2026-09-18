@@ -23,7 +23,7 @@ class User(Base):
     id: Mapped[str] = mapped_column(String(32), primary_key=True, default=_uuid)
     device_id: Mapped[str] = mapped_column(String(128), unique=True, index=True)
     email: Mapped[str | None] = mapped_column(String(255), nullable=True)
-    lang: Mapped[str] = mapped_column(String(8), default="zh")
+    lang: Mapped[str] = mapped_column(String(8), default="en")  # UI language: en (default) | zh
     gps_enabled: Mapped[int] = mapped_column(Integer, default=1)
     credit_balance: Mapped[int] = mapped_column(Integer, default=settings.free_credits)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)

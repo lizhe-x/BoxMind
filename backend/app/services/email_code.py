@@ -39,11 +39,16 @@ def issue(db: Session, email: str) -> str:
 def send_email(email: str, code: str) -> None:
     """真实发送(仅在配置了 SMTP 时调用)。"""
     msg = EmailMessage()
-    msg["Subject"] = "BoxMind 登录验证码"
+    # The user's UI language is not known before sign-in, so the mail is bilingual.
+    msg["Subject"] = "Your BoxMind sign-in code / BoxMind 登录验证码"
     msg["From"] = settings.smtp_from or settings.smtp_user
     msg["To"] = email
     minutes = settings.code_ttl_seconds // 60
-    msg.set_content(f"你的 BoxMind 登录验证码是:{code}\n\n{minutes} 分钟内有效。若非本人操作请忽略。")
+    msg.set_content(
+        f"Your BoxMind sign-in code is {code}. It expires in {minutes} minutes. "
+        "If you did not request it, ignore this email.\n\n"
+        f"你的 BoxMind 登录验证码是:{code}\n{minutes} 分钟内有效。若非本人操作请忽略。"
+    )
     with smtplib.SMTP(settings.smtp_host, settings.smtp_port, timeout=20) as s:
         s.starttls()
         s.login(settings.smtp_user, settings.smtp_password)

@@ -48,5 +48,5 @@ class ExecuteIn(BaseModel):
 def agent_execute(body: ExecuteIn, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     """用户确认后执行破坏性操作。"""
     if body.tool not in agent_tools.DESTRUCTIVE:
-        raise HTTPException(400, "该操作不需要确认执行")
+        raise HTTPException(400, "not a destructive tool; nothing to confirm")
     return agent_destructive.execute(db, user, body.tool, body.args)

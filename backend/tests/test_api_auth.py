@@ -50,7 +50,7 @@ def test_verify_code_creates_then_reuses_user(client) -> None:
 def test_verify_code_wrong(client) -> None:
     client.post("/api/auth/request-code", json={"email": "x@y.io"})
     r = client.post("/api/auth/verify-code", json={"email": "x@y.io", "code": "999999"})
-    assert r.status_code == 400 and r.json()["detail"] in ("验证码错误", "验证失败")
+    assert r.status_code == 400 and r.json()["detail"] == "code_invalid"  # stable code, translated by the UI
 
 
 def test_device_login_still_works(client) -> None:
