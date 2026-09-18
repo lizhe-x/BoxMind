@@ -3,7 +3,7 @@ import type { PointerEvent as ReactPointerEvent } from 'react'
 import { AiAvatar, Cursor, ThinkingDots } from '../components/common'
 import { BackIcon, CameraIcon, ChevronIcon, MicIcon, ScanIcon, SpeakerIcon } from '../components/Icons'
 import { api } from '../api'
-import { distText, useStore } from '../store'
+import { distText, plainText, useStore } from '../store'
 import { T } from '../theme'
 import { useVoice } from '../voice'
 
@@ -143,12 +143,12 @@ export function Ask() {
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10, maxWidth: '82%' }}>
                 <div style={{ background: T.card2, border: `1px solid ${T.border}`, borderRadius: '4px 18px 18px 18px', padding: '12px 15px', fontSize: 15, lineHeight: 1.65, textWrap: 'pretty', color: T.text }}>
-                  {m.text}
+                  {plainText(m.text)}
                   {m.streaming && <Cursor />}
                 </div>
                 {!m.streaming && m.text && (
                   <div
-                    onClick={() => speak(i, m.text)}
+                    onClick={() => speak(i, plainText(m.text))}
                     style={{
                       alignSelf: 'flex-start', display: 'flex', alignItems: 'center', gap: 6,
                       padding: '5px 11px', borderRadius: 999, cursor: 'pointer',

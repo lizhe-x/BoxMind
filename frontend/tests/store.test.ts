@@ -26,7 +26,7 @@ vi.mock('../src/api', () => ({
 }))
 
 import { api, askStream } from '../src/api'
-import { distText, fmtItems, fmtTime, isNewBox, useStore } from '../src/store'
+import { distText, fmtItems, fmtTime, isNewBox, plainText, useStore } from '../src/store'
 
 const mocked = api as unknown as Record<keyof typeof api, ReturnType<typeof vi.fn>>
 const initial = useStore.getState()
@@ -313,6 +313,12 @@ describe('voice recording hand-off', () => {
 })
 
 describe('display helpers', () => {
+  it('plainText strips the markdown the answer model leaks despite the prompt', () => {
+    expect(plainText('电钻在**4号箱**，位置是`储物间地上`。')).toBe('电钻在4号箱，位置是储物间地上。')
+    expect(plainText('**a** and **b**')).toBe('a and b')
+    expect(plainText('no markup 2*3')).toBe('no markup 2*3')
+  })
+
   it('fmtItems', () => {
     expect(fmtItems([{ name: '头灯', qty_text: '×2' }, { name: '帐篷', qty_text: '×1' }])).toBe('头灯 ×2 · 帐篷 ×1')
   })

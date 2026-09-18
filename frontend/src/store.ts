@@ -109,6 +109,11 @@ interface S {
 
 let toastTimer: ReturnType<typeof setTimeout> | undefined
 
+/** 答复提示词要求"不用 markdown",但模型仍会漏出 **加粗** / `代码`;展示与朗读前去掉这些标记。 */
+export function plainText(text: string): string {
+  return text.replace(/\*\*(.+?)\*\*/g, '$1').replace(/`([^`]+)`/g, '$1')
+}
+
 export function fmtItems(items: { name: string; qty_text: string }[]): string {
   return items.map((i) => `${i.name} ${i.qty_text}`).join(' · ')
 }
