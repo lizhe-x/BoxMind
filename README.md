@@ -1,214 +1,172 @@
 # BoxMind
 
-**Scan a box, say a word, and let an AI remember everything.**
+**An AI-native inventory assistant for boxes, storage units, garages, and closets.**
 
-[![CI](https://github.com/lizhe666666666/BoxMind/actions/workflows/ci.yml/badge.svg)](https://github.com/lizhe666666666/BoxMind/actions/workflows/ci.yml)
+[![CI](https://github.com/lizhe-x/BoxMind/actions/workflows/ci.yml/badge.svg)](https://github.com/lizhe-x/BoxMind/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 ![Python 3.11](https://img.shields.io/badge/python-3.11-3776AB?logo=python&logoColor=white)
 ![React 19](https://img.shields.io/badge/react-19-149ECA?logo=react&logoColor=white)
-![pgvector](https://img.shields.io/badge/postgres-17%20%2B%20pgvector-336791?logo=postgresql&logoColor=white)
+![PostgreSQL 17 + pgvector](https://img.shields.io/badge/postgres-17%20%2B%20pgvector-336791?logo=postgresql&logoColor=white)
 
-BoxMind is an AI inventory assistant for the boxes people pack into garages, storage units and closets. You tell it what went into a box by voice, text, photo or barcode. Later you ask "where is the tent?" in plain language and it answers. Housekeeping ("move the headlamps from box 5 to box 7", "merge the two kitchen boxes") is done by an **LLM function-calling agent that operates the app's own API**, with a confirmation step before anything destructive and single-step undo.
+BoxMind lets you **record, find, and reorganize physical inventory using natural language**.
 
-The interesting part is not that an LLM was used to write code. It is that the LLM is the runtime: a small classifier routes each sentence, an agent decides which backend operations to call and in what order, a vision model reads photos into structured items, and a RAG loop answers questions. Everything the models do is bounded by tool schemas, confirmation gates and tests.
+Say what went into a box by voice, text, photo, or barcode. Later ask *"Where is the tent?"* and get an answer with the relevant box. For operations such as *"move the headlamps from box 5 to box 7"* or *"merge the kitchen boxes"*, an LLM function-calling agent operates the application's own API.
 
-Built solo in June 2026 as an MVP. The UI is English by default with Chinese available in Settings; everything the server generates (box names, confirmation summaries, tool results) follows the user's language, and the models answer in whatever language you ask in. Code comments are partly Chinese.
+The core idea is simple:
+
+> **The model proposes actions; the application enforces the rules.**
+
+Tool schemas, database validation, confirmation gates, snapshots, undo, and tests keep the model inside a bounded execution environment.
+
+Built solo as an MVP in June 2026.
 
 <p align="center">
-  <img src="docs/screenshots/home.png" width="230" alt="Home: one big talk button">
-  <img src="docs/screenshots/entry-confirm.png" width="230" alt="Structured confirm card after one spoken sentence">
-  <img src="docs/screenshots/ask.png" width="230" alt="Streaming answer with a clickable box card">
-  <img src="docs/screenshots/agent-confirm.png" width="230" alt="Agent pauses for confirmation before a destructive merge">
+  <img src="docs/screenshots/home.png" width="230" alt="Home screen">
+  <img src="docs/screenshots/entry-confirm.png" width="230" alt="Structured intake confirmation">
+  <img src="docs/screenshots/ask.png" width="230" alt="Natural-language answer">
+  <img src="docs/screenshots/agent-confirm.png" width="230" alt="Agent confirmation before destructive action">
 </p>
 
-## What it does
+## Why this project
 
-| Capability | How |
+BoxMind is less about building a chatbot and more about exploring **reliable AI application architecture**.
+
+- **Interpretation** — LLMs understand natural language and choose tools.
+- **Execution** — typed backend tools perform the actual operations.
+- **Validation** — every tool validates arguments against current database state.
+- **Safety** — destructive operations require explicit confirmation.
+- **Recovery** — snapshots make destructive operations undoable.
+- **Retrieval** — pgvector provides semantic search across inventory.
+- **Verification** — the orchestration layer is tested without requiring a real LLM.
+
+This keeps the model replaceable without making the application dependent on model behavior.
+
+## What it can do
+
+| Capability | Implementation |
 |---|---|
-| Natural-language operations | Function-calling agent with 15 tools (search, create, add, rename, move, set location / GPS / barcode, delete, empty, merge, undo). Destructive tools pause and return a confirmation card; the app snapshots affected boxes before executing so "undo" restores them. |
-| Structured intake | One sentence → box label, items with quantities, location. Shown as a confirm card, never written silently. If no box was named, the app asks which one and suggests the next free number. |
-| Question answering | RAG: items are embedded locally (multilingual MiniLM, 384-d) into Postgres/pgvector; the answer streams back over SSE and the boxes it mentions become tappable cards. Cross-lingual ("snow boots" finds 雪地靴). |
-| Photo intake | A vision model reads a photo of an open box and returns items with a confidence level plus the handwritten label if visible; low-confidence items start unchecked. |
-| Barcode / QR | In-browser decoding (ZXing) links a physical code to a box; a handwritten label is the fallback. |
-| Voice | Browser Web Speech (on-device, real time) first, server-side ASR through the gateway second, typing last. Audio is kept so the note can be replayed. |
-| Read-aloud | TTS on any answer. |
-| Media | Photos become box covers; photos and voice notes are stored per box. |
-| Login | Email verification code (SMTP), with a dev mode that returns the code from the API so the app runs without mail setup. |
-| Languages | UI in English (default) or Chinese, switchable before sign-in and in Settings. The choice is stored on the account so the backend localises what it generates: default box names ("Box 4" / "4号箱"), confirmation summaries, tool results the model relays, dates. Models are told which language to answer in; item names are never translated. |
+| Natural-language operations | Function-calling agent with 15 typed tools |
+| Safe destructive actions | Confirmation + database snapshots + undo |
+| Structured intake | One sentence → structured box/item data → confirmation |
+| Semantic search | Multilingual MiniLM embeddings + PostgreSQL/pgvector |
+| Photo intake | Vision model extracts items and confidence |
+| Voice input | Browser Web Speech + server ASR fallback |
+| Barcode / QR | Browser-side ZXing |
+| Streaming answers | Server-Sent Events (SSE) |
+| Read-aloud | TTS |
+| Media | Photos and voice notes per box |
+| Localization | English / Chinese |
+| Export | JSON / CSV |
+| Authentication | Email verification-code login |
 
-## How one sentence is handled
+## Agent architecture
 
-```mermaid
-sequenceDiagram
-    autonumber
-    actor U as User
-    participant FE as PWA
-    participant API as FastAPI
-    participant LLM as LLM gateway
-    participant DB as Postgres + pgvector
-
-    U->>FE: "Move the power drill from box 4 to box 2, then merge Kitchen spare into box 5"
-    FE->>API: POST /api/interpret
-    API->>LLM: JSON-mode classify: ingest | query | operation
-    LLM-->>API: {"intent": "operation"}
-    FE->>API: POST /api/agent {message, history, gps}
-    API->>LLM: chat + 15 tool schemas + snapshot of the user's boxes + "answer in English"
-    LLM-->>API: tool_calls: move_items(4→2, [Power drill]), merge_boxes([Kitchen spare]→5)
-    API->>DB: move_items executed
-    Note over API: merge_boxes is destructive → do not execute
-    API-->>FE: {type: "confirm", actions: [{tool, args, summary}], executed: [...]}
-    FE-->>U: red card: "Move everything from “Kitchen spare” into “5” and delete the emptied source boxes"
-    U->>FE: Confirm
-    FE->>API: POST /api/agent/execute {tool, args}
-    API->>DB: snapshot affected boxes → merge → commit
-    API-->>FE: "Merged “Kitchen spare” into “Box 5”"
-    U->>FE: "undo"
-    FE->>API: POST /api/agent → LLM picks undo_last
-    API->>DB: restore boxes, items, media ownership from snapshot (same ids)
+```text
+User
+ │
+ ▼
+React 19 PWA
+ │
+ ▼
+FastAPI
+ ├── intent router: ingest / query / operation
+ ├── function-calling agent
+ ├── confirmation gate
+ └── typed tool executors
+ │
+ ├──────────────► OpenAI-compatible model gateway
+ │
+ ▼
+PostgreSQL 17 + pgvector
 ```
 
-The trace above is the real one behind the screenshots. Three things worth noticing:
+A typical operation follows:
 
-- **The classifier is a router, not the brain.** One cheap JSON-mode call decides between the fixed intake UI (`ingest`), streaming RAG (`query`) and the agent (`operation`). Intake is the most frequent action and benefits from a deterministic confirm card; the agent handles the long tail without new code per intent.
-- **The model proposes, the user disposes.** `delete_item`, `delete_box`, `empty_box` and `merge_boxes` are declared to the model like any other tool, but the loop never executes them. It returns a human-readable summary; only an explicit second request runs the action, after a snapshot is taken. Non-destructive calls in the same turn (the move, here) run immediately instead of being dropped.
-- **References and arithmetic are resolved with context, then validated.** The system prompt embeds a compact snapshot of the user's boxes, so "7号", "Liam" or "the kitchen box" resolve and "add three more" becomes a final count in the tool call. Every tool re-validates against the database and returns an error object the model can react to, including a missing-argument error when the model sends malformed JSON.
-
-Full decision log, including the move from a two-intent classifier to the agent: [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md).
-
-## Architecture
-
-```
-React 19 PWA (Vite, zustand, ZXing)
-        │  HTTPS, same origin
-FastAPI backend ─────────── any OpenAI-compatible gateway
-   ├─ /api/interpret   JSON-mode intent router (ingest | query | operation)
-   ├─ /api/agent       function-calling loop, ≤6 steps, confirm-before-destroy
-   ├─ /api/agent/execute   runs one confirmed destructive action (snapshot first)
-   ├─ /api/ask         streaming RAG (SSE)
-   ├─ /api/recognize   vision intake
-   ├─ /api/transcribe  /api/tts
-   ├─ /api/boxes       CRUD, resolve-by-code, media upload
-   ├─ /api/me          profile, settings, JSON/CSV export
-   └─ /media           static photos / audio
-PostgreSQL 17 + pgvector (Docker)
+```text
+Natural-language request → intent classification → typed tool calls
+                         → validate → execute
+                         → destructive action: confirm → snapshot → execute
+                         → undo
 ```
 
-In production the backend serves the built frontend, so one process behind one HTTPS endpoint carries the app, the API and user media. Embeddings run in-process with fastembed by default; the gateway is used for chat, tools, vision, ASR and TTS, all through the OpenAI-compatible surface, so swapping the model or provider is a `.env` change.
+### The classifier is a router, not the application brain
 
-<p align="center">
-  <img src="docs/screenshots/boxes.png" width="230" alt="Box list">
-  <img src="docs/screenshots/box-detail.png" width="230" alt="Box detail with items, location and media">
-  <img src="docs/screenshots/agent-done.png" width="230" alt="Agent reports the executed merge">
-</p>
+A small JSON-mode call routes requests to ingest, query, or operation. Common intake remains deterministic; the agent handles the long tail of natural-language operations.
 
-## Tests
+### Destructive operations are a two-step protocol
 
-Tests were written to make the AI orchestration checkable without a model in the loop.
+The model can propose delete, empty, or merge operations, but those actions do not execute immediately. The backend returns a human-readable confirmation request. After explicit confirmation, affected data is snapshotted before execution.
 
-| Suite | Count | What is real, what is faked |
-|---|---|---|
-| Backend `pytest` | 163 | Real PostgreSQL + pgvector (throwaway `boxmind_test` database, created on demand), real FastAPI app through `TestClient`, real cascades and undo snapshots. Faked: embeddings (deterministic hash vectors, so nothing is downloaded and exact names always match) and the LLM gateway (a scripted client that replays tool calls and records every request). Warnings are errors. |
-| Frontend `vitest` | 47 | Store logic (routing of a sentence, confirm-card flow, photo-intake selection, scan fallback, language handling, display helpers) with the API module mocked; API client (auth header, 401 → logout, SSE parser across arbitrary chunk boundaries). |
+### The database remains authoritative
 
-The agent loop is tested turn by turn: which tools were called, what was fed back to the model, when the loop paused for confirmation, what happens on malformed arguments, that non-destructive siblings of a destructive call still run, and that the six-step cap holds. Undo is tested to restore boxes with the same ids, items re-embedded and media rows moved back.
+The model receives compact context to resolve references such as "box 7" or "the kitchen box", but every tool validates against current database state. The model can be wrong; it cannot bypass the application's state and validation rules.
+
+## Testing
+
+The AI orchestration is deliberately tested without depending on an external model.
+
+| Suite | Count | Coverage |
+|---|---:|---|
+| Backend pytest | 163 | Real PostgreSQL + pgvector, FastAPI, cascades, snapshots, undo, agent loop, malformed arguments, confirmation flow |
+| Frontend Vitest | 47 | State machine, routing, confirmation flow, camera/scan fallback, localization, API client and SSE parsing |
+
+The LLM gateway is replaced by a scripted client that records requests and replays tool calls. Embeddings use deterministic test vectors.
 
 ```bash
-# backend (needs the docker compose database; creates boxmind_test itself)
-cd backend && pip install -r requirements-dev.txt && ruff check app tests && pytest
+cd backend
+pip install -r requirements-dev.txt
+ruff check app tests
+pytest
 
-# frontend
-cd frontend && npm ci && npm run lint && npm test && npm run build
+cd frontend
+npm ci
+npm run lint
+npm test
+npm run build
 ```
 
-CI runs both on every push: [.github/workflows/ci.yml](.github/workflows/ci.yml).
+CI runs backend and frontend checks on every push.
 
 ## Run locally
 
 ```bash
-# 1. database (pgvector on host port 5434)
 docker compose up -d
 
-# 2. backend
 cd backend
-python -m venv .venv && . .venv/Scripts/activate   # or: source .venv/bin/activate
+python -m venv .venv
+source .venv/bin/activate
+# Windows: .venv\Scripts\activate
 pip install -r requirements.txt
-cp .env.example .env    # set BOXMIND_LLM_API_KEY at minimum
+cp .env.example .env
+# Set BOXMIND_LLM_API_KEY
 uvicorn app.main:app --port 8001
 
-# 3. frontend
 cd ../frontend
 npm install
-npm run dev             # http://localhost:5173, /api proxied to :8001
+npm run dev
 ```
 
-Logging in without SMTP: leave `BOXMIND_SMTP_HOST` empty and the code request returns the code in the response (the login screen shows it). The first backend start downloads the embedding model (about 500 MB) once.
-
-For production, `npm run build` and start the backend; it serves `frontend/dist` itself.
-
-## Configuration
-
-All settings are environment variables prefixed `BOXMIND_`, documented in [backend/.env.example](backend/.env.example). Model names (`LLM_MODEL`, `VISION_MODEL`, `ASR_MODEL`, `TTS_MODEL`, `EMBEDDING_MODEL`) are configuration, not code. The default gateway is [getbot.me](https://api.getbot.me), an OpenAI-compatible gateway I also run; any compatible endpoint works.
-
-Data created before the English default (Chinese box names such as 5号箱, 若干 quantities) can be re-localised in place; it is a dry run unless `--apply` is given, and it never touches text the user typed:
-
-```bash
-cd backend && python -m app.maintenance.relabel --lang en --apply
-```
-
-Things to know before exposing an instance:
-
-- `BOXMIND_JWT_SECRET` has a development default. Set it.
-- Dev-mode login (empty SMTP host) returns verification codes from the API. Configure SMTP for anything reachable by others.
-- CORS allows localhost and private-network origins only; the intended deployment serves frontend and API from the same origin.
-- Secrets, TLS certificates and user media are git-ignored.
-
-## Repository layout
-
-```
-backend/
-  app/
-    routers/        HTTP surface, one file per concern
-    services/
-      agent.py            function-calling loop
-      agent_tools.py      tool schemas + executors (read / add / modify)
-      agent_destructive.py  summaries, snapshot, execute, undo
-      llm.py              prompts and the OpenAI-compatible client
-      embeddings.py       local fastembed or remote /embeddings
-    normalize.py    "1" = "Box 1" = "1号" = "一号" label normalisation
-    i18n.py         every user-facing string the server produces, en / zh
-  tests/            pytest suite (see above)
-frontend/
-  src/
-    store.ts        zustand state machine for intake / ask / agent / camera / scan
-    i18n.ts         UI strings, en / zh, with the language toggle helpers
-    api.ts          API client + SSE parser
-    screens/        Home, Ask, Boxes, BoxDetail, Camera, Scan, Settings, Login, Onboarding
-  tests/            vitest suite
-docs/
-  DEVELOPMENT.md    decision log and iteration history
-  design/           PRD v1.0 and the high-fidelity HTML prototype the app was built from
-  screenshots/
-```
-
-<p align="center">
-  <img src="docs/screenshots/prototype.png" width="230" alt="The HTML prototype the implementation was built from"><br>
-  <sub>The pre-implementation prototype, kept in <a href="docs/design">docs/design</a> with a note on where the implementation deviates.</sub>
-</p>
+The frontend runs on http://localhost:5173 and proxies /api to the backend.
 
 ## Stack
 
-Python 3.11, FastAPI, SQLAlchemy 2, pgvector, fastembed, PyJWT · React 19, TypeScript, Vite, zustand, vite-plugin-pwa, @zxing/browser · PostgreSQL 17 with pgvector (Docker) · any OpenAI-compatible gateway for chat, tools, vision, ASR and TTS.
+**Backend:** Python 3.11, FastAPI, SQLAlchemy 2, PostgreSQL 17, pgvector, fastembed, PyJWT
+**Frontend:** React 19, TypeScript, Vite, zustand, PWA, ZXing
+**AI:** LLM function calling, vision, ASR, TTS, multilingual embeddings, RAG
+**Infrastructure:** Docker, GitHub Actions
 
-About 6K lines of application code plus 2K lines of tests.
+Approximately 6K lines of application code plus 2K lines of tests.
 
-## Status and limits
+## Status
 
-- MVP: one user per account, no sharing.
-- Undo is single-step. Undoing a box deletion restores items but not photos (media rows cascade); undoing a merge restores photos too.
-- Server-side ASR depends on the gateway exposing the model; the browser engine is the default and works on Chromium and Safari.
-- Photo recognition quality is bounded by the vision model and the photo.
-- PWA only, no native app.
+MVP / single-user application.
+
+- Single user per account; no sharing
+- Single-step undo
+- Photo recognition depends on the vision model and input quality
+- Server-side ASR depends on the configured gateway
+- PWA rather than a native mobile application
 
 ## License
 
-[MIT](LICENSE)
+MIT
