@@ -106,7 +106,9 @@ final class VoiceRecorder {
                                converter: analyzerFormat.flatMap { AVAudioConverter(from: hw, to: $0) },
                                targetFormat: analyzerFormat)
         self.sink = sink
-        input.installTap(onBus: 0, bufferSize: 4096, format: hw) { buffer, _ in sink.handle(buffer) }
+        // @Sendable: a plain closure here inherits the class's main-actor isolation and Swift 6 inserts a runtime
+        // isolation check; CoreAudio calls the tap on its realtime queue, so that check trapped (TestFlight 1.0 (1)).
+        input.installTap(onBus: 0, bufferSize: 4096, format: hw) { @Sendable buffer, _ in sink.handle(buffer) }
         engine.prepare()
         do { try engine.start() } catch {
             input.removeTap(onBus: 0)
