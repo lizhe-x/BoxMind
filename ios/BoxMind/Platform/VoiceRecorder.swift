@@ -262,12 +262,36 @@ private final class CaptureSink: @unchecked Sendable {
     }
 }
 
-/// Run `body`, giving up (not cancelling) after `seconds`.
+/// Run `body`, returning after it finishes or after `seconds`, whichever comes first. The body keeps running in
+/// the background when it overruns: a task group would wait for it (child tasks are always awaited, and the
+/// analyzer's finalize does not observe cancellation), which is how hold-to-talk froze after a mixed-language
+/// recording.
 func withTimeout(seconds: Double, _ body: @escaping @Sendable () async -> Void) async {
-    await withTaskGroup(of: Void.self) { group in
-        group.addTask { await body() }
-        group.addTask { try? await Task.sleep(for: .seconds(seconds)) }
-        await group.next()
-        group.cancelAll()
+    await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
+        let gate = ResumeOnce(continuation)
+        Task {
+            await body()
+            gate.resume()
+        }
+        Task {
+            try? await Task.sleep(for: .seconds(seconds))
+            gate.resume()
+        }
+    }
+}
+
+/// Resumes a continuation exactly once, whichever racer gets there first.
+private final class ResumeOnce: @unchecked Sendable {
+    private let lock = NSLock()
+    private var continuation: CheckedContinuation<Void, Never>?
+
+    init(_ continuation: CheckedContinuation<Void, Never>) { self.continuation = continuation }
+
+    func resume() {
+        lock.lock()
+        let c = continuation
+        continuation = nil
+        lock.unlock()
+        c?.resume()
     }
 }
