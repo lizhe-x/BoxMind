@@ -9,6 +9,7 @@ final class MockAPI: BoxMindAPI, @unchecked Sendable {
     private var token: String?
     private var boxes: [Box]
     private var lastDeleted: Box?
+    private var ratings: [String: Int] = [:]
     private var used = 0
     private var photoSeq = 0
 
@@ -134,7 +135,7 @@ final class MockAPI: BoxMindAPI, @unchecked Sendable {
                     BoxRef(id: $0.id, label: $0.label, name: $0.name, locationText: $0.locationText, colorA: $0.colorA, colorB: $0.colorB, gpsLat: $0.gpsLat, gpsLng: $0.gpsLng)
                 }
                 self.lock.withLock { self.used += 1 }
-                c.yield(.done(boxes: refs, creditsLeft: -1))
+                c.yield(.done(boxes: refs, creditsLeft: -1, runId: "mock-ask-\(UUID().uuidString.prefix(8))"))
                 c.finish()
             }
         }
@@ -148,7 +149,7 @@ final class MockAPI: BoxMindAPI, @unchecked Sendable {
            let b = lock.withLock({ boxes.first { $0.label.lowercased() == label } }) {
             return AgentResponse(type: .confirm, text: "",
                                  actions: [AgentAction(tool: "delete_box", args: .object(["box": .string(b.label)]), summary: "Delete \(b.name) and its \(b.items.count) items")],
-                                 executed: nil)
+                                 executed: nil, runId: "mock-agent-\(UUID().uuidString.prefix(8))")
         }
         if low.hasPrefix("undo") {
             let restored: Box? = lock.withLock {
@@ -157,9 +158,14 @@ final class MockAPI: BoxMindAPI, @unchecked Sendable {
                 boxes.append(b)
                 return b
             }
-            return AgentResponse(type: .message, text: restored.map { "Restored \($0.name)." } ?? "Nothing to undo.", actions: nil, executed: nil)
+            return AgentResponse(type: .message, text: restored.map { "Restored \($0.name)." } ?? "Nothing to undo.", actions: nil, executed: nil, runId: "mock-agent-\(UUID().uuidString.prefix(8))")
         }
-        return AgentResponse(type: .message, text: "Done.", actions: nil, executed: nil)
+        return AgentResponse(type: .message, text: "Done.", actions: nil, executed: nil, runId: "mock-agent-\(UUID().uuidString.prefix(8))")
+    }
+
+    func rateRun(id: String, value: Int) async throws {
+        try auth()
+        lock.withLock { ratings[id] = value }
     }
 
     func agentExecute(tool: String, args: JSONValue) async throws -> ExecuteResult {

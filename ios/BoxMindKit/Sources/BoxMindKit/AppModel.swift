@@ -31,15 +31,21 @@ public struct AskMsg: Identifiable, Equatable, Sendable {
     public var boxes: [BoxRef]?
     /// Destructive agent actions waiting for the user's confirmation.
     public var confirm: [AgentAction]?
+    /// The server-side trace behind this reply; nil for local messages (greeting, errors, cancellations).
+    public var runId: String?
+    /// 1 thumbs up, -1 thumbs down, 0 none.
+    public var feedback = 0
 
     public init(id: UUID = UUID(), who: Who, text: String, streaming: Bool = false,
-                boxes: [BoxRef]? = nil, confirm: [AgentAction]? = nil) {
+                boxes: [BoxRef]? = nil, confirm: [AgentAction]? = nil, runId: String? = nil, feedback: Int = 0) {
         self.id = id
         self.who = who
         self.text = text
         self.streaming = streaming
         self.boxes = boxes
         self.confirm = confirm
+        self.runId = runId
+        self.feedback = feedback
     }
 }
 
@@ -469,10 +475,11 @@ public final class AppModel {
                         askMsgs.append(AskMsg(who: .ai, text: d, streaming: true))
                     }
                     thinking = false
-                case .done(let boxes, _):
+                case .done(let boxes, _, let runId):
                     if let i = askMsgs.indices.last, askMsgs[i].who == .ai {
                         askMsgs[i].streaming = false
                         askMsgs[i].boxes = boxes
+                        askMsgs[i].runId = runId
                     }
                     thinking = false
                     me?.used += 1
@@ -501,10 +508,10 @@ public final class AppModel {
             thinking = false
             if resp.type == .confirm {
                 askMsgs.append(AskMsg(who: .ai, text: resp.text.isEmpty ? t(.agent_confirm_text) : resp.text,
-                                      confirm: resp.actions ?? []))
+                                      confirm: resp.actions ?? [], runId: resp.runId))
                 if !(resp.executed ?? []).isEmpty { try? await refresh() } // siblings already ran this turn
             } else {
-                askMsgs.append(AskMsg(who: .ai, text: resp.text.isEmpty ? t(.agent_ok) : resp.text))
+                askMsgs.append(AskMsg(who: .ai, text: resp.text.isEmpty ? t(.agent_ok) : resp.text, runId: resp.runId))
                 try? await refresh() // the agent may have run tools (rename, move, undo…) before replying
             }
         } catch {
@@ -528,6 +535,20 @@ public final class AppModel {
         try? await refresh()
         thinking = false
         askMsgs.append(AskMsg(who: .ai, text: results.joined(separator: "; ")))
+    }
+
+    /// Thumbs on a reply: tapping the active thumb again clears it. Optimistic; reverted if the server refuses.
+    public func rate(_ msgId: UUID, _ value: Int) async {
+        guard let i = askMsgs.firstIndex(where: { $0.id == msgId }), let runId = askMsgs[i].runId else { return }
+        let previous = askMsgs[i].feedback
+        let next = previous == value ? 0 : value
+        askMsgs[i].feedback = next
+        do {
+            try await api.rateRun(id: runId, value: next)
+        } catch {
+            if let j = askMsgs.firstIndex(where: { $0.id == msgId }) { askMsgs[j].feedback = previous }
+            showToast(t(.toast_offline))
+        }
     }
 
     public func agentCancel() {

@@ -27,6 +27,8 @@ final class ScriptedAPI: BoxMindAPI, @unchecked Sendable {
     var agentCalls: [(message: String, history: [AgentMessage], gps: GeoPoint?)] = []
     var executeResults: [Result<ExecuteResult, Error>] = []
     var executeCalls: [(tool: String, args: JSONValue)] = []
+    var rateResult: Result<Void, Error> = .success(())
+    var rateCalls: [(id: String, value: Int)] = []
 
     // M3 scripts
     var recognizeResult: Result<RecogResult, Error> = .failure(Boom())
@@ -105,6 +107,10 @@ final class ScriptedAPI: BoxMindAPI, @unchecked Sendable {
     func agent(message: String, history: [AgentMessage], gps: GeoPoint?) async throws -> AgentResponse {
         lock.withLock { agentCalls.append((message, history, gps)) }
         return try agentResult.get()
+    }
+    func rateRun(id: String, value: Int) async throws {
+        let r = lock.withLock { rateCalls.append((id, value)); return rateResult }
+        try r.get()
     }
     func agentExecute(tool: String, args: JSONValue) async throws -> ExecuteResult {
         let next: Result<ExecuteResult, Error> = lock.withLock {

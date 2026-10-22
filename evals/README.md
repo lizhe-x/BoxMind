@@ -132,7 +132,8 @@ Every model-backed request (`/api/agent`, `/api/interpret`, `/api/ask`, `/api/re
 a row in `agent_runs` (`backend/app/services/runs.py`): model, prompt version, tool calls with arguments and
 results, steps, latency, outcome, error. The response carries the `run_id`, and two signals attach to it:
 
-- explicit: `POST /api/runs/{id}/feedback {"value": 1 | -1, "note"?}` (thumbs up / down);
+- explicit: `POST /api/runs/{id}/feedback {"value": 1 | -1, "note"?}` (thumbs up / down). The iOS Ask screen
+  shows the two thumbs under every reply that has a run behind it; a second tap clears the vote;
 - implicit: when the user confirms a destructive action the snapshot taken before it records the run that
   proposed it, and an undo marks that run `undone`. Undo is a thumbs down the user did not have to type.
 

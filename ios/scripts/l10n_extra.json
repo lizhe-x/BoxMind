@@ -11,5 +11,13 @@
   "gps_off_hint": {
     "en": "Location is off; boxes are saved without a position",
     "zh": "定位已关闭,入库时不记录位置"
+  },
+  "feedback_up": {
+    "en": "Helpful",
+    "zh": "有用"
+  },
+  "feedback_down": {
+    "en": "Not helpful",
+    "zh": "没用"
   }
 }

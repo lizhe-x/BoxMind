@@ -42,7 +42,7 @@ public struct SSEParser: Sendable {
 /// Decoded /api/ask events.
 public enum AskEvent: Equatable, Sendable {
     case delta(String)
-    case done(boxes: [BoxRef], creditsLeft: Int)
+    case done(boxes: [BoxRef], creditsLeft: Int, runId: String? = nil)
     case error(String)
 
     public init?(_ raw: SSEEvent) {
@@ -53,9 +53,9 @@ public enum AskEvent: Equatable, Sendable {
             guard let d = try? JSON.decoder.decode(D.self, from: data) else { return nil }
             self = .delta(d.t)
         case "done":
-            struct D: Decodable { let boxes: [BoxRef]; let credits_left: Int }
+            struct D: Decodable { let boxes: [BoxRef]; let credits_left: Int; let run_id: String? }
             guard let d = try? JSON.decoder.decode(D.self, from: data) else { return nil }
-            self = .done(boxes: d.boxes, creditsLeft: d.credits_left)
+            self = .done(boxes: d.boxes, creditsLeft: d.credits_left, runId: d.run_id)
         case "error":
             struct D: Decodable { let message: String }
             guard let d = try? JSON.decoder.decode(D.self, from: data) else { return nil }

@@ -168,7 +168,7 @@ final class APIClientTests: XCTestCase {
         guard events.count == 3, !StubProtocol.requests.isEmpty else { return XCTFail("events \(events)") }
         XCTAssertEqual(events[0], .delta("In "))
         XCTAssertEqual(events[1], .delta("box 1"))
-        if case .done(let boxes, _) = events[2] { XCTAssertEqual(boxes.first?.name, "Box 1") } else { XCTFail("\(events[2])") }
+        if case .done(let boxes, _, _) = events[2] { XCTAssertEqual(boxes.first?.name, "Box 1") } else { XCTFail("\(events[2])") }
         let sent = try JSONSerialization.jsonObject(with: StubProtocol.requests[0].httpBody!) as! [String: Any]
         XCTAssertEqual(sent["question"] as? String, "where")
     }
@@ -251,5 +251,15 @@ final class APIClientTests: XCTestCase {
         let patch = try JSONSerialization.jsonObject(with: reqs[1].httpBody!) as! [String: Any]
         XCTAssertEqual(patch["qty_text"] as? String, "×2")
         XCTAssertNil(patch["name"])
+    }
+
+    func testRateRunPostsTheVoteToTheRunsEndpoint() async throws {
+        StubProtocol.handler = { _ in (200, #"{"ok": true, "run_id": "r1", "feedback": -1}"#.data(using: .utf8)!) }
+        try await client.rateRun(id: "r1", value: -1)
+        let req = try XCTUnwrap(StubProtocol.requests.last)
+        XCTAssertEqual(req.url?.path, "/api/runs/r1/feedback")
+        XCTAssertEqual(req.httpMethod, "POST")
+        let body = try JSONSerialization.jsonObject(with: StubProtocol.body(of: req)) as? [String: Any]
+        XCTAssertEqual(body?["value"] as? Int, -1)
     }
 }

@@ -204,6 +204,8 @@ public enum L10nKey: String, CaseIterable, Sendable {
     case toast_offline
     case gps_denied
     case gps_off_hint
+    case feedback_up
+    case feedback_down
 }
 
 extension L10n {
@@ -410,6 +412,8 @@ extension L10n {
         .toast_offline: "Can't reach the server — check your connection",
         .gps_denied: "Location access is off — allow it in Settings to remember where boxes are",
         .gps_off_hint: "Location is off; boxes are saved without a position",
+        .feedback_up: "Helpful",
+        .feedback_down: "Not helpful",
     ]
 
     static let zh: [L10nKey: String] = [
@@ -615,5 +619,7 @@ extension L10n {
         .toast_offline: "连不上服务器,请检查网络后重试",
         .gps_denied: "没有定位权限,请到系统设置里允许,才能记住箱子的位置",
         .gps_off_hint: "定位已关闭,入库时不记录位置",
+        .feedback_up: "有用",
+        .feedback_down: "没用",
     ]
 }

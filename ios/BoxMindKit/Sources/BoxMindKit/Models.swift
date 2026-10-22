@@ -215,12 +215,21 @@ public struct AgentResponse: Codable, Hashable, Sendable {
     public var actions: [AgentAction]?
     /// Non-destructive calls the agent already ran in this turn.
     public var executed: [Executed]?
+    /// The recorded production trace; thumbs feedback goes to `POST /api/runs/{id}/feedback`.
+    public var runId: String?
 
-    public init(type: Kind, text: String, actions: [AgentAction]? = nil, executed: [Executed]? = nil) {
+    public init(type: Kind, text: String, actions: [AgentAction]? = nil, executed: [Executed]? = nil,
+                runId: String? = nil) {
         self.type = type
         self.text = text
         self.actions = actions
         self.executed = executed
+        self.runId = runId
+    }
+
+    enum CodingKeys: String, CodingKey {
+        case type, text, actions, executed
+        case runId = "run_id"
     }
 
     public struct Executed: Codable, Hashable, Sendable {

@@ -252,3 +252,13 @@ open ios/BoxMind.xcodeproj             # 在 Xcode 里选真机运行
   已登录并塞入 3 个箱子;审核期间后端必须公网可达(Funnel 或正式域名),这一步没做。
 - 截图:新建 iPhone 17 Pro Max 模拟器(6.9",1320×2868,状态栏 9:41),`BoxMindUITests/ScreenshotTests`
   在 `-bm-mock` 下产出 8 张到 `docs/app-store/screenshots/`。
+
+### 2026-10-22 · 回复点赞 / 点踩(评测闭环的 iOS 端)
+
+- 后端每次模型请求落 `agent_runs` 一行,`/api/agent` 响应和 `/api/ask` 的 done 事件带 `run_id`
+  (`AgentResponse.runId`、`AskEvent.done(boxes:creditsLeft:runId:)`),`AskMsg` 记 `runId` 和 `feedback`。
+- `BoxMindAPI.rateRun(id:value:)` → `POST /api/runs/{id}/feedback`;`AppModel.rate(_:_:)` 乐观更新,再点一次清除,
+  失败回滚并 toast。本地消息(问候、错误、取消)没有 run,不显示按钮。
+- Ask 页每条有 run 的回复下方,朗读按钮右侧两个小拇指(`ask.up.<i>` / `ask.down.<i>`),选中态填充 + `isSelected`。
+- 测试:Kit +6(`AppModelFeedbackTests`、SSE run_id、客户端请求),UI `EntryFlowTests` 增加点踩 / 清除步骤。
+- 撤销已经是隐式负反馈(后端做),这里只补显式的那一半。

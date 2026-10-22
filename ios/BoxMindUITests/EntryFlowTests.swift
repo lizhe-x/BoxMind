@@ -84,6 +84,13 @@ final class EntryFlowTests: XCTestCase {
         XCTAssertTrue(app.buttons["ask.back"].waitForExistence(timeout: 60), "query routes to the chat")
         XCTAssertTrue(waitForBubble(app, containing: "is in Box 1"), "streamed answer finished")
         XCTAssertTrue(app.buttons["ask.box.1"].waitForExistence(timeout: 10), "box card under the answer")
+        // Thumbs on the answer: tap down, it stays selected; tap again, it clears.
+        let down = app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH 'ask.down.'")).firstMatch
+        XCTAssertTrue(down.waitForExistence(timeout: 5), "thumbs under the answer")
+        down.tap()
+        XCTAssertTrue(down.wait(for: \.isSelected, toEqual: true, timeout: 5))
+        down.tap()
+        XCTAssertTrue(down.wait(for: \.isSelected, toEqual: false, timeout: 5))
         shot(app, "15-ask-answer")
 
         // 4) Destructive agent command → confirm card → execute → undo

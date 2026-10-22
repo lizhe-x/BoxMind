@@ -90,7 +90,12 @@ struct AskView: View {
                 .padding(.horizontal, 15).padding(.vertical, 12)
                 .background(BM.card2, in: BubbleShape(tail: .leading))
                 .overlay(BubbleShape(tail: .leading).strokeBorder(BM.border, lineWidth: 1))
-                if !m.streaming, !m.text.isEmpty { speakButton(m) }
+                if !m.streaming, !m.text.isEmpty {
+                    HStack(spacing: 8) {
+                        speakButton(m)
+                        if m.runId != nil { thumbs(m) }
+                    }
+                }
                 ForEach(m.boxes ?? []) { box in boxCard(box) }
                 if let actions = m.confirm, !actions.isEmpty { confirmCard(actions) }
             }
@@ -112,6 +117,33 @@ struct AskView: View {
             .overlay(Capsule().strokeBorder(on ? BM.blueTint.opacity(0.35) : BM.border8, lineWidth: 1))
         }
         .buttonStyle(.plain)
+    }
+
+    /// Thumbs up / down on a model reply (goes to the run's feedback; undo is the implicit one).
+    private func thumbs(_ m: AskMsg) -> some View {
+        let index = model.askMsgs.firstIndex(where: { $0.id == m.id }) ?? 0
+        return HStack(spacing: 4) {
+            thumb(m, value: 1, symbol: "hand.thumbsup", label: model.t(.feedback_up), id: "ask.up.\(index)")
+            thumb(m, value: -1, symbol: "hand.thumbsdown", label: model.t(.feedback_down), id: "ask.down.\(index)")
+        }
+    }
+
+    private func thumb(_ m: AskMsg, value: Int, symbol: String, label: String, id: String) -> some View {
+        let on = m.feedback == value
+        return Button {
+            Haptics.tick()
+            Task { await model.rate(m.id, value) }
+        } label: {
+            Image(systemName: on ? symbol + ".fill" : symbol).font(.system(size: 12))
+                .foregroundStyle(on ? BM.blue2 : BM.textSub)
+                .frame(width: 30, height: 28)
+                .background(on ? BM.blueTint.opacity(0.12) : Color.white.opacity(0.04), in: Capsule())
+                .overlay(Capsule().strokeBorder(on ? BM.blueTint.opacity(0.35) : BM.border8, lineWidth: 1))
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(label)
+        .accessibilityAddTraits(on ? .isSelected : [])
+        .accessibilityIdentifier(id)
     }
 
     private func boxCard(_ box: BoxRef) -> some View {

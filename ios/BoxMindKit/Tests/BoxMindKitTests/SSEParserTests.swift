@@ -37,4 +37,12 @@ final class SSEParserTests: XCTestCase {
         var parser = SSEParser()
         XCTAssertEqual(parser.feed(": keep-alive\n\nevent: delta\n\n"), [])
     }
+
+
+    func testDoneCarriesTheRunIdWhenPresent() {
+        let raw = SSEEvent(event: "done", data: #"{"boxes": [], "credits_left": -1, "run_id": "abc123"}"#)
+        XCTAssertEqual(AskEvent(raw), .done(boxes: [], creditsLeft: -1, runId: "abc123"))
+        let old = SSEEvent(event: "done", data: #"{"boxes": [], "credits_left": -1}"#)
+        XCTAssertEqual(AskEvent(old), .done(boxes: [], creditsLeft: -1, runId: nil))
+    }
 }

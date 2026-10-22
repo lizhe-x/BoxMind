@@ -63,6 +63,10 @@ extension APIClient: BoxMindAPI {
         return try decode(ExecuteResult.self, try await send(path: "/api/agent/execute", method: "POST", json: body).0)
     }
 
+    public func rateRun(id: String, value: Int) async throws {
+        _ = try await send(path: "/api/runs/\(id)/feedback", method: "POST", json: ["value": value])
+    }
+
     public func tts(text: String) async throws -> AudioClip {
         let (data, http) = try await send(path: "/api/tts", method: "POST", json: ["text": text])
         let mime = http.value(forHTTPHeaderField: "Content-Type") ?? "audio/wav"

@@ -43,6 +43,8 @@ public protocol BoxMindAPI: Sendable {
     func askStream(question: String) -> AsyncThrowingStream<AskEvent, Error>
     func agent(message: String, history: [AgentMessage], gps: GeoPoint?) async throws -> AgentResponse
     func agentExecute(tool: String, args: JSONValue) async throws -> ExecuteResult
+    /// Thumbs on a recorded run: 1 up, -1 down, 0 clears.
+    func rateRun(id: String, value: Int) async throws
     func tts(text: String) async throws -> AudioClip
 
     // Photo intake / scan / box editing (M3)
