@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024" role="img" aria-label="BoxMind">
+<defs>
+<linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0C1122"/><stop offset="1" stop-color="#171F3C"/></linearGradient>
+<radialGradient id="vig" cx=".5" cy=".42" r=".6"><stop offset="0" stop-color="#2A3566" stop-opacity=".55"/><stop offset="1" stop-color="#0C1122" stop-opacity="0"/></radialGradient>
+<linearGradient id="front" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5584FF"/><stop offset="1" stop-color="#8B5CF6"/></linearGradient>
+<linearGradient id="side" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3C63D6"/><stop offset="1" stop-color="#4E35A8"/></linearGradient>
+<linearGradient id="top" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#B4C4FF"/><stop offset="1" stop-color="#CDB8FF"/></linearGradient>
+<linearGradient id="tag" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFD98A"/><stop offset="1" stop-color="#FFA640"/></linearGradient>
+<filter id="soft" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="22"/></filter>
+<filter id="tagShadow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="12"/></filter>
+</defs>
+<rect width="1024" height="1024" fill="url(#bg)"/>
+<rect width="1024" height="1024" fill="url(#vig)"/>
+<ellipse cx="520" cy="884" rx="330" ry="44" fill="#05070F" fill-opacity=".7" filter="url(#soft)"/>
+<polygon points="196,392 716,392 836,272 316,272" fill="url(#top)"/>
+<polygon points="716,392 836,272 836,752 716,872" fill="url(#side)"/>
+<path d="M218,392 H716 V872 H218 Q196,872 196,850 V414 Q196,392 218,392 Z" fill="url(#front)"/>
+<polygon points="426,392 486,392 606,272 546,272" fill="#FFFFFF" fill-opacity=".22"/>
+<rect x="426" y="392" width="60" height="480" fill="#FFFFFF" fill-opacity=".16"/>
+<g transform="translate(800,354) rotate(-14) translate(-98,-52)"><path d="M98,0 Q110,0 118,10 L188,66 Q196,72 196,82 V246 Q196,276 166,276 H30 Q0,276 0,246 V82 Q0,72 8,66 L78,10 Q86,0 98,0 Z" fill="#05070F" fill-opacity=".45" filter="url(#tagShadow)"/></g>
+<path d="M836,272 C 828,296 810,318 790,340" fill="none" stroke="#F6EEDC" stroke-width="9" stroke-linecap="round"/>
+<g transform="translate(790,340) rotate(-14) translate(-98,-52)">
+  <path d="M98,0 Q110,0 118,10 L188,66 Q196,72 196,82 V246 Q196,276 166,276 H30 Q0,276 0,246 V82 Q0,72 8,66 L78,10 Q86,0 98,0 Z" fill="url(#tag)"/>
+  <circle cx="98" cy="52" r="20" fill="#0C1122" fill-opacity=".82"/>
+  <circle cx="98" cy="52" r="9" fill="#F6EEDC"/>
+  <rect x="44" y="124" width="108" height="24" rx="12" fill="#5A3A0E" fill-opacity=".7"/>
+  <rect x="44" y="174" width="70" height="24" rx="12" fill="#5A3A0E" fill-opacity=".7"/>
+</g>
+</svg>
