@@ -165,7 +165,9 @@ executed, confirm gate, arguments, resulting box state). Results per prompt vers
 fails a test). The first runs found a provider protocol bug, a tool side-effect bug and a prompt rule that
 moved extraction from 0.90 to 0.95. In production every model-backed request persists its trace (`agent_runs`)
 with thumbs feedback and undo as implicit negative feedback; `evals/export.py` turns failed runs into eval-case
-stubs. Item search is hybrid (pgvector + pg_trgm, reciprocal rank fusion) and the retrieval set measures it.
+stubs. Item search is hybrid (pgvector + pg_trgm, reciprocal rank fusion) and the retrieval set measures it; it also
+showed the embedding runtime mattered more than the model (same MiniLM: R@8 0.80 via ONNX, 0.89 via
+sentence-transformers), so the server runs the native one.
 
 ```bash
 backend/.venv/bin/python evals/run.py            # both sets, provider and model from backend/.env

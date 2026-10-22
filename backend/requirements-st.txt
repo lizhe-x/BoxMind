@@ -1,0 +1,4 @@
+# Optional: in-process embeddings through sentence-transformers (torch).
+# The retrieval eval showed the same MiniLM model scoring R@8 0.89 here vs 0.80 through fastembed's ONNX export;
+# set BOXMIND_EMBEDDING_PROVIDER=st and run `python -m app.maintenance.reembed --apply` after installing.
+sentence-transformers>=3.0

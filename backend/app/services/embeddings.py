@@ -1,4 +1,7 @@
-"""Embedding 提供方: local(fastembed,进程内) / remote(网关 /v1/embeddings)。
+"""Embedding 提供方: local(fastembed,进程内) / remote(网关 /v1/embeddings) / st(sentence-transformers,进程内)。
+
+`st` 是复核用的:fastembed 跑 multilingual-e5-large 得到的检索分数远低于该模型的口碑,用原生实现再跑一遍
+检索集才能判断是模型不行还是 ONNX 导出不行。它需要 torch,默认不装(`pip install sentence-transformers`)。
 
 网关开通 embedding 模型后,把 BOXMIND_EMBEDDING_PROVIDER=remote、
 BOXMIND_EMBEDDING_MODEL 与 BOXMIND_EMBEDDING_DIM 改到 .env 即可切换。
@@ -31,6 +34,24 @@ def _embed_local_sync(texts: list[str]) -> list[list[float]]:
     return [list(map(float, v)) for v in model.embed(texts)]
 
 
+_st_model = None
+
+
+def _get_st_model():
+    global _st_model
+    if _st_model is None:
+        from sentence_transformers import SentenceTransformer
+
+        _st_model = SentenceTransformer(settings.embedding_model,
+                                        cache_folder=settings.embedding_cache_dir or None)
+    return _st_model
+
+
+def _embed_st_sync(texts: list[str]) -> list[list[float]]:
+    model = _get_st_model()
+    return [list(map(float, v)) for v in model.encode(texts, normalize_embeddings=True, batch_size=32)]
+
+
 async def embed(texts: list[str], query: bool = False) -> list[list[float]]:
     """Embed item names (`query=False`) or a search query (`query=True`); the role only matters for models
     that take a prefix (settings.embedding_*_prefix)."""
@@ -49,11 +70,14 @@ async def embed(texts: list[str], query: bool = False) -> list[list[float]]:
             r.raise_for_status()
             data = sorted(r.json()["data"], key=lambda d: d["index"])
             return [d["embedding"] for d in data]
-    async with _lock:  # fastembed 模型非线程安全,串行化
-        return await asyncio.to_thread(_embed_local_sync, texts)
+    async with _lock:  # 进程内模型非线程安全,串行化
+        fn = _embed_st_sync if settings.embedding_provider == "st" else _embed_local_sync
+        return await asyncio.to_thread(fn, texts)
 
 
 def warmup() -> None:
     """启动时预加载本地模型(首次会下载权重)。"""
     if settings.embedding_provider == "local":
         _get_local_model()
+    elif settings.embedding_provider == "st":
+        _get_st_model()

@@ -31,7 +31,9 @@ The retrieval row has no model: it measures the embedding index.
 | model | - | search hybrid | search vector |
 |---|---|---|---|
 | embedding / multilingual-e5-large |  | 0.44 · 33 ms |  |
+| embedding / multilingual-e5-large / sentence-transformers |  | 0.58 · 19 ms |  |
 | embedding / paraphrase-multilingual-MiniLM-L12-v2 | 0.80 · 3 ms | 0.80 · 4 ms | 0.80 · 3 ms |
+| embedding / paraphrase-multilingual-MiniLM-L12-v2 / sentence-transformers |  | 0.89 · 10 ms |  |
 | embedding / paraphrase-multilingual-mpnet-base-v2 |  | 0.82 · 8 ms |  |
 
 **tools** (pass, p50 latency)
@@ -81,3 +83,6 @@ The retrieval row has no model: it measures the embedding index.
 | 2026-10-22 | extraction | claude_code / haiku | interpret v4 (0ab82a99a5) | 40 | exact 0.93 · en 1.00 · zh 0.85 · intent 1.00 · label 1.00 · location 1.00 · items P 1.00 R 1.00 · qty 0.96 | p50 3240 ms | [json](results/extraction-2026-10-22T170531Z.json) |
 | 2026-10-22 | routing | claude_code / opus | interpret v4 (0ab82a99a5) | 60 | acc 1.00 · en 1.00 · zh 1.00 · ingest F1 1.00 · query F1 1.00 · operation F1 1.00 | p50 2820 ms | [json](results/routing-2026-10-22T170718Z.json) |
 | 2026-10-22 | extraction | claude_code / opus | interpret v4 (0ab82a99a5) | 40 | exact 0.95 · en 1.00 · zh 0.90 · intent 1.00 · label 1.00 · location 1.00 · items P 1.00 R 1.00 · qty 0.98 | p50 3182 ms | [json](results/extraction-2026-10-22T170718Z.json) |
+| 2026-10-22 | retrieval | embedding / paraphrase-multilingual-MiniLM-L12-v2 / sentence-transformers | search hybrid | 50 | R@1 0.56 · R@3 0.81 · R@8 0.89 · MRR 0.82 · en 0.93 · zh 0.84 · category 0.70 · cross 0.92 · exact 1.00 · synonym 0.89 | p50 10 ms | [json](results/retrieval-2026-10-22T171725Z.json) |
+| 2026-10-22 | retrieval | embedding / multilingual-e5-large / sentence-transformers | search hybrid | 50 | R@1 0.39 · R@3 0.59 · R@8 0.71 · MRR 0.64 · en 0.77 · zh 0.66 · category 0.57 · cross 0.62 · exact 1.00 · synonym 0.86 | p50 23 ms | [json](results/retrieval-2026-10-22T171757Z.json) |
+| 2026-10-22 | retrieval | embedding / multilingual-e5-large / sentence-transformers | search hybrid | 50 | R@1 0.33 · R@3 0.46 · R@8 0.58 · MRR 0.55 · en 0.74 · zh 0.41 · category 0.58 · cross 0.38 · exact 1.00 · synonym 0.71 | p50 19 ms | [json](results/retrieval-2026-10-22T171804Z.json) |

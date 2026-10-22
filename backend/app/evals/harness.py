@@ -195,7 +195,10 @@ def run_label(set_name: str, results: list[dict]) -> tuple[str, str]:
     from ..config import settings
 
     if set_name == "retrieval":
-        return f"embedding / {settings.embedding_model.rsplit('/', 1)[-1]}", f"search {settings.search_mode}"
+        runtimes = {"local": "fastembed", "st": "sentence-transformers", "remote": "gateway"}
+        runtime = runtimes[settings.embedding_provider]
+        return (f"embedding / {settings.embedding_model.rsplit('/', 1)[-1]} / {runtime}",
+                f"search {settings.search_mode}")
     from ..services.llm import llm
 
     provider = f"{settings.llm_provider} / {llm.model_name}"
@@ -285,7 +288,9 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--concurrency", type=int, default=3)
     ap.add_argument("--limit", type=int, default=0, help="only the first N cases of each set")
     ap.add_argument("--search", choices=("hybrid", "vector"), help="item search mode for retrieval / tools")
-    ap.add_argument("--embedding", help="fastembed model id for retrieval, e.g. intfloat/multilingual-e5-large")
+    ap.add_argument("--embedding", help="embedding model id for retrieval, e.g. intfloat/multilingual-e5-large")
+    ap.add_argument("--embedding-provider", choices=("local", "st", "remote"),
+                    help="local = fastembed (ONNX), st = sentence-transformers (torch), remote = gateway")
     ap.add_argument("--dim", type=int, help="its vector dimension (required with --embedding)")
     ap.add_argument("--prefixes", choices=("none", "e5"), default=None,
                     help="role prefixes the embedding model expects (e5: 'query: ' / 'passage: ')")
@@ -314,6 +319,8 @@ def main(argv: list[str] | None = None) -> int:
         if not args.dim:
             ap.error("--embedding needs --dim")
         settings.embedding_model, settings.embedding_dim = args.embedding, args.dim
+    if args.embedding_provider:
+        settings.embedding_provider = args.embedding_provider
     if args.prefixes == "e5":
         settings.embedding_query_prefix, settings.embedding_passage_prefix = "query: ", "passage: "
     elif args.prefixes == "none":

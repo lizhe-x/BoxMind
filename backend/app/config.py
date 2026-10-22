@@ -22,7 +22,8 @@ class Settings(BaseSettings):
     tts_voice: str = "alloy"
 
     # Embeddings: "local" uses fastembed in-process; "remote" uses the gateway
-    # /v1/embeddings endpoint with embedding_model (switch once enabled there).
+    # /v1/embeddings endpoint with embedding_model (switch once enabled there);
+    # "st" uses sentence-transformers in-process (torch; evaluation only unless adopted).
     embedding_provider: str = "local"
     embedding_model: str = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
     embedding_dim: int = 384

@@ -117,8 +117,14 @@ Recorded in `RESULTS.md`; the point of the sets is that these were found by numb
   mpnet-base 0.82 (en 0.90 / zh 0.74, cross 0.83 but R@1 0.40 and synonym 0.81); multilingual-e5-large through
   fastembed 0.52 with prefixes and 0.44 without, which is far below the model's reputation and points at the
   ONNX export or pooling in that runtime rather than the model; to be checked with sentence-transformers before
-  it is judged. Decision: keep MiniLM; the Chinese → English single-word gap is still open and is the next
-  retrieval change to measure (`app/maintenance/reembed.py` switches the server when a model wins).
+  it is judged.
+- retrieval, runtime check (`--embedding-provider st`, sentence-transformers instead of fastembed's ONNX export):
+  the same MiniLM-L12 model scores R@8 0.89 (en 0.93 / zh 0.84, cross 0.92) natively against 0.80 (zh 0.66,
+  cross 0.75) through fastembed. The gap was the runtime, not the model. e5-large natively: 0.71 with the
+  `query:` / `passage:` prefixes, 0.58 without, so it is not the model for short item names either way.
+  Decision: the server now runs MiniLM through sentence-transformers (`BOXMIND_EMBEDDING_PROVIDER=st`,
+  `pip install -r requirements-st.txt`, then `python -m app.maintenance.reembed --apply`); fastembed stays the
+  dependency-free default for fresh installs and CI.
 - tools: sonnet and opus 40/40, haiku 39/40 (it asks which "灯" is meant instead of moving the lantern, which is
   a defensible reading); opus is also the fastest at p50 5.3 s per case against sonnet 9.6 s.
 - retrieval: the multilingual MiniLM index is near-perfect within a language (exact 1.00, en 0.94) but weak
