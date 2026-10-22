@@ -197,7 +197,8 @@ def run_label(set_name: str, results: list[dict]) -> tuple[str, str]:
     if set_name == "retrieval":
         runtimes = {"local": "fastembed", "st": "sentence-transformers", "remote": "gateway"}
         runtime = runtimes[settings.embedding_provider]
-        return (f"embedding / {settings.embedding_model.rsplit('/', 1)[-1]} / {runtime}",
+        prefixed = " / prefixes" if settings.embedding_query_prefix or settings.embedding_passage_prefix else ""
+        return (f"embedding / {settings.embedding_model.rsplit('/', 1)[-1]} / {runtime}{prefixed}",
                 f"search {settings.search_mode}")
     from ..services.llm import llm
 

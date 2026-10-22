@@ -31,7 +31,9 @@ The retrieval row has no model: it measures the embedding index.
 | model | - | search hybrid | search vector |
 |---|---|---|---|
 | embedding / multilingual-e5-large |  | 0.44 · 33 ms |  |
+| embedding / multilingual-e5-large / prefixes |  | 0.52 · 22 ms |  |
 | embedding / multilingual-e5-large / sentence-transformers |  | 0.58 · 19 ms |  |
+| embedding / multilingual-e5-large / sentence-transformers / prefixes |  | 0.71 · 23 ms |  |
 | embedding / paraphrase-multilingual-MiniLM-L12-v2 | 0.80 · 3 ms | 0.80 · 4 ms | 0.80 · 3 ms |
 | embedding / paraphrase-multilingual-MiniLM-L12-v2 / sentence-transformers |  | 0.89 · 10 ms |  |
 | embedding / paraphrase-multilingual-mpnet-base-v2 |  | 0.82 · 8 ms |  |

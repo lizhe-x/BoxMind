@@ -1,7 +1,7 @@
 {
  "set": "retrieval",
  "stamp": "2026-10-22T171757Z",
- "model": "embedding / multilingual-e5-large / sentence-transformers",
+ "model": "embedding / multilingual-e5-large / sentence-transformers / prefixes",
  "prompt": "search hybrid",
  "summary": {
   "n": 50,

@@ -1,7 +1,7 @@
 {
  "set": "retrieval",
  "stamp": "2026-10-22T162723Z",
- "model": "embedding / multilingual-e5-large",
+ "model": "embedding / multilingual-e5-large / prefixes",
  "prompt": "search hybrid",
  "summary": {
   "n": 50,
