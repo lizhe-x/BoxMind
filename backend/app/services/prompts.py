@@ -38,7 +38,7 @@ class Prompt:
         return self.text.format(**kw)
 
 
-INTERPRET = Prompt("interpret", "v2", """\
+INTERPRET = Prompt("interpret", "v4", """\
 You are the parsing engine of BoxMind, an app that remembers what is stored in which box.
 The user says one sentence. Classify it and extract structure. Output exactly one JSON object and nothing else:
 
@@ -58,6 +58,10 @@ Rules:
   delete a box or item ("remove the pliers"), move ("move the drill to box 5"), empty, bind a code,
   record the current GPS position, undo / revert / restore.
 - qty_text format: "×3", "×2 pairs", "×1 bag"; use "{some}" only when the quantity is genuinely unclear
+- a real measure keeps the language of the sentence, never translated: "一套茶具" → "×1套", "两根雪杖" → "×2根",
+  "两双手套" → "×2双", "a set of screwdrivers" → "×1 set", "two pairs of boots" → "×2 pairs"
+- the generic classifier 个 and English articles are not measures: "一个水壶" → "×1", "four mugs" → "×4";
+  a word that belongs to the item's name stays in the name: "a tea set" → name "tea set", "×1"
 - a single item named without a number or measure word is one item: "the tent", "帐篷", "旧手机", "备用键盘" → "×1";
   "{some}" is for plurals and bulk words without a number ("my scarves", "some batteries", "若干电池", "一些书")
 - box_label: normalise numeric labels to the bare number ("box 1" / "1号箱" / "一号" → "1");
@@ -126,6 +130,13 @@ CHANGELOG: dict[str, list[tuple[str, str, str, str]]] = {
         ("v2", "212ab1240e", "2026-10-22",
          "extraction eval: Chinese bare nouns without a measure word (帐篷, 旧手机) came back as 若干; "
          "rule added that a single named item is ×1 and {some} is for plurals / bulk words only"),
+        ("v3", "29a4cdb582", "2026-10-22",
+         "extraction eval (haiku): units came back in English inside Chinese sentences (一套茶具 → ×1 set); "
+         "rule added that the unit keeps the sentence's language. REGRESSED: exact sonnet 0.95 -> 0.80, "
+         "opus 0.95 -> 0.75; models kept the generic 个 (×1个) and split 'tea set' into a unit"),
+        ("v4", "0ab82a99a5", "2026-10-22",
+         "v3 narrowed: real measures (套/副/根/双, pairs/sets of) keep the sentence's language; the generic 个 and "
+         "English articles are not measures; a measure word that is part of the name stays in the name"),
     ],
     "vision": [("v1", "2ce6821573", "2026-10-22", "initial wording")],
     "answer": [("v1", "df7e3dad31", "2026-10-22", "initial wording")],

@@ -12,19 +12,19 @@ The retrieval row has no model: it measures the embedding index.
 <!-- matrix:start -->
 **routing** (acc, p50 latency)
 
-| model | interpret v1 (8c50a69b15) | interpret v2 (212ab1240e) |
-|---|---|---|
-| claude_code / haiku | 1.00 · 2910 ms | 1.00 · 3018 ms |
-| claude_code / opus |  | 1.00 · 2945 ms |
-| claude_code / sonnet | 1.00 · 2752 ms | 1.00 · 3677 ms |
+| model | interpret v1 (8c50a69b15) | interpret v2 (212ab1240e) | interpret v3 (29a4cdb582) | interpret v4 (0ab82a99a5) |
+|---|---|---|---|---|
+| claude_code / haiku | 1.00 · 2910 ms | 1.00 · 3018 ms | 1.00 · 3030 ms | 1.00 · 3015 ms |
+| claude_code / opus |  | 1.00 · 2945 ms | 1.00 · 2790 ms | 1.00 · 2820 ms |
+| claude_code / sonnet | 1.00 · 2752 ms | 1.00 · 3677 ms | 1.00 · 2860 ms | 1.00 · 4066 ms |
 
 **extraction** (exact, p50 latency)
 
-| model | interpret v1 (8c50a69b15) | interpret v2 (212ab1240e) |
-|---|---|---|
-| claude_code / haiku | 0.82 · 3345 ms | 0.88 · 3432 ms |
-| claude_code / opus |  | 0.95 · 3216 ms |
-| claude_code / sonnet | 0.90 · 2845 ms | 0.95 · 4464 ms |
+| model | interpret v1 (8c50a69b15) | interpret v2 (212ab1240e) | interpret v3 (29a4cdb582) | interpret v4 (0ab82a99a5) |
+|---|---|---|---|---|
+| claude_code / haiku | 0.82 · 3345 ms | 0.88 · 3432 ms | 0.82 · 3580 ms | 0.93 · 3240 ms |
+| claude_code / opus |  | 0.95 · 3216 ms | 0.75 · 2903 ms | 0.95 · 3182 ms |
+| claude_code / sonnet | 0.90 · 2845 ms | 0.95 · 4464 ms | 0.80 · 2850 ms | 0.95 · 4421 ms |
 
 **retrieval** (R@8, p50 latency)
 
@@ -69,3 +69,15 @@ The retrieval row has no model: it measures the embedding index.
 | 2026-10-22 | retrieval | embedding / multilingual-e5-large | search hybrid | 50 | R@1 0.30 · R@3 0.41 · R@8 0.52 · MRR 0.51 · en 0.62 · zh 0.42 · category 0.54 · cross 0.29 · exact 1.00 · synonym 0.67 | p50 22 ms | [json](results/retrieval-2026-10-22T162723Z.json) |
 | 2026-10-22 | retrieval | embedding / multilingual-e5-large | search hybrid | 50 | R@1 0.27 · R@3 0.33 · R@8 0.44 · MRR 0.45 · en 0.59 · zh 0.30 · category 0.45 · cross 0.17 · exact 1.00 · synonym 0.67 | p50 33 ms | [json](results/retrieval-2026-10-22T162820Z.json) |
 | 2026-10-22 | retrieval | embedding / paraphrase-multilingual-MiniLM-L12-v2 | search hybrid | 50 | R@1 0.52 · R@3 0.74 · R@8 0.80 · MRR 0.74 · en 0.94 · zh 0.66 · category 0.68 · cross 0.75 · exact 1.00 · synonym 0.89 | p50 4 ms | [json](results/retrieval-2026-10-22T162837Z.json) |
+| 2026-10-22 | routing | claude_code / sonnet | interpret v3 (29a4cdb582) | 60 | acc 1.00 · en 1.00 · zh 1.00 · ingest F1 1.00 · query F1 1.00 · operation F1 1.00 | p50 2860 ms | [json](results/routing-2026-10-22T165656Z.json) |
+| 2026-10-22 | extraction | claude_code / sonnet | interpret v3 (29a4cdb582) | 40 | exact 0.80 · en 0.95 · zh 0.65 · intent 1.00 · label 1.00 · location 1.00 · items P 1.00 R 1.00 · qty 0.89 | p50 2850 ms | [json](results/extraction-2026-10-22T165656Z.json) |
+| 2026-10-22 | routing | claude_code / haiku | interpret v3 (29a4cdb582) | 60 | acc 1.00 · en 1.00 · zh 1.00 · ingest F1 1.00 · query F1 1.00 · operation F1 1.00 | p50 3030 ms | [json](results/routing-2026-10-22T165845Z.json) |
+| 2026-10-22 | extraction | claude_code / haiku | interpret v3 (29a4cdb582) | 40 | exact 0.82 · en 0.95 · zh 0.70 · intent 1.00 · label 1.00 · location 1.00 · items P 1.00 R 1.00 · qty 0.91 | p50 3580 ms | [json](results/extraction-2026-10-22T165845Z.json) |
+| 2026-10-22 | routing | claude_code / opus | interpret v3 (29a4cdb582) | 60 | acc 1.00 · en 1.00 · zh 1.00 · ingest F1 1.00 · query F1 1.00 · operation F1 1.00 | p50 2790 ms | [json](results/routing-2026-10-22T170041Z.json) |
+| 2026-10-22 | extraction | claude_code / opus | interpret v3 (29a4cdb582) | 40 | exact 0.75 · en 0.95 · zh 0.55 · intent 1.00 · label 1.00 · location 1.00 · items P 1.00 R 1.00 · qty 0.86 | p50 2903 ms | [json](results/extraction-2026-10-22T170041Z.json) |
+| 2026-10-22 | routing | claude_code / sonnet | interpret v4 (0ab82a99a5) | 60 | acc 1.00 · en 1.00 · zh 1.00 · ingest F1 1.00 · query F1 1.00 · operation F1 1.00 | p50 4066 ms | [json](results/routing-2026-10-22T170252Z.json) |
+| 2026-10-22 | extraction | claude_code / sonnet | interpret v4 (0ab82a99a5) | 40 | exact 0.95 · en 1.00 · zh 0.90 · intent 1.00 · label 1.00 · location 1.00 · items P 1.00 R 1.00 · qty 0.98 | p50 4421 ms | [json](results/extraction-2026-10-22T170252Z.json) |
+| 2026-10-22 | routing | claude_code / haiku | interpret v4 (0ab82a99a5) | 60 | acc 1.00 · en 1.00 · zh 1.00 · ingest F1 1.00 · query F1 1.00 · operation F1 1.00 | p50 3015 ms | [json](results/routing-2026-10-22T170531Z.json) |
+| 2026-10-22 | extraction | claude_code / haiku | interpret v4 (0ab82a99a5) | 40 | exact 0.93 · en 1.00 · zh 0.85 · intent 1.00 · label 1.00 · location 1.00 · items P 1.00 R 1.00 · qty 0.96 | p50 3240 ms | [json](results/extraction-2026-10-22T170531Z.json) |
+| 2026-10-22 | routing | claude_code / opus | interpret v4 (0ab82a99a5) | 60 | acc 1.00 · en 1.00 · zh 1.00 · ingest F1 1.00 · query F1 1.00 · operation F1 1.00 | p50 2820 ms | [json](results/routing-2026-10-22T170718Z.json) |
+| 2026-10-22 | extraction | claude_code / opus | interpret v4 (0ab82a99a5) | 40 | exact 0.95 · en 1.00 · zh 0.90 · intent 1.00 · label 1.00 · location 1.00 · items P 1.00 R 1.00 · qty 0.98 | p50 3182 ms | [json](results/extraction-2026-10-22T170718Z.json) |

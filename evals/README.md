@@ -102,7 +102,12 @@ Recorded in `RESULTS.md`; the point of the sets is that these were found by numb
   the rule "a single named item is ×1; `some` is for plurals and bulk words": exact-case rate sonnet 0.90 → 0.95,
   haiku 0.82 → 0.88, opus 0.95. The two remaining sonnet/opus misses (充电线, 旧相册 as ×1) are nouns that are
   plural by sense only, a judgment call the label makes one way; haiku additionally writes units in English
-  ("×1 set", "×1 pair") inside Chinese sentences, a candidate for v3.
+  ("×1 set", "×1 pair") inside Chinese sentences.
+- extraction, interpret v3 → v4: v3 said "the unit stays in the language of the sentence" and regressed on every
+  model (sonnet 0.95 → 0.80, haiku 0.88 → 0.82, opus 0.95 → 0.75): the models kept the generic classifier 个
+  ("×1个") and split "a tea set" into a unit. v4 narrows it to real measures (套/副/根/双, pairs/sets of), says 个
+  and articles are not measures and a measure word inside the name stays in the name: sonnet 0.95, haiku 0.93,
+  opus 0.95, no language-mixed unit left. The regression is in the CHANGELOG on purpose; it is what the sets are for.
 - routing: 60/60 on sonnet, haiku and opus, both prompt versions. The three-way split is not where the risk is.
 - retrieval, hybrid search: with a trigram floor of 0.1 the trigram leg added noise ("printer" pulled in
   "decanter" through a shared "ter") and R@1 fell 0.52 → 0.47; at 0.3 it adds only real substring / typo hits
