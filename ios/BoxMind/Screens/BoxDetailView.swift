@@ -9,6 +9,8 @@ struct BoxDetailView: View {
     @Environment(AppModel.self) private var model
     @State private var newItem = ""
     @State private var picks: [PhotosPickerItem] = []
+    @State private var showLibrary = false
+    @State private var showCamera = false
     @State private var uploading = false
 
     var body: some View {
@@ -187,7 +189,14 @@ struct BoxDetailView: View {
                         .buttonStyle(.plain)
                         .accessibilityIdentifier("detail.photo.\(i)")
                     }
-                    PhotosPicker(selection: $picks, maxSelectionCount: 10, matching: .images) {
+                    Menu {
+                        Button { showCamera = true } label: { Label(model.t(.take_photo), systemImage: "camera") }
+                            .accessibilityIdentifier("detail.takePhoto")
+                        Button { showLibrary = true } label: {
+                            Label(model.t(.choose_from_library), systemImage: "photo.on.rectangle")
+                        }
+                        .accessibilityIdentifier("detail.chooseLibrary")
+                    } label: {
                         VStack(spacing: 3) {
                             if uploading {
                                 ProgressView().tint(BM.blue)
@@ -205,11 +214,31 @@ struct BoxDetailView: View {
             }
         }
         .padding(.horizontal, 20)
+        .photosPicker(isPresented: $showLibrary, selection: $picks, maxSelectionCount: 10, matching: .images)
+        .fullScreenCover(isPresented: $showCamera) {
+            CameraPicker { data in
+                showCamera = false
+                guard let data else { return }
+                Task { await uploadCaptured(data, to: box) }
+            }
+            .ignoresSafeArea()
+        }
         .onChange(of: picks) { _, items in
             guard !items.isEmpty else { return }
             picks = []
             Task { await upload(items, to: box) }
         }
+    }
+
+    /// A photo just taken: downscale and upload; it becomes the cover when the box has none.
+    private func uploadCaptured(_ raw: Data, to box: Box) async {
+        uploading = true
+        defer { uploading = false }
+        guard let clip = ImageResize.clip(raw) else {
+            model.showToast(model.t(.toast_photo_failed))
+            return
+        }
+        await model.addBoxPhoto(boxId: box.id, photo: clip, setCover: box.photoURL == nil)
     }
 
     /// Library photos: downscale, upload one by one; the first becomes the cover when the box has none.

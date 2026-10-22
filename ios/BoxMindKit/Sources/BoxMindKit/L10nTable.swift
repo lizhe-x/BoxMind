@@ -206,6 +206,8 @@ public enum L10nKey: String, CaseIterable, Sendable {
     case gps_off_hint
     case feedback_up
     case feedback_down
+    case take_photo
+    case choose_from_library
 }
 
 extension L10n {
@@ -414,6 +416,8 @@ extension L10n {
         .gps_off_hint: "Location is off; boxes are saved without a position",
         .feedback_up: "Helpful",
         .feedback_down: "Not helpful",
+        .take_photo: "Take photo",
+        .choose_from_library: "Choose from library",
     ]
 
     static let zh: [L10nKey: String] = [
@@ -621,5 +625,7 @@ extension L10n {
         .gps_off_hint: "定位已关闭,入库时不记录位置",
         .feedback_up: "有用",
         .feedback_down: "没用",
+        .take_photo: "拍照",
+        .choose_from_library: "从相册选择",
     ]
 }

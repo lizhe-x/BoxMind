@@ -19,5 +19,13 @@
   "feedback_down": {
     "en": "Not helpful",
     "zh": "没用"
+  },
+  "take_photo": {
+    "en": "Take photo",
+    "zh": "拍照"
+  },
+  "choose_from_library": {
+    "en": "Choose from library",
+    "zh": "从相册选择"
   }
 }
