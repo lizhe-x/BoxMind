@@ -6,7 +6,7 @@
 
 | 项 | 值 |
 |---|---|
-| App 名称 | BoxMind |
+| App 名称 | BoxMind: Find My Stuff(ASC 记录名,2026-10-22 建;设备上显示名仍是 BoxMind) |
 | Bundle ID | `me.boxmind.app` |
 | SKU | `boxmind-ios` |
 | 主语言 | English (U.S.) |
@@ -140,7 +140,7 @@ AI features send the typed/spoken text, the photo, and the user's own box data t
 1. **后端公网可达**:已于 2026-10-22 开启 Tailscale Funnel(`tailscale funnel --bg 8001`),公网地址 `https://zhes-mac-mini.tailb3c9f2.ts.net`,与 `ios/Config/Release.xcconfig` 的 `API_BASE_URL` 一致,归档不用改;关闭用 `tailscale funnel --https=443 off`。这是 Mac mini 家用网络上的服务,够 TestFlight 和审核用;正式域名 + AWS 单机部署见下一条。
 1b. **正式部署(可选)**:公司 AWS 账号(CatchLine 用的那个,us-east-1)上一台小 EC2(arm64,2–4 GB)跑 docker compose(后端 + Postgres/pgvector),EBS 存 media,Caddy 做 TLS,Route53 指一个子域。Lambda 不合适:后端常驻 1 GB 的向量模型、要 Postgres、要 SSE 流式。
 2. **SMTP**:已配 Gmail(smtp.gmail.com:587,应用专用密码,发件人 lizhe.dev@gmail.com),真实验证码已收到。审核账号不受影响。
-3. **App Store Connect**:用公司账号(Team `GZ4LT9W9H9`)创建 App 记录(Bundle ID `me.boxmind.app`);同意最新的 Paid Apps / Developer Program 协议。
+3. **App Store Connect**:App 记录已建(2026-10-22,"BoxMind: Find My Stuff",Bundle ID `me.boxmind.app`,SKU `boxmind-ios`);Free / Paid Apps 协议均 Active。
 4. **上传**:`xcodebuild -exportArchive … destination=upload` 需要该 Apple ID 在 ASC 有权限,或用 ASC API Key(Key ID + **Issuer ID** + .p8)。本机 `~/.appstoreconnect/private_keys/` 已有两把 key(`63Z6JY7LQX`、`LMPCU2FSGZ`),缺 Issuer ID。拿到后:
    ```bash
    xcodebuild -exportArchive -archivePath <archive> -exportOptionsPlist ExportOptions.plist -exportPath out \

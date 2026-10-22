@@ -262,3 +262,14 @@ open ios/BoxMind.xcodeproj             # 在 Xcode 里选真机运行
 - Ask 页每条有 run 的回复下方,朗读按钮右侧两个小拇指(`ask.up.<i>` / `ask.down.<i>`),选中态填充 + `isSelected`。
 - 测试:Kit +6(`AppModelFeedbackTests`、SSE run_id、客户端请求),UI `EntryFlowTests` 增加点踩 / 清除步骤。
 - 撤销已经是隐式负反馈(后端做),这里只补显式的那一半。
+
+### 2026-10-22 · 1.0 (1) 已上传 App Store Connect
+
+- ASC App 记录 "BoxMind: Find My Stuff"(me.boxmind.app,SKU boxmind-ios)由本人在网页建好;Free / Paid 协议均 Active。
+- 上传走 API key(LMPCU2FSGZ + Issuer ID)。自动签名导出报 "Cloud signing permission error",改为手动签名:
+  通过 ASC API 建 App Store 描述文件 "BoxMind App Store"(公司 Apple Distribution 证书),ExportOptions 指定
+  `signingStyle manual` + `provisioningProfiles {me.boxmind.app: BoxMind App Store}`。
+- 首次上传被包校验拒绝:工程实际含 iPad(target 默认 `TARGETED_DEVICE_FAMILY 1,2` 覆盖了 project 级的 "1"),
+  iPad 要求四个方向。改为 target 级 "1"(仅 iPhone),重新归档后 "Upload succeeded"。
+- 这个包的 `API_BASE_URL` 是 Funnel 的 `ts.net` 地址,只给 TestFlight 用;提交审核前换成 `api.boxmind.deskfox.ai`
+  重新归档为 1.0 (2)。
