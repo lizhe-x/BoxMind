@@ -15,7 +15,8 @@ final class HoldToTalk {
         recording = true
         Haptics.press()
         Task {
-            let ok = await recorder.start(locale: Locale(identifier: model.lang.speechLocale), onPartial: onPartial)
+            let locales = await VoiceRecorder.candidateLocales(uiLocale: Locale(identifier: model.lang.speechLocale))
+            let ok = await recorder.start(locales: locales, onPartial: onPartial)
             if !ok {
                 recording = false
                 onUnavailable()

@@ -1,7 +1,9 @@
 // Hold-to-talk capture. Port of frontend/src/voice.ts with native engines:
-//  1. SpeechAnalyzer + SpeechTranscriber (iOS 26, on-device) gives the live transcript.
+//  1. SpeechAnalyzer + SpeechTranscriber (iOS 26, on-device) gives the live transcript. A transcriber listens in
+//     one language, so one runs per candidate language (the UI language plus the device's preferred languages,
+//     at most two) on the same microphone tap, and the lane with the higher mean confidence wins.
 //  2. The same microphone tap is written to an m4a file, saved on the box after the ingest.
-//  3. No on-device text → the m4a goes to /api/transcribe (gateway ASR).
+//  3. No on-device text → the m4a goes to /api/transcribe (server ASR, when one is configured).
 // Everything is best-effort: a failed engine never blocks the other, and the caller falls back to typing.
 import AVFoundation
 import Speech
@@ -11,14 +13,50 @@ import BoxMindKit
 final class VoiceRecorder {
     private let engine = AVAudioEngine()
     private var sink: CaptureSink?
-    private var analyzer: SpeechAnalyzer?
-    private var resultsTask: Task<Void, Never>?
+    private var lanes: [Lane] = []
     private var startTask: Task<Bool, Never>?
     private var fileURL: URL?
-    private var finalText = ""
-    private var volatileText = ""
+    private var preferredLocaleId = ""
 
-    /// Download the on-device model for the locale when it is missing. Cheap when already installed.
+    /// One transcriber listening in one language.
+    @MainActor
+    private final class Lane {
+        let locale: Locale
+        let analyzer: SpeechAnalyzer
+        var task: Task<Void, Never>?
+        var finalText = ""
+        var volatileText = ""
+        var confidenceSum = 0.0
+        var confidenceCount = 0
+
+        init(locale: Locale, analyzer: SpeechAnalyzer) {
+            self.locale = locale
+            self.analyzer = analyzer
+        }
+
+        var text: String { (finalText + volatileText).trimmingCharacters(in: .whitespaces) }
+        var confidence: Double? { confidenceCount > 0 ? confidenceSum / Double(confidenceCount) : nil }
+    }
+
+    /// Languages worth listening in: the UI language first, then the device's preferred languages; at most two,
+    /// one per language code, only those the on-device transcriber supports.
+    static func candidateLocales(uiLocale: Locale) async -> [Locale] {
+        var out: [Locale] = []
+        guard SpeechTranscriber.isAvailable else { return out }
+        for id in [uiLocale.identifier] + Locale.preferredLanguages {
+            guard let supported = await SpeechTranscriber.supportedLocale(equivalentTo: Locale(identifier: id)) else { continue }
+            let code = supported.language.languageCode?.identifier
+            if !out.contains(where: { $0.language.languageCode?.identifier == code }) { out.append(supported) }
+            if out.count == 2 { break }
+        }
+        return out
+    }
+
+    /// Download the on-device models for the locales when missing. Cheap when already installed.
+    static func prepareModels(for locales: [Locale]) async {
+        for locale in locales { await prepareModel(for: locale) }
+    }
+
     static func prepareModel(for locale: Locale) async {
         guard SpeechTranscriber.isAvailable,
               let supported = await SpeechTranscriber.supportedLocale(equivalentTo: locale),
@@ -34,16 +72,16 @@ final class VoiceRecorder {
     }
 
     /// Start capturing. Returns false when the microphone is unavailable or denied.
-    func start(locale: Locale, onPartial: @escaping @MainActor (String) -> Void) async -> Bool {
-        let task = Task { await self.begin(locale: locale, onPartial: onPartial) }
+    func start(locales: [Locale], onPartial: @escaping @MainActor (String) -> Void) async -> Bool {
+        let task = Task { await self.begin(locales: locales, onPartial: onPartial) }
         startTask = task
         return await task.value
     }
 
-    private func begin(locale: Locale, onPartial: @escaping @MainActor (String) -> Void) async -> Bool {
+    private func begin(locales: [Locale], onPartial: @escaping @MainActor (String) -> Void) async -> Bool {
         guard await AVAudioApplication.requestRecordPermission() else { return false }
-        finalText = ""
-        volatileText = ""
+        lanes = []
+        preferredLocaleId = locales.first?.identifier(.bcp47) ?? ""
         let session = AVAudioSession.sharedInstance()
         try? session.setCategory(.playAndRecord, mode: .default, options: [.defaultToSpeaker, .allowBluetoothHFP])
         try? session.setActive(true)
@@ -57,38 +95,45 @@ final class VoiceRecorder {
         let hw = input.outputFormat(forBus: 0)
         guard hw.sampleRate > 0, hw.channelCount > 0 else { return false }
 
-        // 1) on-device transcriber, only when its model is installed (the download runs in the background)
-        var analyzerFormat: AVAudioFormat?
-        var inputContinuation: AsyncStream<AnalyzerInput>.Continuation?
-        if SpeechTranscriber.isAvailable,
-           let supported = await SpeechTranscriber.supportedLocale(equivalentTo: locale),
-           await Self.isInstalled(supported) {
-            let t = SpeechTranscriber(locale: supported, transcriptionOptions: [],
-                                      reportingOptions: [.volatileResults, .fastResults], attributeOptions: [])
-            analyzerFormat = await SpeechAnalyzer.bestAvailableAudioFormat(compatibleWith: [t])
-            let (stream, cont) = AsyncStream<AnalyzerInput>.makeStream()
-            inputContinuation = cont
-            let a = SpeechAnalyzer(modules: [t])
-            analyzer = a
-            resultsTask = Task { [weak self] in
-                do {
-                    for try await r in t.results {
-                        let text = String(r.text.characters)
-                        guard let self else { return }
-                        if r.isFinal {
-                            self.finalText += text
-                            self.volatileText = ""
-                        } else {
-                            self.volatileText = text
+        // 1) on-device transcribers, one per installed candidate language (the download runs in the background)
+        var targets: [CaptureSink.Target] = []
+        if SpeechTranscriber.isAvailable {
+            for locale in locales where await Self.isInstalled(locale) {
+                let t = SpeechTranscriber(locale: locale, transcriptionOptions: [],
+                                          reportingOptions: [.volatileResults, .fastResults],
+                                          attributeOptions: [.transcriptionConfidence])
+                guard let format = await SpeechAnalyzer.bestAvailableAudioFormat(compatibleWith: [t]) else { continue }
+                let (stream, continuation) = AsyncStream<AnalyzerInput>.makeStream()
+                let lane = Lane(locale: locale, analyzer: SpeechAnalyzer(modules: [t]))
+                lane.task = Task { [weak self, weak lane] in
+                    do {
+                        for try await r in t.results {
+                            guard let self, let lane else { return }
+                            let text = String(r.text.characters)
+                            if r.isFinal {
+                                lane.finalText += text
+                                lane.volatileText = ""
+                            } else {
+                                lane.volatileText = text
+                            }
+                            for run in r.text.runs {
+                                if let c = run.transcriptionConfidence {
+                                    lane.confidenceSum += c
+                                    lane.confidenceCount += 1
+                                }
+                            }
+                            onPartial(self.bestText())
                         }
-                        onPartial((self.finalText + self.volatileText).trimmingCharacters(in: .whitespaces))
-                    }
-                } catch { /* transcriber gave up; the file + server ASR remain */ }
-            }
-            do { try await a.start(inputSequence: stream) } catch {
-                analyzer = nil
-                analyzerFormat = nil
-                inputContinuation = nil
+                    } catch { /* this transcriber gave up; the other lane, the file and server ASR remain */ }
+                }
+                do { try await lane.analyzer.start(inputSequence: stream) } catch {
+                    lane.task?.cancel()
+                    continuation.finish()
+                    continue
+                }
+                lanes.append(lane)
+                targets.append(.init(continuation: continuation, converter: AVAudioConverter(from: hw, to: format),
+                                     format: format))
             }
         }
 
@@ -102,9 +147,7 @@ final class VoiceRecorder {
         ], commonFormat: hw.commonFormat, interleaved: hw.isInterleaved)
         fileURL = file == nil ? nil : url
 
-        let sink = CaptureSink(file: file, continuation: inputContinuation,
-                               converter: analyzerFormat.flatMap { AVAudioConverter(from: hw, to: $0) },
-                               targetFormat: analyzerFormat)
+        let sink = CaptureSink(file: file, targets: targets)
         self.sink = sink
         // @Sendable: a plain closure here inherits the class's main-actor isolation and Swift 6 inserts a runtime
         // isolation check; CoreAudio calls the tap on its realtime queue, so that check trapped (TestFlight 1.0 (1)).
@@ -114,12 +157,25 @@ final class VoiceRecorder {
             input.removeTap(onBus: 0)
             sink.finish()
             self.sink = nil
-            return false // the transcriber hears nothing without the engine
+            return false // the transcribers hear nothing without the engine
         }
         return true
     }
 
-    /// Stop, flush the transcriber, close the file; fall back to server ASR when nothing was understood.
+    /// The lane with the higher mean confidence; with no confidence reported yet, the UI language's lane.
+    private func bestText() -> String {
+        let ranked = lanes.sorted { a, b in
+            switch (a.confidence, b.confidence) {
+            case let (x?, y?) where x != y: return x > y
+            case (.some, .none): return true
+            case (.none, .some): return false
+            default: return a.locale.identifier(.bcp47) == preferredLocaleId
+            }
+        }
+        return ranked.first(where: { !$0.text.isEmpty })?.text ?? ""
+    }
+
+    /// Stop, flush the transcribers, close the file; fall back to server ASR when nothing was understood.
     func stop(api: any BoxMindAPI, language: String?) async -> (text: String, audio: AudioClip?) {
         if let startTask { _ = await startTask.value } // a quick tap can release before start() returned
         startTask = nil
@@ -127,16 +183,23 @@ final class VoiceRecorder {
         engine.stop()
         sink?.finish()
         sink = nil
-        if let analyzer {
-            await withTimeout(seconds: 3) { try? await analyzer.finalizeAndFinishThroughEndOfInput() }
-            await withTimeout(seconds: 2) { await self.resultsTask?.value }
+        let analyzers = lanes.map(\.analyzer)
+        let tasks = lanes.compactMap(\.task)
+        await withTimeout(seconds: 3) {
+            await withTaskGroup(of: Void.self) { group in
+                for a in analyzers { group.addTask { try? await a.finalizeAndFinishThroughEndOfInput() } }
+            }
         }
-        resultsTask?.cancel()
-        resultsTask = nil
-        analyzer = nil
+        await withTimeout(seconds: 2) {
+            await withTaskGroup(of: Void.self) { group in
+                for t in tasks { group.addTask { await t.value } }
+            }
+        }
+        for lane in lanes { lane.task?.cancel() }
+        var text = bestText()
+        lanes = []
         try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
 
-        var text = (finalText + volatileText).trimmingCharacters(in: .whitespacesAndNewlines)
         var clip: AudioClip?
         if let fileURL, let data = try? Data(contentsOf: fileURL), data.count > 1024 {
             clip = AudioClip(data: data)
@@ -150,30 +213,34 @@ final class VoiceRecorder {
     }
 }
 
-/// Owned by the audio tap: writes the file and feeds the analyzer. Only the realtime thread touches it after start.
+/// Owned by the audio tap: writes the file and feeds every analyzer. Only the realtime thread touches it after start.
 private final class CaptureSink: @unchecked Sendable {
+    struct Target {
+        let continuation: AsyncStream<AnalyzerInput>.Continuation
+        let converter: AVAudioConverter?
+        let format: AVAudioFormat
+    }
+
     private let file: AVAudioFile?
-    private let continuation: AsyncStream<AnalyzerInput>.Continuation?
-    private let converter: AVAudioConverter?
-    private let targetFormat: AVAudioFormat?
+    private let targets: [Target]
     private var finished = false
 
-    init(file: AVAudioFile?, continuation: AsyncStream<AnalyzerInput>.Continuation?,
-         converter: AVAudioConverter?, targetFormat: AVAudioFormat?) {
+    init(file: AVAudioFile?, targets: [Target]) {
         self.file = file
-        self.continuation = continuation
-        self.converter = converter
-        self.targetFormat = targetFormat
+        self.targets = targets
     }
 
     func handle(_ buffer: AVAudioPCMBuffer) {
         guard !finished else { return }
         try? file?.write(from: buffer)
-        guard let continuation else { return }
-        if let converter, let targetFormat {
-            let ratio = targetFormat.sampleRate / buffer.format.sampleRate
+        for target in targets {
+            guard let converter = target.converter else {
+                target.continuation.yield(AnalyzerInput(buffer: buffer))
+                continue
+            }
+            let ratio = target.format.sampleRate / buffer.format.sampleRate
             let capacity = AVAudioFrameCount(Double(buffer.frameLength) * ratio) + 32
-            guard let out = AVAudioPCMBuffer(pcmFormat: targetFormat, frameCapacity: capacity) else { return }
+            guard let out = AVAudioPCMBuffer(pcmFormat: target.format, frameCapacity: capacity) else { continue }
             var consumed = false
             var error: NSError?
             converter.convert(to: out, error: &error) { _, status in
@@ -185,15 +252,13 @@ private final class CaptureSink: @unchecked Sendable {
                 status.pointee = .haveData
                 return buffer
             }
-            if error == nil, out.frameLength > 0 { continuation.yield(AnalyzerInput(buffer: out)) }
-        } else {
-            continuation.yield(AnalyzerInput(buffer: buffer))
+            if error == nil, out.frameLength > 0 { target.continuation.yield(AnalyzerInput(buffer: out)) }
         }
     }
 
     func finish() {
         finished = true
-        continuation?.finish()
+        for target in targets { target.continuation.finish() }
     }
 }
 

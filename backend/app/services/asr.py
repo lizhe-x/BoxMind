@@ -15,8 +15,8 @@ async def transcribe(audio: bytes, filename: str, content_type: str, language: s
         data["language"] = language
     async with httpx.AsyncClient(timeout=120) as client:
         r = await client.post(
-            f"{settings.llm_base_url}/audio/transcriptions",
-            headers={"Authorization": f"Bearer {settings.llm_api_key}"},
+            f"{settings.asr_base_url or settings.llm_base_url}/audio/transcriptions",
+            headers={"Authorization": f"Bearer {settings.asr_api_key or settings.llm_api_key}"},
             files={"file": (filename or "audio.webm", audio, content_type or "audio/webm")},
             data=data,
         )

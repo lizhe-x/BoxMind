@@ -23,6 +23,10 @@ class Settings(BaseSettings):
     llm_allow_fallbacks: bool = True
     # "off" sends reasoning.enabled=false (Kimi K2.x think by default; our outputs are short JSON). "" = model default.
     llm_reasoning: str = ""
+    # Speech-to-text fallback (/v1/audio/transcriptions, OpenAI shape). OpenRouter has no audio endpoint, so this
+    # can point at a different provider; empty base URL / key = reuse the LLM gateway's.
+    asr_base_url: str = ""
+    asr_api_key: str = ""
     asr_model: str = "qwen3-asr-flash-realtime"  # 语音转写,走 /v1/audio/transcriptions
     tts_model: str = "qwen3-tts-flash"  # 语音合成,走 /v1/audio/speech
     tts_voice: str = "alloy"

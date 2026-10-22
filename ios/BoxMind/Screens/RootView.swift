@@ -40,7 +40,10 @@ struct RootView: View {
         .onChange(of: scenePhase) { _, phase in
             if phase == .active { Task { await model.reconnectIfNeeded() } } // offline launch → retry on return
         }
-        .task(id: model.lang) { await VoiceRecorder.prepareModel(for: Locale(identifier: model.lang.speechLocale)) }
+        .task(id: model.lang) {
+            let locales = await VoiceRecorder.candidateLocales(uiLocale: Locale(identifier: model.lang.speechLocale))
+            await VoiceRecorder.prepareModels(for: locales)
+        }
     }
 
     @ViewBuilder private var screen: some View {
