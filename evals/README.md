@@ -42,8 +42,10 @@ that file says what changed and why, with the eval finding that motivated it. Th
 1. a run shows a failure pattern → 2. edit the prompt, bump the version, add the changelog line →
 3. re-run the affected sets → 4. the matrix shows the old and new columns side by side.
 
-Model comparison here means `claude -p` with different models (sonnet, haiku, opus) on the same prompt
-version; the gateway provider takes `--provider gateway --model <id>` once it has a funded key.
+Model comparison covers `claude -p` models (sonnet, haiku, opus) and the production gateway
+(`--provider gateway --model moonshotai/kimi-k2.6`, OpenRouter) on the same prompt version. Gateway runs also
+record token usage per case, so a row's cost is measured: a full routing + extraction + tools run on kimi-k2.6 is
+about 284k tokens, roughly $0.25 at OpenRouter's list price.
 
 The DB-backed sets (retrieval, tools) need PostgreSQL + pgvector like the server. They use a dedicated database
 `boxmind_eval` next to the configured one (created on demand, emptied at the start of each run; override with
@@ -167,6 +169,18 @@ rank fusion (`BOXMIND_SEARCH_MODE=hybrid|vector`); the agent's `search_items` to
 The retrieval set runs under either mode (`--search vector`) and under any fastembed model
 (`--embedding <id> --dim <n> [--prefixes e5]`; the eval database is rebuilt at the new dimension).
 Switching the server's model is `python -m app.maintenance.reembed --apply` after changing `backend/.env`.
+
+## Production model: kimi-k2.6 on OpenRouter
+
+Same sets, interpret v4, agent v1. kimi-k2.6: routing 60/60, extraction 0.88, tools 40/40 with no missed gate,
+p50 0.6 s per interpret call and 1.5 s per tools case (the `claude -p` models sit at 3 to 10 s). kimi-k2.5 is
+about 30% cheaper per run but four times slower and moves both battery boxes on the ambiguous "move the
+batteries" case where every other model asks; that one case is the confirm-gate behaviour the tools set exists
+to protect, so k2.6 is the production model for everything, including photo intake.
+
+kimi's extraction misses are its own, not the prompt's: "box five" comes back as label "five" (the app
+normalises digits and Chinese numerals, not English number words), and "若干电池" keeps 若干 inside the item
+name. Both are candidates for the next interpret version, measured the same way.
 
 ## Scoring code
 

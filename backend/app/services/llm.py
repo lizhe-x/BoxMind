@@ -1,4 +1,5 @@
 import json
+import os
 import re
 from collections.abc import AsyncIterator
 
@@ -12,11 +13,28 @@ from .prompts import ANSWER, INTERPRET, VISION
 
 class LLM:
     def __init__(self) -> None:
+        key = settings.llm_api_key or os.environ.get("OPENROUTER_API_KEY", "")
         self._headers = {
-            "Authorization": f"Bearer {settings.llm_api_key}",
+            "Authorization": f"Bearer {key}",
             "Content-Type": "application/json",
+            # OpenRouter attribution headers; harmless elsewhere
+            "HTTP-Referer": "https://github.com/lizhe-x/BoxMind",
+            "X-Title": "BoxMind",
         }
         self._url = f"{settings.llm_base_url}/chat/completions"
+
+    @staticmethod
+    def request_extras() -> dict:
+        """Gateway-specific request fields (OpenRouter provider routing, reasoning switch); {} when unset."""
+        extras: dict = {}
+        order = [s.strip() for s in settings.llm_provider_order.split(",") if s.strip()]
+        if order or not settings.llm_allow_fallbacks:
+            extras["provider"] = {"allow_fallbacks": settings.llm_allow_fallbacks}
+            if order:
+                extras["provider"]["order"] = order
+        if settings.llm_reasoning == "off":
+            extras["reasoning"] = {"enabled": False}
+        return extras
 
     @property
     def model_name(self) -> str:
@@ -56,6 +74,7 @@ class LLM:
             ],
             "temperature": 0,
             "response_format": {"type": "json_object"},
+            **self.request_extras(),
         }
         async with httpx.AsyncClient(timeout=60) as client:
             r = await client.post(self._url, headers=self._headers, json=payload)
@@ -83,6 +102,7 @@ class LLM:
             ],
             "temperature": 0,
             "response_format": {"type": "json_object"},
+            **self.request_extras(),
         }
         async with httpx.AsyncClient(timeout=120) as client:
             r = await client.post(self._url, headers=self._headers, json=payload)
@@ -101,11 +121,14 @@ class LLM:
             "tools": tools,
             "tool_choice": "auto",
             "temperature": 0,
+            **self.request_extras(),
         }
         async with httpx.AsyncClient(timeout=90) as client:
             r = await client.post(self._url, headers=self._headers, json=payload)
             r.raise_for_status()
-            return r.json()["choices"][0]["message"]
+            data = r.json()
+        _count_tokens(data.get("usage"))
+        return data["choices"][0]["message"]
 
     async def answer_stream(
         self, question: str, context_json: str, relevant_hint: str
@@ -125,6 +148,8 @@ class LLM:
             ],
             "temperature": 0.3,
             "stream": True,
+            "stream_options": {"include_usage": True},  # usage arrives in the last chunk (OpenAI / OpenRouter)
+            **self.request_extras(),
         }
         async with httpx.AsyncClient(timeout=120) as client:
             async with client.stream("POST", self._url, headers=self._headers, json=payload) as r:
@@ -136,11 +161,23 @@ class LLM:
                     if chunk == "[DONE]":
                         break
                     try:
-                        delta = json.loads(chunk)["choices"][0]["delta"].get("content")
-                    except (json.JSONDecodeError, KeyError, IndexError):
+                        event = json.loads(chunk)
+                    except json.JSONDecodeError:
+                        continue
+                    _count_tokens(event.get("usage"))
+                    try:
+                        delta = event["choices"][0]["delta"].get("content")
+                    except (KeyError, IndexError, TypeError):
                         continue
                     if delta:
                         yield delta
+
+
+def _count_tokens(usage: dict | None) -> None:
+    """Add a response's token usage to the request's trace (agent steps and streamed answers)."""
+    t = trace.current()
+    if t is not None and usage:
+        t.tokens += int(usage.get("total_tokens") or 0)
 
 
 def _parse_json(content: str) -> dict:

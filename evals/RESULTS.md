@@ -17,6 +17,8 @@ The retrieval row has no model: it measures the embedding index.
 | claude_code / haiku | 1.00 · 2910 ms | 1.00 · 3018 ms | 1.00 · 3030 ms | 1.00 · 3015 ms |
 | claude_code / opus |  | 1.00 · 2945 ms | 1.00 · 2790 ms | 1.00 · 2820 ms |
 | claude_code / sonnet | 1.00 · 2752 ms | 1.00 · 3677 ms | 1.00 · 2860 ms | 1.00 · 4066 ms |
+| gateway / moonshotai/kimi-k2.5 |  |  |  | 1.00 · 2642 ms |
+| gateway / moonshotai/kimi-k2.6 |  |  |  | 1.00 · 595 ms |
 
 **extraction** (exact, p50 latency)
 
@@ -25,6 +27,8 @@ The retrieval row has no model: it measures the embedding index.
 | claude_code / haiku | 0.82 · 3345 ms | 0.88 · 3432 ms | 0.82 · 3580 ms | 0.93 · 3240 ms |
 | claude_code / opus |  | 0.95 · 3216 ms | 0.75 · 2903 ms | 0.95 · 3182 ms |
 | claude_code / sonnet | 0.90 · 2845 ms | 0.95 · 4464 ms | 0.80 · 2850 ms | 0.95 · 4421 ms |
+| gateway / moonshotai/kimi-k2.5 |  |  |  | 0.85 · 3411 ms |
+| gateway / moonshotai/kimi-k2.6 |  |  |  | 0.88 · 631 ms |
 
 **retrieval** (R@8, p50 latency)
 
@@ -45,6 +49,8 @@ The retrieval row has no model: it measures the embedding index.
 | claude_code / haiku | 0.97 · 6376 ms |
 | claude_code / opus | 1.00 · 5310 ms |
 | claude_code / sonnet | 1.00 · 9632 ms |
+| gateway / moonshotai/kimi-k2.5 | 0.97 · 5041 ms |
+| gateway / moonshotai/kimi-k2.6 | 1.00 · 1485 ms |
 <!-- matrix:end -->
 
 ## All runs
@@ -88,3 +94,9 @@ The retrieval row has no model: it measures the embedding index.
 | 2026-10-22 | retrieval | embedding / paraphrase-multilingual-MiniLM-L12-v2 / sentence-transformers | search hybrid | 50 | R@1 0.56 · R@3 0.81 · R@8 0.89 · MRR 0.82 · en 0.93 · zh 0.84 · category 0.70 · cross 0.92 · exact 1.00 · synonym 0.89 | p50 10 ms | [json](results/retrieval-2026-10-22T171725Z.json) |
 | 2026-10-22 | retrieval | embedding / multilingual-e5-large / sentence-transformers | search hybrid | 50 | R@1 0.39 · R@3 0.59 · R@8 0.71 · MRR 0.64 · en 0.77 · zh 0.66 · category 0.57 · cross 0.62 · exact 1.00 · synonym 0.86 | p50 23 ms | [json](results/retrieval-2026-10-22T171757Z.json) |
 | 2026-10-22 | retrieval | embedding / multilingual-e5-large / sentence-transformers | search hybrid | 50 | R@1 0.33 · R@3 0.46 · R@8 0.58 · MRR 0.55 · en 0.74 · zh 0.41 · category 0.58 · cross 0.38 · exact 1.00 · synonym 0.71 | p50 19 ms | [json](results/retrieval-2026-10-22T171804Z.json) |
+| 2026-10-22 | routing | gateway / moonshotai/kimi-k2.6 | interpret v4 (0ab82a99a5) | 60 | acc 1.00 · en 1.00 · zh 1.00 · ingest F1 1.00 · query F1 1.00 · operation F1 1.00 | p50 595 ms | [json](results/routing-2026-10-22T181854Z.json) |
+| 2026-10-22 | extraction | gateway / moonshotai/kimi-k2.6 | interpret v4 (0ab82a99a5) | 40 | exact 0.88 · en 0.85 · zh 0.90 · intent 1.00 · label 0.97 · location 1.00 · items P 0.99 R 0.99 · qty 0.94 | p50 631 ms | [json](results/extraction-2026-10-22T181854Z.json) |
+| 2026-10-22 | tools | gateway / moonshotai/kimi-k2.6 | agent v1 (2b5eb4f024) | 40 | pass 1.00 · en 1.00 · zh 1.00 · tools 1.00 · confirm 1.00 · args 1.00 · state 1.00 · missed gate 0 · spurious gate 0 · steps 1.8 | p50 1485 ms | [json](results/tools-2026-10-22T181854Z.json) |
+| 2026-10-22 | routing | gateway / moonshotai/kimi-k2.5 | interpret v4 (0ab82a99a5) | 60 | acc 1.00 · en 1.00 · zh 1.00 · ingest F1 1.00 · query F1 1.00 · operation F1 1.00 | p50 2642 ms | [json](results/routing-2026-10-22T181942Z.json) |
+| 2026-10-22 | extraction | gateway / moonshotai/kimi-k2.5 | interpret v4 (0ab82a99a5) | 40 | exact 0.85 · en 0.80 · zh 0.90 · intent 1.00 · label 0.97 · location 1.00 · items P 0.98 R 0.98 · qty 0.94 | p50 3411 ms | [json](results/extraction-2026-10-22T181942Z.json) |
+| 2026-10-22 | tools | gateway / moonshotai/kimi-k2.5 | agent v1 (2b5eb4f024) | 40 | pass 0.97 · en 0.95 · zh 1.00 · tools 0.97 · confirm 1.00 · args 1.00 · state 0.97 · missed gate 0 · spurious gate 0 · steps 1.8 | p50 5041 ms | [json](results/tools-2026-10-22T181942Z.json) |

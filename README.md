@@ -195,7 +195,7 @@ Signing in without a mail server: leave `BOXMIND_SMTP_HOST` empty and the login 
 
 ## Configuration
 
-All settings are environment variables prefixed `BOXMIND_`, documented in [backend/.env.example](backend/.env.example). Model names (`LLM_MODEL`, `VISION_MODEL`, `ASR_MODEL`, `TTS_MODEL`, `EMBEDDING_MODEL`) are configuration, not code; any OpenAI-compatible gateway works. The default points at [getbot.me](https://api.getbot.me), a gateway I also run.
+All settings are environment variables prefixed `BOXMIND_`, documented in [backend/.env.example](backend/.env.example). Model names (`LLM_MODEL`, `VISION_MODEL`, `ASR_MODEL`, `TTS_MODEL`, `EMBEDDING_MODEL`) are configuration, not code; any OpenAI-compatible gateway works. Production runs on [OpenRouter](https://openrouter.ai) with `moonshotai/kimi-k2.6` for chat, interpretation and photo intake (`LLM_PROVIDER_ORDER` picks the hosting providers, `LLM_REASONING=off` turns thinking off for the short JSON replies this app wants); the key comes from `BOXMIND_LLM_API_KEY` or `OPENROUTER_API_KEY`. A second provider, `claude_code`, spawns the local `claude -p` CLI and is used for model comparison in the evals.
 
 Before exposing an instance:
 

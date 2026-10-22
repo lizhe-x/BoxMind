@@ -12,11 +12,17 @@ class Settings(BaseSettings):
     claude_vision_model: str = "sonnet"  # photo intake (reads the image with the Read tool)
     claude_concurrency: int = 3          # max simultaneous claude processes
 
-    # OpenAI-compatible gateway. Default is getbot.me (my own gateway); any compatible endpoint works.
-    llm_base_url: str = "https://api.getbot.me/v1"
-    llm_api_key: str = ""
-    llm_model: str = "kimi-k2.5"
-    vision_model: str = "kimi-k2.5"  # 拍照识别(图片输入),走 /v1/chat/completions
+    # OpenAI-compatible gateway (/chat/completions). OpenRouter is the production one; any compatible endpoint works.
+    llm_base_url: str = "https://openrouter.ai/api/v1"
+    llm_api_key: str = ""            # empty = read OPENROUTER_API_KEY from the environment
+    llm_model: str = "moonshotai/kimi-k2.6"
+    vision_model: str = "moonshotai/kimi-k2.6"  # 拍照识别(图片输入),走 /v1/chat/completions
+    # OpenRouter provider routing: ordered preference (comma-separated slugs) and whether others may serve
+    # the request when those fail. Empty = let the router choose.
+    llm_provider_order: str = ""
+    llm_allow_fallbacks: bool = True
+    # "off" sends reasoning.enabled=false (Kimi K2.x think by default; our outputs are short JSON). "" = model default.
+    llm_reasoning: str = ""
     asr_model: str = "qwen3-asr-flash-realtime"  # 语音转写,走 /v1/audio/transcriptions
     tts_model: str = "qwen3-tts-flash"  # 语音合成,走 /v1/audio/speech
     tts_voice: str = "alloy"
