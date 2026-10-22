@@ -1,0 +1,101 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&display=swap');
+
+html, body, #root { margin: 0; height: 100%; }
+body {
+  background: #05070C;
+  font-family: -apple-system, 'PingFang SC', system-ui, sans-serif;
+  /* 按钮式 App:全局禁用文字选区与长按菜单,避免"按住说话"被选区/拖拽/长按菜单打断 */
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+}
+/* 仅输入控件保留可选中/可编辑 */
+input, textarea {
+  -webkit-user-select: text;
+  user-select: text;
+}
+/* 图标/图片不可拖拽,防止长按拖出 */
+img, svg { -webkit-user-drag: none; user-select: none; }
+*::-webkit-scrollbar { display: none; }
+* { scrollbar-width: none; }
+input::placeholder, textarea::placeholder { color: rgba(235, 240, 250, 0.35); }
+input, textarea, button { outline: none; }
+
+@keyframes bm-wave { 0%,100%{transform:scaleY(0.25)} 50%{transform:scaleY(1)} }
+@keyframes bm-pulse { 0%{transform:scale(1);opacity:0.5} 100%{transform:scale(1.6);opacity:0} }
+@keyframes bm-scan { 0%{top:6%} 50%{top:90%} 100%{top:6%} }
+@keyframes bm-fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:none} }
+@keyframes bm-pop { from{opacity:0;transform:scale(0.94) translateY(10px)} to{opacity:1;transform:none} }
+@keyframes bm-dot { 0%,60%,100%{transform:translateY(0);opacity:0.35} 30%{transform:translateY(-4px);opacity:1} }
+@keyframes bm-blink { 0%,100%{opacity:1} 50%{opacity:0} }
+@keyframes bm-glow { 0%,100%{opacity:0.55} 50%{opacity:1} }
+
+/* 麦克风等需要按压反馈的元素 */
+.bm-press:active { transform: scale(0.96); }
+.bm-press98:active { transform: scale(0.98); }
+
+/* App 外壳:手机比例画框,桌面居中,移动端铺满 */
+.bm-page {
+  min-height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #05070C;
+  position: relative;
+  overflow: hidden;
+}
+.bm-frame {
+  position: relative;
+  width: 402px;
+  height: 874px;
+  max-width: 100vw;
+  max-height: 100svh;
+  overflow: hidden;
+  background: #0A0D15;
+  color: #F2F5FA;
+  font-family: -apple-system, 'PingFang SC', system-ui, sans-serif;
+  z-index: 1;
+}
+@media (min-width: 460px) and (min-height: 900px) {
+  .bm-frame {
+    border-radius: 38px;
+    box-shadow: 0 40px 120px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.04);
+  }
+}
+/* 画框内顶部品牌光晕(对应原型) */
+.bm-frame::before {
+  content: '';
+  position: absolute;
+  top: -160px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 560px;
+  height: 440px;
+  background: radial-gradient(closest-side, rgba(93, 108, 255, 0.18), transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+/* 页面底层柔光 */
+.bm-page::before {
+  content: '';
+  position: absolute;
+  top: -220px;
+  left: 50%;
+  transform: translateX(-62%);
+  width: 760px;
+  height: 560px;
+  background: radial-gradient(closest-side, rgba(77, 124, 254, 0.14), transparent 70%);
+  pointer-events: none;
+}
+.bm-page::after {
+  content: '';
+  position: absolute;
+  bottom: -260px;
+  left: 50%;
+  transform: translateX(-30%);
+  width: 700px;
+  height: 540px;
+  background: radial-gradient(closest-side, rgba(139, 92, 246, 0.1), transparent 70%);
+  pointer-events: none;
+}

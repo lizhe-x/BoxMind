@@ -1,0 +1,20 @@
+services:
+  db:
+    image: pgvector/pgvector:pg17
+    container_name: boxmind-db
+    environment:
+      POSTGRES_USER: boxmind
+      POSTGRES_PASSWORD: boxmind
+      POSTGRES_DB: boxmind
+    ports:
+      - "5434:5432"
+    volumes:
+      - boxmind-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U boxmind"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+volumes:
+  boxmind-pgdata:

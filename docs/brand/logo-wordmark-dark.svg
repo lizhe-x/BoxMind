@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 790 320" width="790" height="320" role="img" aria-label="BoxMind">
+  <title>BoxMind</title>
+  <defs>
+    <linearGradient id="wRim" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8CA4FF"/><stop offset="1" stop-color="#B49BFF"/></linearGradient>
+    <linearGradient id="wRight" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4D7CFE"/><stop offset="1" stop-color="#8B5CF6"/></linearGradient>
+    <linearGradient id="wLeft" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2F55C9"/><stop offset="1" stop-color="#5B3AB8"/></linearGradient>
+    <linearGradient id="wVoid" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#070A14"/><stop offset="1" stop-color="#161D33"/></linearGradient>
+    <radialGradient id="wGlow" cx=".5" cy=".5" r=".5">
+      <stop offset="0" stop-color="#AFC2FF" stop-opacity=".38"/><stop offset="1" stop-color="#7C9BFF" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="wSphere" cx=".34" cy=".28" r=".8">
+      <stop offset="0" stop-color="#FFC9BE"/><stop offset=".42" stop-color="#FF6152"/><stop offset="1" stop-color="#CC2C26"/>
+    </radialGradient>
+    <linearGradient id="wCubeTop" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#93F5D1"/><stop offset="1" stop-color="#4FDFA9"/></linearGradient>
+    <linearGradient id="wCubeR" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#28C990"/><stop offset="1" stop-color="#15A877"/></linearGradient>
+    <linearGradient id="wCubeL" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1CAE7E"/><stop offset="1" stop-color="#0E8760"/></linearGradient>
+    <linearGradient id="wPyrR" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#9BDCFF"/><stop offset="1" stop-color="#3FA8FF"/></linearGradient>
+    <linearGradient id="wPyrL" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4699F5"/><stop offset="1" stop-color="#2A76E0"/></linearGradient>
+    <clipPath id="wInner"><polygon points="256,217 376,287 256,357 136,287"/></clipPath>
+    <linearGradient id="wText" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#8CA4FF"/><stop offset="1" stop-color="#C6A9FF"/></linearGradient>
+  </defs>
+  <g transform="translate(-43.9 -11.0) scale(0.6404)">
+  <!-- box -->
+  <polygon points="106,287 256,374 256,470 106,383" fill="url(#wLeft)" stroke="url(#wLeft)" stroke-width="10" stroke-linejoin="round"/>
+  <polygon points="256,374 406,287 406,383 256,470" fill="url(#wRight)" stroke="url(#wRight)" stroke-width="10" stroke-linejoin="round"/>
+  <polygon points="256,200 406,287 256,374 106,287" fill="url(#wRim)" stroke="url(#wRim)" stroke-width="10" stroke-linejoin="round"/>
+  <polygon points="256,217 376,287 256,357 136,287" fill="url(#wVoid)"/>
+  <g clip-path="url(#wInner)"><ellipse cx="256" cy="300" rx="104" ry="60" fill="url(#wGlow)"/></g>
+
+  <!-- falling in: blue pyramid, green cube, red sphere -->
+  <g transform="rotate(15 298 94)">
+    <polygon points="298,58 266,104 298,122" fill="url(#wPyrL)"/>
+    <polygon points="298,58 330,104 298,122" fill="url(#wPyrR)"/>
+  </g>
+  <g transform="rotate(-16 198 172)">
+    <polygon points="166,160 198,178 198,202 166,184" fill="url(#wCubeL)"/>
+    <polygon points="198,178 230,160 230,184 198,202" fill="url(#wCubeR)"/>
+    <polygon points="198,142 230,160 198,178 166,160" fill="url(#wCubeTop)"/>
+  </g>
+  <circle cx="272" cy="258" r="40" fill="url(#wSphere)"/>
+  <ellipse cx="259" cy="242" rx="10" ry="6" fill="#FFFFFF" opacity=".45" transform="rotate(-28 259 242)"/>
+  </g>
+  <text x="254" y="207" font-family="'Space Grotesk','Segoe UI','Helvetica Neue',Arial,sans-serif" font-size="132" font-weight="600" letter-spacing="-3">
+    <tspan fill="#F2F5FA" textLength="196" lengthAdjust="spacingAndGlyphs">Box</tspan><tspan fill="url(#wText)" textLength="292" lengthAdjust="spacingAndGlyphs">Mind</tspan>
+  </text>
+</svg>

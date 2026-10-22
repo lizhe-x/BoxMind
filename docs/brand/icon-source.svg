@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="BoxMind">
+  <title>BoxMind</title>
+  <defs>
+    <linearGradient id="iRim" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8CA4FF"/><stop offset="1" stop-color="#B49BFF"/></linearGradient>
+    <linearGradient id="iRight" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4D7CFE"/><stop offset="1" stop-color="#8B5CF6"/></linearGradient>
+    <linearGradient id="iLeft" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2F55C9"/><stop offset="1" stop-color="#5B3AB8"/></linearGradient>
+    <linearGradient id="iVoid" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#070A14"/><stop offset="1" stop-color="#161D33"/></linearGradient>
+    <radialGradient id="iGlow" cx=".5" cy=".5" r=".5">
+      <stop offset="0" stop-color="#AFC2FF" stop-opacity=".38"/><stop offset="1" stop-color="#7C9BFF" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="iSphere" cx=".34" cy=".28" r=".8">
+      <stop offset="0" stop-color="#FFC9BE"/><stop offset=".42" stop-color="#FF6152"/><stop offset="1" stop-color="#CC2C26"/>
+    </radialGradient>
+    <linearGradient id="iCubeTop" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#93F5D1"/><stop offset="1" stop-color="#4FDFA9"/></linearGradient>
+    <linearGradient id="iCubeR" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#28C990"/><stop offset="1" stop-color="#15A877"/></linearGradient>
+    <linearGradient id="iCubeL" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1CAE7E"/><stop offset="1" stop-color="#0E8760"/></linearGradient>
+    <linearGradient id="iPyrR" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#9BDCFF"/><stop offset="1" stop-color="#3FA8FF"/></linearGradient>
+    <linearGradient id="iPyrL" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4699F5"/><stop offset="1" stop-color="#2A76E0"/></linearGradient>
+    <clipPath id="iInner"><polygon points="256,217 376,287 256,357 136,287"/></clipPath>
+    <linearGradient id="iBg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0E1424"/><stop offset="1" stop-color="#070A12"/></linearGradient>
+  </defs>
+  <rect width="512" height="512" fill="url(#iBg)"/>
+  <g transform="translate(256 262) scale(0.8) translate(-256 -262)">
+  <!-- box -->
+  <polygon points="106,287 256,374 256,470 106,383" fill="url(#iLeft)" stroke="url(#iLeft)" stroke-width="10" stroke-linejoin="round"/>
+  <polygon points="256,374 406,287 406,383 256,470" fill="url(#iRight)" stroke="url(#iRight)" stroke-width="10" stroke-linejoin="round"/>
+  <polygon points="256,200 406,287 256,374 106,287" fill="url(#iRim)" stroke="url(#iRim)" stroke-width="10" stroke-linejoin="round"/>
+  <polygon points="256,217 376,287 256,357 136,287" fill="url(#iVoid)"/>
+  <g clip-path="url(#iInner)"><ellipse cx="256" cy="300" rx="104" ry="60" fill="url(#iGlow)"/></g>
+
+  <!-- falling in: blue pyramid, green cube, red sphere -->
+  <g transform="rotate(15 298 94)">
+    <polygon points="298,58 266,104 298,122" fill="url(#iPyrL)"/>
+    <polygon points="298,58 330,104 298,122" fill="url(#iPyrR)"/>
+  </g>
+  <g transform="rotate(-16 198 172)">
+    <polygon points="166,160 198,178 198,202 166,184" fill="url(#iCubeL)"/>
+    <polygon points="198,178 230,160 230,184 198,202" fill="url(#iCubeR)"/>
+    <polygon points="198,142 230,160 198,178 166,160" fill="url(#iCubeTop)"/>
+  </g>
+  <circle cx="272" cy="258" r="40" fill="url(#iSphere)"/>
+  <ellipse cx="259" cy="242" rx="10" ry="6" fill="#FFFFFF" opacity=".45" transform="rotate(-28 259 242)"/>
+  </g>
+</svg>

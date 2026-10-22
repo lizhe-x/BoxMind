@@ -1,0 +1,5 @@
+/* 权限提示(简体中文)。英文在 en.lproj。 */
+"NSCameraUsageDescription" = "BoxMind 用相机拍下放进箱子的物品,并扫描箱子上的编号。";
+"NSMicrophoneUsageDescription" = "按住说话时 BoxMind 会用麦克风听你描述箱子里的东西。";
+"NSSpeechRecognitionUsageDescription" = "BoxMind 在本机把你的语音转成文字,生成入库记录。";
+"NSLocationWhenInUseUsageDescription" = "BoxMind 可以记住装箱时所在的位置,方便以后找箱子。此项可选。";

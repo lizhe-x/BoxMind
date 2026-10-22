@@ -1,0 +1,15 @@
+{
+  "_comment": "iOS-only strings (no web counterpart). Merged into L10nTable.swift by gen_l10n.py.",
+  "toast_offline": {
+    "en": "Can't reach the server — check your connection",
+    "zh": "连不上服务器,请检查网络后重试"
+  },
+  "gps_denied": {
+    "en": "Location access is off — allow it in Settings to remember where boxes are",
+    "zh": "没有定位权限,请到系统设置里允许,才能记住箱子的位置"
+  },
+  "gps_off_hint": {
+    "en": "Location is off; boxes are saved without a position",
+    "zh": "定位已关闭,入库时不记录位置"
+  }
+}

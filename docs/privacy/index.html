@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BoxMind Privacy Policy</title>
+<meta name="description" content="What BoxMind stores, what it sends to AI models, and how to delete your data.">
+<style>
+  :root { --bg: #0a0d15; --card: #11151f; --text: #f2f5fa; --sub: rgba(235,240,250,.6); --blue: #93a8ff; --border: rgba(255,255,255,.08); }
+  @media (prefers-color-scheme: light) { :root { --bg: #f6f7fb; --card: #ffffff; --text: #141826; --sub: #525a6e; --blue: #4d5fd8; --border: rgba(0,0,0,.08); } }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.65 -apple-system, "SF Pro Text", Inter, system-ui, sans-serif; }
+  main { max-width: 720px; margin: 0 auto; padding: 48px 16px 80px; }
+  h1 { font-size: 28px; margin: 0 0 4px; }
+  .meta { color: var(--sub); font-size: 14px; margin-bottom: 28px; }
+  h2 { font-size: 19px; margin: 36px 0 10px; }
+  p, li { color: var(--text); }
+  table { border-collapse: collapse; width: 100%; font-size: 15px; }
+  th, td { text-align: left; padding: 9px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--sub); font-weight: 600; }
+  a { color: var(--blue); }
+  .lang { display: flex; gap: 8px; margin-bottom: 24px; }
+  .lang button { background: var(--card); color: var(--text); border: 1px solid var(--border); border-radius: 999px; padding: 6px 14px; font-size: 14px; cursor: pointer; }
+  .lang button[aria-pressed="true"] { border-color: var(--blue); color: var(--blue); }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<main>
+  <div class="lang" role="group" aria-label="Language">
+    <button type="button" data-lang="en" aria-pressed="true">English</button>
+    <button type="button" data-lang="zh" aria-pressed="false">中文</button>
+  </div>
+
+  <section data-section="en">
+    <h1>BoxMind Privacy Policy</h1>
+    <div class="meta">Effective 20 October 2026 · applies to the BoxMind iOS app and the BoxMind service</div>
+
+    <p>BoxMind is an inventory assistant: you tell it what went into which box and later ask where things are. This page explains what the app stores, what it sends to AI models, and how to delete everything. BoxMind does not sell data, does not show ads, and does not track you across other apps or websites.</p>
+
+    <h2>What we collect and why</h2>
+    <table>
+      <tr><th>Data</th><th>Why</th><th>Where it goes</th></tr>
+      <tr><td>Email address</td><td>Sign-in with a one-time code; account identity.</td><td>BoxMind server. A sign-in code is emailed to you.</td></tr>
+      <tr><td>Text you type or say</td><td>Turned into box and item records; answering your questions; carrying out operations you ask for.</td><td>BoxMind server, then an AI language model (see below).</td></tr>
+      <tr><td>Voice recordings</td><td>Speech is transcribed on your device. The recording is kept as a voice note on the box you created, so you can play it back.</td><td>BoxMind server. Sent to a speech model only when on-device transcription produced nothing.</td></tr>
+      <tr><td>Photos</td><td>Recognising items and the handwritten label on a box; shown as the box cover.</td><td>BoxMind server, then an AI vision model.</td></tr>
+      <tr><td>Location (optional)</td><td>Remembering where a box was packed, so the app can show how far away it is. Off by default; you turn it on in Settings.</td><td>BoxMind server, attached to the box.</td></tr>
+      <tr><td>Barcodes / QR codes</td><td>Linking a code printed on a box to that box.</td><td>BoxMind server.</td></tr>
+    </table>
+
+    <h2>AI processing</h2>
+    <p>To understand sentences, read photos and answer questions, BoxMind sends the relevant text, photo or audio, together with the box data needed to answer, to a third-party large language model provider through the BoxMind server. The provider processes the request to produce a reply; BoxMind does not use your data to train models. Which provider is used is a server configuration and may change; the categories of data sent are the ones in the table above.</p>
+
+    <h2>Storage and security</h2>
+    <p>Your records, photos and voice notes are stored on the BoxMind server and transmitted over HTTPS only. Access requires the sign-in token stored in your device's Keychain. Sign-in codes expire after 10 minutes.</p>
+
+    <h2>Your controls</h2>
+    <ul>
+      <li><strong>Export</strong>: Settings → Export JSON / CSV gives you a copy of all your boxes and items.</li>
+      <li><strong>Delete account</strong>: Settings → Delete account removes your account, every box, item, photo and voice note immediately and permanently.</li>
+      <li><strong>Location</strong>: the Settings switch, or the iOS Settings app, turns it off at any time; existing boxes keep only what was recorded while it was on.</li>
+      <li><strong>Camera, microphone, speech recognition</strong>: each is requested only when you first use that feature and can be revoked in the iOS Settings app.</li>
+    </ul>
+
+    <h2>Children</h2>
+    <p>BoxMind is not directed at children under 13 and does not knowingly collect their data.</p>
+
+    <h2>Changes and contact</h2>
+    <p>If this policy changes, the new version is published here with a new effective date. Questions: open an issue at <a href="https://github.com/lizhe-x/BoxMind">github.com/lizhe-x/BoxMind</a> or write to <a href="mailto:lizhe666@gmail.com">lizhe666@gmail.com</a>.</p>
+  </section>
+
+  <section data-section="zh" hidden>
+    <h1>BoxMind 隐私政策</h1>
+    <div class="meta">生效日期 2026 年 10 月 20 日 · 适用于 BoxMind iOS 应用及 BoxMind 服务</div>
+
+    <p>BoxMind 是一个收纳助手:你告诉它什么东西放进了哪个箱子,之后问它东西在哪。本页说明应用保存什么、哪些内容会发给 AI 模型、以及如何删除全部数据。BoxMind 不出售数据、不投放广告、不跨应用或网站追踪你。</p>
+
+    <h2>收集什么、为什么</h2>
+    <table>
+      <tr><th>数据</th><th>用途</th><th>去向</th></tr>
+      <tr><td>邮箱地址</td><td>验证码登录;账号标识。</td><td>BoxMind 服务器。登录验证码会发到你的邮箱。</td></tr>
+      <tr><td>你输入或说出的文字</td><td>生成箱子和物品记录;回答你的问题;执行你要求的操作。</td><td>BoxMind 服务器,随后发给 AI 语言模型(见下文)。</td></tr>
+      <tr><td>语音录音</td><td>语音在你的设备上转成文字。录音作为语音备注保存在对应箱子里,便于回放。</td><td>BoxMind 服务器。仅当端侧转写没有结果时才发给语音识别模型。</td></tr>
+      <tr><td>照片</td><td>识别箱子里的物品和手写编号;作为箱子封面显示。</td><td>BoxMind 服务器,随后发给 AI 视觉模型。</td></tr>
+      <tr><td>位置(可选)</td><td>记住装箱时所在位置,以便显示箱子距离。默认关闭,需在设置中开启。</td><td>BoxMind 服务器,附在箱子记录上。</td></tr>
+      <tr><td>条码 / 二维码</td><td>把箱子上贴的码与该箱子关联。</td><td>BoxMind 服务器。</td></tr>
+    </table>
+
+    <h2>AI 处理</h2>
+    <p>为了理解句子、看懂照片和回答问题,BoxMind 会把相关文字、照片或音频,连同回答所需的箱子数据,经 BoxMind 服务器发送给第三方大语言模型服务商处理。服务商仅用于生成回复;BoxMind 不会用你的数据训练模型。具体使用哪家服务商由服务端配置决定、可能变化,但发送的数据类别以上表为准。</p>
+
+    <h2>存储与安全</h2>
+    <p>你的记录、照片和语音备注保存在 BoxMind 服务器上,传输全部使用 HTTPS。访问需要保存在设备钥匙串中的登录令牌。登录验证码 10 分钟后失效。</p>
+
+    <h2>你可以做什么</h2>
+    <ul>
+      <li><strong>导出</strong>:设置 → 导出 JSON / CSV,获得全部箱子和物品的副本。</li>
+      <li><strong>删除账号</strong>:设置 → 删除账号,立即且永久删除账号及全部箱子、物品、照片、语音备注。</li>
+      <li><strong>位置</strong>:随时在应用设置或 iOS 系统设置中关闭;已有箱子只保留开启期间记录的位置。</li>
+      <li><strong>相机、麦克风、语音识别</strong>:只在首次使用对应功能时请求授权,可随时在 iOS 系统设置中撤销。</li>
+    </ul>
+
+    <h2>儿童</h2>
+    <p>BoxMind 不面向 13 岁以下儿童,也不会有意收集他们的数据。</p>
+
+    <h2>变更与联系</h2>
+    <p>政策如有变更,会在本页发布新版本并更新生效日期。有问题可在 <a href="https://github.com/lizhe-x/BoxMind">github.com/lizhe-x/BoxMind</a> 提 issue,或邮件至 <a href="mailto:lizhe666@gmail.com">lizhe666@gmail.com</a>。</p>
+  </section>
+</main>
+<script>
+  const buttons = document.querySelectorAll('.lang button');
+  const show = (lang) => {
+    document.documentElement.lang = lang === 'zh' ? 'zh-Hans' : 'en';
+    document.querySelectorAll('[data-section]').forEach((s) => { s.hidden = s.dataset.section !== lang; });
+    buttons.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.lang === lang)));
+  };
+  buttons.forEach((b) => b.addEventListener('click', () => show(b.dataset.lang)));
+  const nav = (navigator.language || '').toLowerCase();
+  if (location.hash === '#zh' || (location.hash !== '#en' && nav.startsWith('zh'))) show('zh');
+</script>
+</body>
+</html>

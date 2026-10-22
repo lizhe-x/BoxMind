@@ -1,0 +1,3 @@
+// Debug builds talk to the test server on the Mac mini over Tailscale (tailnet only).
+// xcconfig treats "//" as a comment, so the scheme is split off with $().
+API_BASE_URL = https:/$()/zhes-mac-mini.tailb3c9f2.ts.net

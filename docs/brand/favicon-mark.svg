@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="BoxMind">
+  <title>BoxMind</title>
+  <defs>
+    <linearGradient id="fRim" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8CA4FF"/><stop offset="1" stop-color="#B49BFF"/></linearGradient>
+    <linearGradient id="fRight" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4D7CFE"/><stop offset="1" stop-color="#8B5CF6"/></linearGradient>
+    <linearGradient id="fLeft" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2F55C9"/><stop offset="1" stop-color="#5B3AB8"/></linearGradient>
+    <linearGradient id="fVoid" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#070A14"/><stop offset="1" stop-color="#161D33"/></linearGradient>
+    <radialGradient id="fGlow" cx=".5" cy=".5" r=".5">
+      <stop offset="0" stop-color="#AFC2FF" stop-opacity=".38"/><stop offset="1" stop-color="#7C9BFF" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="fSphere" cx=".34" cy=".28" r=".8">
+      <stop offset="0" stop-color="#FFC9BE"/><stop offset=".42" stop-color="#FF6152"/><stop offset="1" stop-color="#CC2C26"/>
+    </radialGradient>
+    <linearGradient id="fCubeTop" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#93F5D1"/><stop offset="1" stop-color="#4FDFA9"/></linearGradient>
+    <linearGradient id="fCubeR" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#28C990"/><stop offset="1" stop-color="#15A877"/></linearGradient>
+    <linearGradient id="fCubeL" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1CAE7E"/><stop offset="1" stop-color="#0E8760"/></linearGradient>
+    <linearGradient id="fPyrR" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#9BDCFF"/><stop offset="1" stop-color="#3FA8FF"/></linearGradient>
+    <linearGradient id="fPyrL" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4699F5"/><stop offset="1" stop-color="#2A76E0"/></linearGradient>
+    <clipPath id="fInner"><polygon points="256,217 376,287 256,357 136,287"/></clipPath>
+  </defs>
+  <g transform="translate(256 268) scale(1.08) translate(-256 -268)">
+  <!-- box -->
+  <polygon points="106,287 256,374 256,470 106,383" fill="url(#fLeft)" stroke="url(#fLeft)" stroke-width="10" stroke-linejoin="round"/>
+  <polygon points="256,374 406,287 406,383 256,470" fill="url(#fRight)" stroke="url(#fRight)" stroke-width="10" stroke-linejoin="round"/>
+  <polygon points="256,200 406,287 256,374 106,287" fill="url(#fRim)" stroke="url(#fRim)" stroke-width="10" stroke-linejoin="round"/>
+  <polygon points="256,217 376,287 256,357 136,287" fill="url(#fVoid)"/>
+  <g clip-path="url(#fInner)"><ellipse cx="256" cy="300" rx="104" ry="60" fill="url(#fGlow)"/></g>
+
+  <!-- falling in: blue pyramid, green cube, red sphere -->
+  <g transform="rotate(15 296 100)">
+    <polygon points="296,62 260,112 296,133" fill="url(#fPyrL)"/>
+    <polygon points="296,62 332,112 296,133" fill="url(#fPyrR)"/>
+  </g>
+  <g transform="rotate(-16 196 172)">
+    <polygon points="159,158 196,179 196,207 159,186" fill="url(#fCubeL)"/>
+    <polygon points="196,179 233,158 233,186 196,207" fill="url(#fCubeR)"/>
+    <polygon points="196,137 233,158 196,179 159,158" fill="url(#fCubeTop)"/>
+  </g>
+  <circle cx="274" cy="256" r="46" fill="url(#fSphere)"/>
+  <ellipse cx="259" cy="238" rx="11" ry="7" fill="#FFFFFF" opacity=".45" transform="rotate(-28 259 238)"/>
+  </g>
+</svg>

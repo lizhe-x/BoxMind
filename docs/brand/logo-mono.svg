@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" fill="currentColor" role="img" aria-label="BoxMind">
+  <title>BoxMind</title>
+  <path fill-rule="evenodd" d="M256 200 406 287 256 374 106 287ZM256 221 370 287 256 353 142 287Z" opacity=".95"/>
+  <polygon points="256,374 406,287 406,383 256,470" opacity=".72"/>
+  <polygon points="106,287 256,374 256,470 106,383" opacity=".46"/>
+  <g transform="rotate(15 298 94)">
+    <polygon points="298,58 266,104 298,122" opacity=".6"/>
+    <polygon points="298,58 330,104 298,122" opacity=".9"/>
+  </g>
+  <g transform="rotate(-16 198 172)">
+    <polygon points="166,160 198,178 198,202 166,184" opacity=".5"/>
+    <polygon points="198,178 230,160 230,184 198,202" opacity=".72"/>
+    <polygon points="198,142 230,160 198,178 166,160" opacity="1"/>
+  </g>
+  <circle cx="272" cy="258" r="40" opacity=".88"/>
+</svg>

@@ -1,0 +1,2 @@
+// Release builds: public backend. Replace with the production domain before archiving (see docs/IOS_PLAN.md §8).
+API_BASE_URL = https:/$()/zhes-mac-mini.tailb3c9f2.ts.net

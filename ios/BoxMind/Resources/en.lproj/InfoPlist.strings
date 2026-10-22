@@ -1,0 +1,5 @@
+/* Permission prompts (English). The Chinese versions live in zh-Hans.lproj. */
+"NSCameraUsageDescription" = "BoxMind uses the camera to photograph what goes into a box and to scan box labels.";
+"NSMicrophoneUsageDescription" = "BoxMind listens while you hold the talk button so you can describe a box by voice.";
+"NSSpeechRecognitionUsageDescription" = "BoxMind transcribes your voice on this device to turn it into a box entry.";
+"NSLocationWhenInUseUsageDescription" = "BoxMind can remember where a box was packed so you can find it later. This is optional.";

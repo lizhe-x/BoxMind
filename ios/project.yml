@@ -1,0 +1,85 @@
+# xcodegen spec. Regenerate the project with:  cd ios && xcodegen generate
+# The .xcodeproj is not committed; this file is the source of truth.
+name: BoxMind
+options:
+  bundleIdPrefix: me.boxmind
+  deploymentTarget:
+    iOS: "26.0"
+  createIntermediateGroups: true
+  generateEmptyDirectories: true
+configs:
+  Debug: debug
+  Release: release
+configFiles:
+  Debug: Config/Debug.xcconfig
+  Release: Config/Release.xcconfig
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    DEVELOPMENT_TEAM: GZ4LT9W9H9
+    CODE_SIGN_STYLE: Automatic
+    TARGETED_DEVICE_FAMILY: "1"          # iPhone only (no iPad screenshots needed for review)
+    SWIFT_STRICT_CONCURRENCY: complete
+    ENABLE_USER_SCRIPT_SANDBOXING: YES
+    ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS: YES
+packages:
+  BoxMindKit:
+    path: BoxMindKit
+targets:
+  BoxMind:
+    type: application
+    platform: iOS
+    sources:
+      - path: BoxMind
+    dependencies:
+      - package: BoxMindKit
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: me.boxmind.app
+        MARKETING_VERSION: "1.0.0"
+        CURRENT_PROJECT_VERSION: 1
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        SUPPORTED_INTERFACE_ORIENTATIONS_IPHONE: UIInterfaceOrientationPortrait
+    info:
+      path: BoxMind/Info.plist
+      properties:
+        CFBundleDisplayName: BoxMind
+        CFBundleDevelopmentRegion: en
+        CFBundleLocalizations: [en, zh-Hans]
+        UILaunchScreen:
+          UIColorName: LaunchBackground
+        UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
+        UIUserInterfaceStyle: Dark
+        ITSAppUsesNonExemptEncryption: false   # HTTPS only → exempt from export compliance
+        APIBaseURL: $(API_BASE_URL)
+        UIAppFonts: [SpaceGrotesk-Medium.ttf, SpaceGrotesk-Bold.ttf]
+        NSCameraUsageDescription: BoxMind uses the camera to photograph what goes into a box and to scan box labels.
+        NSMicrophoneUsageDescription: BoxMind listens while you hold the talk button so you can describe a box by voice.
+        NSSpeechRecognitionUsageDescription: BoxMind transcribes your voice on this device to turn it into a box entry.
+        NSLocationWhenInUseUsageDescription: BoxMind can remember where a box was packed so you can find it later. This is optional.
+  BoxMindUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - path: BoxMindUITests
+    dependencies:
+      - target: BoxMind
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: me.boxmind.app.uitests
+        TEST_TARGET_NAME: BoxMind
+        GENERATE_INFOPLIST_FILE: YES
+schemes:
+  BoxMind:
+    build:
+      targets:
+        BoxMind: all
+        BoxMindUITests: [test]
+    run:
+      config: Debug
+    test:
+      config: Debug
+      targets:
+        - BoxMindUITests
+    archive:
+      config: Release
