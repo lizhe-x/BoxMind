@@ -1,0 +1,2054 @@
+{
+ "set": "extraction",
+ "stamp": "2026-10-22T161158Z",
+ "model": "claude_code / haiku",
+ "prompt": "interpret v2 (212ab1240e)",
+ "summary": {
+  "n": 40,
+  "exact_rate": 0.875,
+  "by_lang": {
+   "en": 1.0,
+   "zh": 0.75
+  },
+  "intent_acc": 1.0,
+  "box_label_acc": 1.0,
+  "location_acc": 1.0,
+  "language_acc": 1.0,
+  "item_precision": 1.0,
+  "item_recall": 1.0,
+  "item_f1": 1.0,
+  "qty_acc": 0.9383,
+  "latency_ms_p50": 3432,
+  "latency_ms_p95": 4491,
+  "tokens_total": 16526,
+  "errors": 0
+ },
+ "failures": [
+  {
+   "id": "x024",
+   "text": "A2箱:充电线、旧手机、若干电池",
+   "problems": [
+    "qty of '充电线': expected '若干', got '×1'"
+   ]
+  },
+  {
+   "id": "x028",
+   "text": "厨房箱:一个水壶、四个马克杯和一套茶具",
+   "problems": [
+    "qty of '茶具': expected ['×1套', '×1'], got '×1 set'"
+   ]
+  },
+  {
+   "id": "x034",
+   "text": "阁楼的B1箱:旧相册和一台投影仪",
+   "problems": [
+    "qty of '旧相册': expected '若干', got '×1'"
+   ]
+  },
+  {
+   "id": "x035",
+   "text": "8号箱放了一副滑雪板和两根雪杖",
+   "problems": [
+    "qty of '滑雪板': expected ['×1副', '×1'], got '×1 pair'"
+   ]
+  },
+  {
+   "id": "x038",
+   "text": "工具箱:一把锤子、钳子和一套螺丝刀",
+   "problems": [
+    "qty of '螺丝刀': expected ['×1套', '若干'], got '×1 set'"
+   ]
+  }
+ ],
+ "cases": [
+  {
+   "case": {
+    "id": "x001",
+    "lang": "en",
+    "text": "Box 1 has three down jackets and a headlamp",
+    "expect": {
+     "intent": "ingest",
+     "box_label": "1",
+     "items": [
+      {
+       "name": [
+        "down jackets",
+        "down jacket"
+       ],
+       "qty_text": "×3"
+      },
+      {
+       "name": "headlamp",
+       "qty_text": "×1"
+      }
+     ],
+     "location_text": null
+    }
+   },
+   "id": "x001",
+   "got": {
+    "intent": "ingest",
+    "box_label": "1",
+    "items": [
+     {
+      "name": "down jackets",
+      "qty_text": "×3"
+     },
+     {
+      "name": "headlamp",
+      "qty_text": "×1"
+     }
+    ],
+    "location_text": null,
+    "language": "en"
+   },
+   "error": null,
+   "ms": 2746,
+   "tokens": 291,
+   "prompt": "v2 (212ab1240e)",
+   "model": "haiku"
+  },
+  {
+   "case": {
+    "id": "x002",
+    "lang": "en",
+    "text": "Put two pairs of snow boots in box 4, garage left shelf",
+    "expect": {
+     "intent": "ingest",
+     "box_label": "4",
+     "items": [
+      {
+       "name": "snow boots",
+       "qty_text": [
+        "×2 pairs",
+        "×2 pair",
+        "×2"
+       ]
+      }
+     ],
+     "location_text": [
+      "garage left shelf",
+      "garage, left shelf"
+     ]
+    }
+   },
+   "id": "x002",
+   "got": {
+    "intent": "ingest",
+    "box_label": "4",
+    "items": [
+     {
+      "name": "snow boots",
+      "qty_text": "×2 pairs"
+     }
+    ],
+    "location_text": "garage left shelf",
+    "language": "en"
+   },
+   "error": null,
+   "ms": 3293,
+   "tokens": 362,
+   "prompt": "v2 (212ab1240e)",
+   "model": "haiku"
+  },
+  {
+   "case": {
+    "id": "x003",
+    "lang": "en",
+    "text": "The red box has my winter scarves and a wool hat",
+    "expect": {
+     "intent": "ingest",
+     "box_label": [
+      "red",
+      "red box"
+     ],
+     "items": [
+      {
+       "name": [
+        "winter scarves",
+        "winter scarf",
+        "scarves"
+       ],
+       "qty_text": "some"
+      },
+      {
+       "name": "wool hat",
+       "qty_text": "×1"
+      }
+     ],
+     "location_text": null
+    }
+   },
+   "id": "x003",
+   "got": {
+    "intent": "ingest",
+    "box_label": "red",
+    "items": [
+     {
+      "name": "winter scarves",
+      "qty_text": "some"
+     },
+     {
+      "name": "wool hat",
+      "qty_text": "×1"
+     }
+    ],
+    "location_text": null,
+    "language": "en"
+   },
+   "error": null,
+   "ms": 4016,
+   "tokens": 557,
+   "prompt": "v2 (212ab1240e)",
+   "model": "haiku"
+  },
+  {
+   "case": {
+    "id": "x004",
+    "lang": "en",
+    "text": "Box A2: charger cables, an old phone, some batteries",
+    "expect": {
+     "intent": "ingest",
+     "box_label": "A2",
+     "items": [
+      {
+       "name": [
+        "charger cables",
+        "charger cable"
+       ],
+       "qty_text": "some"
+      },
+      {
+       "name": [
+        "old phone",
+        "phone"
+       ],
+       "qty_text": "×1"
+      },
+      {
+       "name": "batteries",
+       "qty_text": "some"
+      }
+     ],
+     "location_text": null
+    }
+   },
+   "id": "x004",
+   "got": {
+    "intent": "ingest",
+    "box_label": "A2",
+    "items": [
+     {
+      "name": "charger cables",
+      "qty_text": "some"
+     },
+     {
+      "name": "old phone",
+      "qty_text": "×1"
+     },
+     {
+      "name": "batteries",
+      "qty_text": "some"
+     }
+    ],
+    "location_text": null,
+    "language": "en"
+   },
+   "error": null,
+   "ms": 3477,
+   "tokens": 418,
+   "prompt": "v2 (212ab1240e)",
+   "model": "haiku"
+  },
+  {
+   "case": {
+    "id": "x005",
+    "lang": "en",
+    "text": "Just packed the camping stove and a lantern into box 7",
+    "expect": {
+     "intent": "ingest",
+     "box_label": "7",
+     "items": [
+      {
+       "name": "camping stove",
+       "qty_text": "×1"
+      },
+      {
+       "name": "lantern",
+       "qty_text": "×1"
+      }
+     ],
+     "location_text": null
+    }
+   },
+   "id": "x005",
+   "got": {
+    "intent": "ingest",
+    "box_label": "7",
+    "items": [
+     {
+      "name": "camping stove",
+      "qty_text": "×1"
+     },
+     {
+      "name": "lantern",
+      "qty_text": "×1"
+     }
+    ],
+    "location_text": null,
+    "language": "en"
+   },
+   "error": null,
+   "ms": 3249,
+   "tokens": 323,
+   "prompt": "v2 (212ab1240e)",
+   "model": "haiku"
+  },
+  {
+   "case": {
+    "id": "x006",
+    "lang": "en",
+    "text": "New box 9 with kids' books and a puzzle",
+    "expect": {
+     "intent": "ingest",
+     "box_label": "9",
+     "items": [
+      {
+       "name": [
+        "kids' books",
+        "kids books",
+        "kids' book"
+       ],
+       "qty_text": "some"
+      },
+      {
+       "name": "puzzle",
+       "qty_text": "×1"
+      }
+     ],
+     "location_text": null
+    }
+   },
+   "id": "x006",
+   "got": {
+    "intent": "ingest",
+    "box_label": "9",
+    "items": [
+     {
+      "name": "kids' books",
+      "qty_text": "some"
+     },
+     {
+      "name": "puzzle",
+      "qty_text": "×1"
+     }
+    ],
+    "location_text": null,
+    "language": "en"
+   },
+   "error": null,
+   "ms": 3227,
+   "tokens": 378,
+   "prompt": "v2 (212ab1240e)",
+   "model": "haiku"
+  },
+  {
+   "case": {
+    "id": "x007",
+    "lang": "en",
+    "text": "Add a flashlight and two AA batteries to box 1",
+    "known_labels": [
+     "1",
+     "2",
+     "3"
+    ],
+    "expect": {
+     "intent": "ingest",
+     "box_label": "1",
+     "items": [
+      {
+       "name": "flashlight",
+       "qty_text": "×1"
+      },
+      {
+       "name": [
+        "AA batteries",
+        "AA battery"
+       ],
+       "qty_text": "×2"
+      }
+     ],
+     "location_text": null
+    }
+   },
+   "id": "x007",
+   "got": {
+    "intent": "ingest",
+    "box_label": "1",
+    "items": [
+     {
+      "name": "flashlight",
+      "qty_text": "×1"
+     },
+     {
+      "name": "AA batteries",
+      "qty_text": "×2"
+     }
+    ],
+    "location_text": null,
+    "language": "en"
+   },
+   "error": null,
+   "ms": 4491,
+   "tokens": 384,
+   "prompt": "v2 (212ab1240e)",
+   "model": "haiku"
+  },
+  {
+   "case": {
+    "id": "x008",
+    "lang": "en",
+    "text": "Kitchen box: a kettle, four mugs and a tea set",
+    "expect": {
+     "intent": "ingest",
+     "box_label": [
+      "kitchen",
+      "kitchen box"
+     ],
+     "items": [
+      {
+       "name": "kettle",
+       "qty_text": "×1"
+      },
+      {
+       "name": [
+        "mugs",
+        "mug"
+       ],
+       "qty_text": "×4"
+      },
+      {
+       "name": "tea set",
+       "qty_text": "×1"
+      }
+     ],
+     "location_text": null
+    }
+   },
+   "id": "x008",
+   "got": {
+    "intent": "ingest",
+    "box_label": "Kitchen",
+    "items": [
+     {
+      "name": "kettle",
+      "qty_text": "×1"
+     },
+     {
+      "name": "mugs",
+      "qty_text": "×4"
+     },
+     {
+      "name": "tea set",
+      "qty_text": "×1"
+     }
+    ],
+    "location_text": null,
+    "language": "en"
+   },
+   "error": null,
+   "ms": 2797,
+   "tokens": 352,
+   "prompt": "v2 (212ab1240e)",
+   "model": "haiku"
+  },
+  {
+   "case": {
+    "id": "x009",
+    "lang": "en",
+    "text": "I put the tent in box 3 in the basement",
+    "expect": {
+     "intent": "ingest",
+     "box_label": "3",
+     "items": [
+      {
+       "name": "tent",
+       "qty_text": "×1"
+      }
+     ],
+     "location_text": [
+      "basement",
+      "in the basement"
+     ]
+    }
+   },
+   "id": "x009",
+   "got": {
+    "intent": "ingest",
+    "box_label": "3",
+    "items": [
+     {
+      "name": "tent",
+      "qty_text": "×1"
+     }
+    ],
+    "location_text": "basement",
+    "language": "en"
+   },
+   "error": null,
+   "ms": 3060,
+   "tokens": 263,
+   "prompt": "v2 (212ab1240e)",
+   "model": "haiku"
+  },
+  {
+   "case": {
+    "id": "x010",
+    "lang": "en",
+    "text": "Box 12 contains the Christmas lights and a tree stand",
+    "expect": {
+     "intent": "ingest",
+     "box_label": "12",
+     "items": [
+      {
+       "name": "Christmas lights",
+       "qty_text": [
+        "some",
+        "×1"
+       ]
+      },
+      {
+       "name": "tree stand",
+       "qty_text": "×1"
+      }
+     ],
+     "location_text": null
+    }
+   },
+   "id": "x010",
+   "got": {
+    "intent": "ingest",
+    "box_label": "12",
+    "items": [
+     {
+      "name": "Christmas lights",
+      "qty_text": "some"
+     },
+     {
+      "name": "tree stand",
+      "qty_text": "×1"
+     }
+    ],
+    "location_text": null,
+    "language": "en"
+   },
+   "error": null,
+   "ms": 3509,
+   "tokens": 343,
+   "prompt": "v2 (212ab1240e)",
+   "model": "haiku"
+  },
+  {
+   "case": {
+    "id": "x011",
+    "lang": "en",
+    "text": "Box 2: six wine glasses, a decanter, bedroom closet top shelf",
+    "expect": {
+     "intent": "ingest",
+     "box_label": "2",
+     "items": [
+      {
+       "name": [
+        "wine glasses",
+        "wine glass"
+       ],
+       "qty_text": "×6"
+      },
+      {
+       "name": "decanter",
+       "qty_text": "×1"
+      }
+     ],
+     "location_text": [
+      "bedroom closet top shelf",
+      "bedroom closet, top shelf"
+     ]
+    }
+   },
+   "id": "x011",
+   "got": {
+    "intent": "ingest",
+    "box_label": "2",
+    "items": [
+     {
+      "name": "wine glasses",
+      "qty_text": "×6"
+     },
+     {
+      "name": "decanter",
+      "qty_text": "×1"
+     }
+    ],
+    "location_text": "bedroom closet top shelf",
+    "language": "en"
+   },
+   "error": null,
+   "ms": 3364,
+   "tokens": 386,
+   "prompt": "v2 (212ab1240e)",
+   "model": "haiku"
+  },
+  {
+   "case": {
+    "id": "x012",
+    "lang": "en",
+    "text": "box five has the drill, a box of screws and a tape measure",
+    "expect": {
+     "intent": "ingest",
+     "box_label": "5",
+     "items": [
+      {
+       "name": "drill",
+       "qty_text": "×1"
+      },
+      {
+       "name": [
+        "screws",
+        "box of screws"
+       ],
+       "qty_text": [
+        "×1 box",
+        "some"
+       ]
+      },
+      {
+       "name": "tape measure",
+       "qty_text": "×1"
+      }
+     ],
+     "location_text": null
+    }
+   },
+   "id": "x012",
+   "got": {
+    "intent": "ingest",
+    "box_label": "5",
+    "items": [
+     {
+      "name": "drill",
+      "qty_text": "×1"
+     },
+     {
+      "name": "screws",
+      "qty_text": "×1 box"
+     },
+     {
+      "name": "tape measure",
+      "qty_text": "×1"
+     }
+    ],
+    "location_text": null,
+    "language": "en"
+   },
+   "error": null,
+   "ms": 4009,
+   "tokens": 544,
+   "prompt": "v2 (212ab1240e)",
+   "model": "haiku"
+  },
+  {
+   "case": {
+    "id": "x013",
+    "lang": "en",
+    "text": "Three towels and a bathrobe went into the blue box, under the bed",
+    "expect": {
+     "intent": "ingest",
+     "box_label": [
+      "blue",
+      "blue box"
+     ],
+     "items": [
+      {
+       "name": [
+        "towels",
+        "towel"
+       ],
+       "qty_text": "×3"
+      },
+      {
+       "name": "bathrobe",
+       "qty_text": "×1"
+      }
+     ],
+     "location_text": "under the bed"
+    }
+   },
+   "id": "x013",
+   "got": {
+    "intent": "ingest",
+    "box_label": "blue",
+    "items": [
+     {
+      "name": "towels",
+      "qty_text": "×3"
+     },
+     {
+      "name": "bathrobe",
+      "qty_text": "×1"
+     }
+    ],
+    "location_text": "under the bed",
+    "language": "en"
+   },
+   "error": null,
+   "ms": 3430,
+   "tokens": 362,
+   "prompt": "v2 (212ab1240e)",
+   "model": "haiku"
+  },
+  {
+   "case": {
+    "id": "x014",
+    "lang": "en",
+    "text": "Storage box B1 in the attic: old photo albums and a projector",
+    "expect": {
+     "intent": "ingest",
+     "box_label": "B1",
+     "items": [
+      {
+       "name": [
+        "old photo albums",
+        "photo albums",
+        "old photo album"
+       ],
+       "qty_text": "some"
+      },
+      {
+       "name": "projector",
+       "qty_text": "×1"
+      }
+     ],
+     "location_text": [
+      "attic",
+      "in the attic"
+     ]
+    }
+   },
+   "id": "x014",
+   "got": {
+    "intent": "ingest",
+    "box_label": "B1",
+    "items": [
+     {
+      "name": "old photo albums",
+      "qty_text": "some"
+     },
+     {
+      "name": "projector",
+      "qty_text": "×1"
+     }
+    ],
+    "location_text": "attic",
+    "language": "en"
+   },
+   "error": null,
+   "ms": 3588,
+   "tokens": 368,
+   "prompt": "v2 (212ab1240e)",
+   "model": "haiku"
+  },
+  {
+   "case": {
+    "id": "x015",
+    "lang": "en",
+    "text": "Box 8 has a pair of skis and two ski poles",
+    "expect": {
+     "intent": "ingest",
+     "box_label": "8",
+     "items": [
+      {
+       "name": "skis",
+       "qty_text": [
+        "×1 pair",
+        "×1"
+       ]
+      },
+      {
+       "name": [
+        "ski poles",
+        "ski pole"
+       ],
+       "qty_text": "×2"
+      }
+     ],
+     "location_text": null
+    }
+   },
+   "id": "x015",
+   "got": {
+    "intent": "ingest",
+    "box_label": "8",
+    "items": [
+     {
+      "name": "skis",
+      "qty_text": "×1 pair"
+     },
+     {
+      "name": "ski poles",
+      "qty_text": "×2"
+     }
+    ],
+    "location_text": null,
+    "language": "en"
+   },
+   "error": null,
+   "ms": 3091,
+   "tokens": 358,
+   "prompt": "v2 (212ab1240e)",
+   "model": "haiku"
+  },
+  {
+   "case": {
+    "id": "x016",
+    "lang": "en",
+    "text": "I'm putting the printer and 2 ink cartridges in box 10",
+    "expect": {
+     "intent": "ingest",
+     "box_label": "10",
+     "items": [
+      {
+       "name": "printer",
+       "qty_text": "×1"
+      },
+      {
+       "name": [
+        "ink cartridges",
+        "ink cartridge"
+       ],
+       "qty_text": "×2"
+      }
+     ],
+     "location_text": null
+    }
+   },
+   "id": "x016",
+   "got": {
+    "intent": "ingest",
+    "box_label": "10",
+    "items": [
+     {
+      "name": "printer",
+      "qty_text": "×1"
+     },
+     {
+      "name": "ink cartridges",
+      "qty_text": "×2"
+     }
+    ],
+    "location_text": null,
+    "language": "en"
+   },
+   "error": null,
+   "ms": 3358,
+   "tokens": 404,
+   "prompt": "v2 (212ab1240e)",
+   "model": "haiku"
+  },
+  {
+   "case": {
+    "id": "x017",
+    "lang": "en",
+    "text": "Box 3 also has a sewing kit",
+    "known_labels": [
+     "1",
+     "2",
+     "3"
+    ],
+    "expect": {
+     "intent": "ingest",
+     "box_label": "3",
+     "items": [
+      {
+       "name": "sewing kit",
+       "qty_text": "×1"
+      }
+     ],
+     "location_text": null
+    }
+   },
+   "id": "x017",
+   "got": {
+    "intent": "ingest",
+    "box_label": "3",
+    "items": [
+     {
+      "name": "sewing kit",
+      "qty_text": "×1"
+     }
+    ],
+    "location_text": null,
+    "language": "en"
+   },
+   "error": null,
+   "ms": 2777,
+   "tokens": 239,
+   "prompt": "v2 (212ab1240e)",
+   "model": "haiku"
+  },
+  {
+   "case": {
+    "id": "x018",
+    "lang": "en",
+    "text": "Toolbox: a hammer, pliers and a set of screwdrivers",
+    "expect": {
+     "intent": "ingest",
+     "box_label": [
+      "toolbox",
+      "tool box",
+      "tool"
+     ],
+     "items": [
+      {
+       "name": "hammer",
+       "qty_text": "×1"
+      },
+      {
+       "name": "pliers",
+       "qty_text": [
+        "×1",
+        "some"
+       ]
+      },
+      {
+       "name": [
+        "screwdrivers",
+        "set of screwdrivers",
+        "screwdriver set"
+       ],
+       "qty_text": [
+        "×1 set",
+        "some"
+       ]
+      }
+     ],
+     "location_text": null
+    }
+   },
+   "id": "x018",
+   "got": {
+    "intent": "ingest",
+    "box_label": "Toolbox",
+    "items": [
+     {
+      "name": "hammer",
+      "qty_text": "×1"
+     },
+     {
+      "name": "pliers",
+      "qty_text": "×1"
+     },
+     {
+      "name": "screwdrivers",
+      "qty_text": "×1 set"
+     }
+    ],
+    "location_text": null,
+    "language": "en"
+   },
+   "error": null,
+   "ms": 4208,
+   "tokens": 613,
+   "prompt": "v2 (212ab1240e)",
+   "model": "haiku"
+  },
+  {
+   "case": {
+    "id": "x019",
+    "lang": "en",
+    "text": "Box 4 now has the kids' winter coats, three of them",
+    "known_labels": [
+     "4"
+    ],
+    "expect": {
+     "intent": "ingest",
+     "box_label": "4",
+     "items": [
+      {
+       "name": [
+        "kids' winter coats",
+        "kids winter coats",
+        "winter coats",
+        "kids' winter coat"
+       ],
+       "qty_text": "×3"
+      }
+     ],
+     "location_text": null
+    }
+   },
+   "id": "x019",
+   "got": {
+    "intent": "ingest",
+    "box_label": "4",
+    "items": [
+     {
+      "name": "kids' winter coats",
+      "qty_text": "×3"
+     }
+    ],
+    "location_text": null,
+    "language": "en"
+   },
+   "error": null,
+   "ms": 2864,
+   "tokens": 258,
+   "prompt": "v2 (212ab1240e)",
+   "model": "haiku"
+  },
+  {
+   "case": {
+    "id": "x020",
+    "lang": "en",
+    "text": "Put the spare keyboard and a mouse in box 11, office cabinet",
+    "expect": {
+     "intent": "ingest",
+     "box_label": "11",
+     "items": [
+      {
+       "name": [
+        "spare keyboard",
+        "keyboard"
+       ],
+       "qty_text": "×1"
+      },
+      {
+       "name": "mouse",
+       "qty_text": "×1"
+      }
+     ],
+     "location_text": "office cabinet"
+    }
+   },
+   "id": "x020",
+   "got": {
+    "intent": "ingest",
+    "box_label": "11",
+    "items": [
+     {
+      "name": "spare keyboard",
+      "qty_text": "×1"
+     },
+     {
+      "name": "mouse",
+      "qty_text": "×1"
+     }
+    ],
+    "location_text": "office cabinet",
+    "language": "en"
+   },
+   "error": null,
+   "ms": 3272,
+   "tokens": 383,
+   "prompt": "v2 (212ab1240e)",
+   "model": "haiku"
+  },
+  {
+   "case": {
+    "id": "x021",
+    "lang": "zh",
+    "text": "3号箱放了两件羽绒服和一个头灯,在车库左边架子上",
+    "expect": {
+     "intent": "ingest",
+     "box_label": "3",
+     "items": [
+      {
+       "name": "羽绒服",
+       "qty_text": [
+        "×2",
+        "×2件"
+       ]
+      },
+      {
+       "name": "头灯",
+       "qty_text": "×1"
+      }
+     ],
+     "location_text": [
+      "车库左边架子上",
+      "车库左边架子",
+      "车库,左边架子"
+     ]
+    }
+   },
+   "id": "x021",
+   "got": {
+    "intent": "ingest",
+    "box_label": "3",
+    "items": [
+     {
+      "name": "羽绒服",
+      "qty_text": "×2"
+     },
+     {
+      "name": "头灯",
+      "qty_text": "×1"
+     }
+    ],
+    "location_text": "车库左边架子上",
+    "language": "zh"
+   },
+   "error": null,
+   "ms": 3766,
+   "tokens": 531,
+   "prompt": "v2 (212ab1240e)",
+   "model": "haiku"
+  },
+  {
+   "case": {
+    "id": "x022",
+    "lang": "zh",
+    "text": "1号箱里有帐篷和两个睡袋",
+    "expect": {
+     "intent": "ingest",
+     "box_label": "1",
+     "items": [
+      {
+       "name": "帐篷",
+       "qty_text": "×1"
+      },
+      {
+       "name": "睡袋",
+       "qty_text": "×2"
+      }
+     ],
+     "location_text": null
+    }
+   },
+   "id": "x022",
+   "got": {
+    "intent": "ingest",
+    "box_label": "1",
+    "items": [
+     {
+      "name": "帐篷",
+      "qty_text": "×1"
+     },
+     {
+      "name": "睡袋",
+      "qty_text": "×2"
+     }
+    ],
+    "location_text": null,
+    "language": "zh"
+   },
+   "error": null,
+   "ms": 3189,
+   "tokens": 333,
+   "prompt": "v2 (212ab1240e)",
+   "model": "haiku"
+  },
+  {
+   "case": {
+    "id": "x023",
+    "lang": "zh",
+    "text": "红箱子装了冬天的围巾和一顶毛线帽",
+    "expect": {
+     "intent": "ingest",
+     "box_label": [
+      "红",
+      "红箱子",
+      "红箱"
+     ],
+     "items": [
+      {
+       "name": [
+        "围巾",
+        "冬天的围巾"
+       ],
+       "qty_text": "若干"
+      },
+      {
+       "name": "毛线帽",
+       "qty_text": [
+        "×1",
+        "×1顶"
+       ]
+      }
+     ],
+     "location_text": null
+    }
+   },
+   "id": "x023",
+   "got": {
+    "intent": "ingest",
+    "box_label": "红箱子",
+    "items": [
+     {
+      "name": "冬天的围巾",
+      "qty_text": "若干"
+     },
+     {
+      "name": "毛线帽",
+      "qty_text": "×1"
+     }
+    ],
+    "location_text": null,
+    "language": "zh"
+   },
+   "error": null,
+   "ms": 4144,
+   "tokens": 558,
+   "prompt": "v2 (212ab1240e)",
+   "model": "haiku"
+  },
+  {
+   "case": {
+    "id": "x024",
+    "lang": "zh",
+    "text": "A2箱:充电线、旧手机、若干电池",
+    "expect": {
+     "intent": "ingest",
+     "box_label": "A2",
+     "items": [
+      {
+       "name": "充电线",
+       "qty_text": "若干"
+      },
+      {
+       "name": [
+        "旧手机",
+        "手机"
+       ],
+       "qty_text": "×1"
+      },
+      {
+       "name": "电池",
+       "qty_text": "若干"
+      }
+     ],
+     "location_text": null
+    }
+   },
+   "id": "x024",
+   "got": {
+    "intent": "ingest",
+    "box_label": "A2",
+    "items": [
+     {
+      "name": "充电线",
+      "qty_text": "×1"
+     },
+     {
+      "name": "旧手机",
+      "qty_text": "×1"
+     },
+     {
+      "name": "电池",
+      "qty_text": "若干"
+     }
+    ],
+    "location_text": null,
+    "language": "zh"
+   },
+   "error": null,
+   "ms": 3432,
+   "tokens": 408,
+   "prompt": "v2 (212ab1240e)",
+   "model": "haiku"
+  },
+  {
+   "case": {
+    "id": "x025",
+    "lang": "zh",
+    "text": "把露营炉和一盏灯放进7号箱了",
+    "expect": {
+     "intent": "ingest",
+     "box_label": "7",
+     "items": [
+      {
+       "name": "露营炉",
+       "qty_text": "×1"
+      },
+      {
+       "name": "灯",
+       "qty_text": [
+        "×1",
+        "×1盏"
+       ]
+      }
+     ],
+     "location_text": null
+    }
+   },
+   "id": "x025",
+   "got": {
+    "intent": "ingest",
+    "box_label": "7",
+    "items": [
+     {
+      "name": "露营炉",
+      "qty_text": "×1"
+     },
+     {
+      "name": "灯",
+      "qty_text": "×1"
+     }
+    ],
+    "location_text": null,
+    "language": "zh"
+   },
+   "error": null,
+   "ms": 3486,
+   "tokens": 382,
+   "prompt": "v2 (212ab1240e)",
+   "model": "haiku"
+  },
+  {
+   "case": {
+    "id": "x026",
+    "lang": "zh",
+    "text": "新建9号箱,里面是孩子的书和一盒拼图",
+    "expect": {
+     "intent": "ingest",
+     "box_label": "9",
+     "items": [
+      {
+       "name": [
+        "孩子的书",
+        "书"
+       ],
+       "qty_text": "若干"
+      },
+      {
+       "name": "拼图",
+       "qty_text": [
+        "×1盒",
+        "×1"
+       ]
+      }
+     ],
+     "location_text": null
+    }
+   },
+   "id": "x026",
+   "got": {
+    "intent": "ingest",
+    "box_label": "9",
+    "items": [
+     {
+      "name": "孩子的书",
+      "qty_text": "若干"
+     },
+     {
+      "name": "拼图",
+      "qty_text": "×1 盒"
+     }
+    ],
+    "location_text": null,
+    "language": "zh"
+   },
+   "error": null,
+   "ms": 3998,
+   "tokens": 370,
+   "prompt": "v2 (212ab1240e)",
+   "model": "haiku"
+  },
+  {
+   "case": {
+    "id": "x027",
+    "lang": "zh",
+    "text": "往1号箱加一个手电筒和两节五号电池",
+    "known_labels": [
+     "1号",
+     "2号",
+     "3号"
+    ],
+    "expect": {
+     "intent": "ingest",
+     "box_label": "1",
+     "items": [
+      {
+       "name": "手电筒",
+       "qty_text": "×1"
+      },
+      {
+       "name": "五号电池",
+       "qty_text": [
+        "×2",
+        "×2节"
+       ]
+      }
+     ],
+     "location_text": null
+    }
+   },
+   "id": "x027",
+   "got": {
+    "intent": "ingest",
+    "box_label": "1",
+    "items": [
+     {
+      "name": "手电筒",
+      "qty_text": "×1"
+     },
+     {
+      "name": "五号电池",
+      "qty_text": "×2 节"
+     }
+    ],
+    "location_text": null,
+    "language": "zh"
+   },
+   "error": null,
+   "ms": 3495,
+   "tokens": 434,
+   "prompt": "v2 (212ab1240e)",
+   "model": "haiku"
+  },
+  {
+   "case": {
+    "id": "x028",
+    "lang": "zh",
+    "text": "厨房箱:一个水壶、四个马克杯和一套茶具",
+    "expect": {
+     "intent": "ingest",
+     "box_label": [
+      "厨房",
+      "厨房箱"
+     ],
+     "items": [
+      {
+       "name": "水壶",
+       "qty_text": "×1"
+      },
+      {
+       "name": "马克杯",
+       "qty_text": "×4"
+      },
+      {
+       "name": "茶具",
+       "qty_text": [
+        "×1套",
+        "×1"
+       ]
+      }
+     ],
+     "location_text": null
+    }
+   },
+   "id": "x028",
+   "got": {
+    "intent": "ingest",
+    "box_label": "厨房",
+    "items": [
+     {
+      "name": "水壶",
+      "qty_text": "×1"
+     },
+     {
+      "name": "马克杯",
+      "qty_text": "×4"
+     },
+     {
+      "name": "茶具",
+      "qty_text": "×1 set"
+     }
+    ],
+    "location_text": null,
+    "language": "zh"
+   },
+   "error": null,
+   "ms": 3162,
+   "tokens": 400,
+   "prompt": "v2 (212ab1240e)",
+   "model": "haiku"
+  },
+  {
+   "case": {
+    "id": "x029",
+    "lang": "zh",
+    "text": "帐篷放在地下室的3号箱里",
+    "expect": {
+     "intent": "ingest",
+     "box_label": "3",
+     "items": [
+      {
+       "name": "帐篷",
+       "qty_text": "×1"
+      }
+     ],
+     "location_text": "地下室"
+    }
+   },
+   "id": "x029",
+   "got": {
+    "intent": "ingest",
+    "box_label": "3",
+    "items": [
+     {
+      "name": "帐篷",
+      "qty_text": "×1"
+     }
+    ],
+    "location_text": "地下室",
+    "language": "zh"
+   },
+   "error": null,
+   "ms": 3136,
+   "tokens": 321,
+   "prompt": "v2 (212ab1240e)",
+   "model": "haiku"
+  },
+  {
+   "case": {
+    "id": "x030",
+    "lang": "zh",
+    "text": "12号箱是圣诞彩灯和树座",
+    "expect": {
+     "intent": "ingest",
+     "box_label": "12",
+     "items": [
+      {
+       "name": "圣诞彩灯",
+       "qty_text": [
+        "若干",
+        "×1"
+       ]
+      },
+      {
+       "name": "树座",
+       "qty_text": "×1"
+      }
+     ],
+     "location_text": null
+    }
+   },
+   "id": "x030",
+   "got": {
+    "intent": "ingest",
+    "box_label": "12",
+    "items": [
+     {
+      "name": "圣诞彩灯",
+      "qty_text": "×1"
+     },
+     {
+      "name": "树座",
+      "qty_text": "×1"
+     }
+    ],
+    "location_text": null,
+    "language": "zh"
+   },
+   "error": null,
+   "ms": 4710,
+   "tokens": 660,
+   "prompt": "v2 (212ab1240e)",
+   "model": "haiku"
+  },
+  {
+   "case": {
+    "id": "x031",
+    "lang": "zh",
+    "text": "2号箱:六个红酒杯、一个醒酒器,放在卧室衣柜最上层",
+    "expect": {
+     "intent": "ingest",
+     "box_label": "2",
+     "items": [
+      {
+       "name": "红酒杯",
+       "qty_text": "×6"
+      },
+      {
+       "name": "醒酒器",
+       "qty_text": "×1"
+      }
+     ],
+     "location_text": [
+      "卧室衣柜最上层",
+      "卧室衣柜,最上层"
+     ]
+    }
+   },
+   "id": "x031",
+   "got": {
+    "intent": "ingest",
+    "box_label": "2",
+    "items": [
+     {
+      "name": "红酒杯",
+      "qty_text": "×6"
+     },
+     {
+      "name": "醒酒器",
+      "qty_text": "×1"
+     }
+    ],
+    "location_text": "卧室衣柜最上层",
+    "language": "zh"
+   },
+   "error": null,
+   "ms": 3818,
+   "tokens": 462,
+   "prompt": "v2 (212ab1240e)",
+   "model": "haiku"
+  },
+  {
+   "case": {
+    "id": "x032",
+    "lang": "zh",
+    "text": "五号箱有电钻、一盒螺丝和一个卷尺",
+    "expect": {
+     "intent": "ingest",
+     "box_label": "5",
+     "items": [
+      {
+       "name": "电钻",
+       "qty_text": "×1"
+      },
+      {
+       "name": "螺丝",
+       "qty_text": [
+        "×1盒",
+        "若干"
+       ]
+      },
+      {
+       "name": "卷尺",
+       "qty_text": "×1"
+      }
+     ],
+     "location_text": null
+    }
+   },
+   "id": "x032",
+   "got": {
+    "intent": "ingest",
+    "box_label": "5",
+    "items": [
+     {
+      "name": "电钻",
+      "qty_text": "×1"
+     },
+     {
+      "name": "螺丝",
+      "qty_text": "×1 盒"
+     },
+     {
+      "name": "卷尺",
+      "qty_text": "×1"
+     }
+    ],
+    "location_text": null,
+    "language": "zh"
+   },
+   "error": null,
+   "ms": 3621,
+   "tokens": 475,
+   "prompt": "v2 (212ab1240e)",
+   "model": "haiku"
+  },
+  {
+   "case": {
+    "id": "x033",
+    "lang": "zh",
+    "text": "三条毛巾和一件浴袍放进蓝箱子了,在床底下",
+    "expect": {
+     "intent": "ingest",
+     "box_label": [
+      "蓝",
+      "蓝箱子",
+      "蓝箱"
+     ],
+     "items": [
+      {
+       "name": "毛巾",
+       "qty_text": [
+        "×3",
+        "×3条"
+       ]
+      },
+      {
+       "name": "浴袍",
+       "qty_text": [
+        "×1",
+        "×1件"
+       ]
+      }
+     ],
+     "location_text": [
+      "床底下",
+      "床下"
+     ]
+    }
+   },
+   "id": "x033",
+   "got": {
+    "intent": "ingest",
+    "box_label": "蓝箱子",
+    "items": [
+     {
+      "name": "毛巾",
+      "qty_text": "×3"
+     },
+     {
+      "name": "浴袍",
+      "qty_text": "×1"
+     }
+    ],
+    "location_text": "床底下",
+    "language": "zh"
+   },
+   "error": null,
+   "ms": 4118,
+   "tokens": 626,
+   "prompt": "v2 (212ab1240e)",
+   "model": "haiku"
+  },
+  {
+   "case": {
+    "id": "x034",
+    "lang": "zh",
+    "text": "阁楼的B1箱:旧相册和一台投影仪",
+    "expect": {
+     "intent": "ingest",
+     "box_label": "B1",
+     "items": [
+      {
+       "name": [
+        "旧相册",
+        "相册"
+       ],
+       "qty_text": "若干"
+      },
+      {
+       "name": "投影仪",
+       "qty_text": [
+        "×1",
+        "×1台"
+       ]
+      }
+     ],
+     "location_text": "阁楼"
+    }
+   },
+   "id": "x034",
+   "got": {
+    "intent": "ingest",
+    "box_label": "B1",
+    "items": [
+     {
+      "name": "旧相册",
+      "qty_text": "×1"
+     },
+     {
+      "name": "投影仪",
+      "qty_text": "×1"
+     }
+    ],
+    "location_text": "阁楼",
+    "language": "zh"
+   },
+   "error": null,
+   "ms": 3582,
+   "tokens": 416,
+   "prompt": "v2 (212ab1240e)",
+   "model": "haiku"
+  },
+  {
+   "case": {
+    "id": "x035",
+    "lang": "zh",
+    "text": "8号箱放了一副滑雪板和两根雪杖",
+    "expect": {
+     "intent": "ingest",
+     "box_label": "8",
+     "items": [
+      {
+       "name": "滑雪板",
+       "qty_text": [
+        "×1副",
+        "×1"
+       ]
+      },
+      {
+       "name": "雪杖",
+       "qty_text": [
+        "×2",
+        "×2根"
+       ]
+      }
+     ],
+     "location_text": null
+    }
+   },
+   "id": "x035",
+   "got": {
+    "intent": "ingest",
+    "box_label": "8",
+    "items": [
+     {
+      "name": "滑雪板",
+      "qty_text": "×1 pair"
+     },
+     {
+      "name": "雪杖",
+      "qty_text": "×2"
+     }
+    ],
+    "location_text": null,
+    "language": "zh"
+   },
+   "error": null,
+   "ms": 4746,
+   "tokens": 501,
+   "prompt": "v2 (212ab1240e)",
+   "model": "haiku"
+  },
+  {
+   "case": {
+    "id": "x036",
+    "lang": "zh",
+    "text": "打印机和两个墨盒我放10号箱了",
+    "expect": {
+     "intent": "ingest",
+     "box_label": "10",
+     "items": [
+      {
+       "name": "打印机",
+       "qty_text": "×1"
+      },
+      {
+       "name": "墨盒",
+       "qty_text": "×2"
+      }
+     ],
+     "location_text": null
+    }
+   },
+   "id": "x036",
+   "got": {
+    "intent": "ingest",
+    "box_label": "10",
+    "items": [
+     {
+      "name": "打印机",
+      "qty_text": "×1"
+     },
+     {
+      "name": "墨盒",
+      "qty_text": "×2"
+     }
+    ],
+    "location_text": null,
+    "language": "zh"
+   },
+   "error": null,
+   "ms": 3424,
+   "tokens": 362,
+   "prompt": "v2 (212ab1240e)",
+   "model": "haiku"
+  },
+  {
+   "case": {
+    "id": "x037",
+    "lang": "zh",
+    "text": "3号箱还有一个针线包",
+    "known_labels": [
+     "1号",
+     "2号",
+     "3号"
+    ],
+    "expect": {
+     "intent": "ingest",
+     "box_label": "3",
+     "items": [
+      {
+       "name": "针线包",
+       "qty_text": "×1"
+      }
+     ],
+     "location_text": null
+    }
+   },
+   "id": "x037",
+   "got": {
+    "intent": "ingest",
+    "box_label": "3",
+    "items": [
+     {
+      "name": "针线包",
+      "qty_text": "×1"
+     }
+    ],
+    "location_text": null,
+    "language": "zh"
+   },
+   "error": null,
+   "ms": 2874,
+   "tokens": 285,
+   "prompt": "v2 (212ab1240e)",
+   "model": "haiku"
+  },
+  {
+   "case": {
+    "id": "x038",
+    "lang": "zh",
+    "text": "工具箱:一把锤子、钳子和一套螺丝刀",
+    "expect": {
+     "intent": "ingest",
+     "box_label": [
+      "工具",
+      "工具箱"
+     ],
+     "items": [
+      {
+       "name": "锤子",
+       "qty_text": [
+        "×1",
+        "×1把"
+       ]
+      },
+      {
+       "name": "钳子",
+       "qty_text": [
+        "×1",
+        "若干"
+       ]
+      },
+      {
+       "name": "螺丝刀",
+       "qty_text": [
+        "×1套",
+        "若干"
+       ]
+      }
+     ],
+     "location_text": null
+    }
+   },
+   "id": "x038",
+   "got": {
+    "intent": "ingest",
+    "box_label": "工具箱",
+    "items": [
+     {
+      "name": "锤子",
+      "qty_text": "×1"
+     },
+     {
+      "name": "钳子",
+      "qty_text": "×1"
+     },
+     {
+      "name": "螺丝刀",
+      "qty_text": "×1 set"
+     }
+    ],
+    "location_text": null,
+    "language": "zh"
+   },
+   "error": null,
+   "ms": 4198,
+   "tokens": 650,
+   "prompt": "v2 (212ab1240e)",
+   "model": "haiku"
+  },
+  {
+   "case": {
+    "id": "x039",
+    "lang": "zh",
+    "text": "4号箱现在放了孩子的三件冬衣",
+    "known_labels": [
+     "4号"
+    ],
+    "expect": {
+     "intent": "ingest",
+     "box_label": "4",
+     "items": [
+      {
+       "name": [
+        "冬衣",
+        "孩子的冬衣"
+       ],
+       "qty_text": [
+        "×3",
+        "×3件"
+       ]
+      }
+     ],
+     "location_text": null
+    }
+   },
+   "id": "x039",
+   "got": {
+    "intent": "ingest",
+    "box_label": "4",
+    "items": [
+     {
+      "name": "孩子的冬衣",
+      "qty_text": "×3"
+     }
+    ],
+    "location_text": null,
+    "language": "zh"
+   },
+   "error": null,
+   "ms": 3246,
+   "tokens": 353,
+   "prompt": "v2 (212ab1240e)",
+   "model": "haiku"
+  },
+  {
+   "case": {
+    "id": "x040",
+    "lang": "zh",
+    "text": "备用键盘和一个鼠标放11号箱,办公室柜子里",
+    "expect": {
+     "intent": "ingest",
+     "box_label": "11",
+     "items": [
+      {
+       "name": [
+        "备用键盘",
+        "键盘"
+       ],
+       "qty_text": "×1"
+      },
+      {
+       "name": "鼠标",
+       "qty_text": "×1"
+      }
+     ],
+     "location_text": [
+      "办公室柜子里",
+      "办公室柜子",
+      "办公室的柜子里"
+     ]
+    }
+   },
+   "id": "x040",
+   "got": {
+    "intent": "ingest",
+    "box_label": "11",
+    "items": [
+     {
+      "name": "备用键盘",
+      "qty_text": "×1"
+     },
+     {
+      "name": "鼠标",
+      "qty_text": "×1"
+     }
+    ],
+    "location_text": "办公室柜子里",
+    "language": "zh"
+   },
+   "error": null,
+   "ms": 3247,
+   "tokens": 413,
+   "prompt": "v2 (212ab1240e)",
+   "model": "haiku"
+  }
+ ]
+}

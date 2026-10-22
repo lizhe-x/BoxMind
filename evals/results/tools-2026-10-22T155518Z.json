@@ -2,7 +2,7 @@
  "set": "tools",
  "stamp": "2026-10-22T155518Z",
  "model": "claude_code / sonnet",
- "prompt": "agent@2b5eb4f024",
+ "prompt": "agent v1 (2b5eb4f024)",
  "summary": {
   "n": 40,
   "pass_rate": 0.85,
@@ -103,7 +103,7 @@
     "kind": "agent",
     "model": "sonnet",
     "prompts": {
-     "agent": "2b5eb4f024"
+     "agent": "v1 (2b5eb4f024)"
     },
     "input": "Box 7 is under the kitchen sink now",
     "lang": "en",
@@ -187,7 +187,7 @@
     "kind": "agent",
     "model": "sonnet",
     "prompts": {
-     "agent": "2b5eb4f024"
+     "agent": "v1 (2b5eb4f024)"
     },
     "input": "Call box 3 the tool box",
     "lang": "en",
@@ -278,7 +278,7 @@
     "kind": "agent",
     "model": "sonnet",
     "prompts": {
-     "agent": "2b5eb4f024"
+     "agent": "v1 (2b5eb4f024)"
     },
     "input": "Move the drill to box 5",
     "lang": "en",
@@ -383,7 +383,7 @@
     "kind": "agent",
     "model": "sonnet",
     "prompts": {
-     "agent": "2b5eb4f024"
+     "agent": "v1 (2b5eb4f024)"
     },
     "input": "Add two candles to box 1",
     "lang": "en",
@@ -464,7 +464,7 @@
     "kind": "agent",
     "model": "sonnet",
     "prompts": {
-     "agent": "2b5eb4f024"
+     "agent": "v1 (2b5eb4f024)"
     },
     "input": "The red box now has three winter scarves",
     "lang": "en",
@@ -539,7 +539,7 @@
     "kind": "agent",
     "model": "sonnet",
     "prompts": {
-     "agent": "2b5eb4f024"
+     "agent": "v1 (2b5eb4f024)"
     },
     "input": "Add 3 more AA batteries to box 2",
     "lang": "en",
@@ -609,7 +609,7 @@
     "kind": "agent",
     "model": "sonnet",
     "prompts": {
-     "agent": "2b5eb4f024"
+     "agent": "v1 (2b5eb4f024)"
     },
     "input": "Delete the decanter from box 2",
     "lang": "en",
@@ -698,7 +698,7 @@
     "kind": "agent",
     "model": "sonnet",
     "prompts": {
-     "agent": "2b5eb4f024"
+     "agent": "v1 (2b5eb4f024)"
     },
     "input": "Delete box 9",
     "lang": "en",
@@ -788,7 +788,7 @@
     "kind": "agent",
     "model": "sonnet",
     "prompts": {
-     "agent": "2b5eb4f024"
+     "agent": "v1 (2b5eb4f024)"
     },
     "input": "Empty box 5",
     "lang": "en",
@@ -878,7 +878,7 @@
     "kind": "agent",
     "model": "sonnet",
     "prompts": {
-     "agent": "2b5eb4f024"
+     "agent": "v1 (2b5eb4f024)"
     },
     "input": "Merge box 12 into B1",
     "lang": "en",
@@ -972,7 +972,7 @@
     "kind": "agent",
     "model": "sonnet",
     "prompts": {
-     "agent": "2b5eb4f024"
+     "agent": "v1 (2b5eb4f024)"
     },
     "input": "Box 3's barcode is 4901234567890",
     "lang": "en",
@@ -1051,7 +1051,7 @@
     "kind": "agent",
     "model": "sonnet",
     "prompts": {
-     "agent": "2b5eb4f024"
+     "agent": "v1 (2b5eb4f024)"
     },
     "input": "Remember where I am for box 2",
     "lang": "en",
@@ -1117,7 +1117,7 @@
     "kind": "agent",
     "model": "sonnet",
     "prompts": {
-     "agent": "2b5eb4f024"
+     "agent": "v1 (2b5eb4f024)"
     },
     "input": "Undo that",
     "lang": "en",
@@ -1169,7 +1169,7 @@
     "kind": "agent",
     "model": "sonnet",
     "prompts": {
-     "agent": "2b5eb4f024"
+     "agent": "v1 (2b5eb4f024)"
     },
     "input": "Move the batteries to box 1",
     "lang": "en",
@@ -1280,7 +1280,7 @@
     "kind": "agent",
     "model": "sonnet",
     "prompts": {
-     "agent": "2b5eb4f024"
+     "agent": "v1 (2b5eb4f024)"
     },
     "input": "Move the tent to box 7 and then delete box 1",
     "lang": "en",
@@ -1398,7 +1398,7 @@
     "kind": "agent",
     "model": "sonnet",
     "prompts": {
-     "agent": "2b5eb4f024"
+     "agent": "v1 (2b5eb4f024)"
     },
     "input": "Create box 13 in the attic",
     "lang": "en",
@@ -1495,7 +1495,7 @@
     "kind": "agent",
     "model": "sonnet",
     "prompts": {
-     "agent": "2b5eb4f024"
+     "agent": "v1 (2b5eb4f024)"
     },
     "input": "Put the lantern and the camping stove in box 1",
     "lang": "en",
@@ -1593,7 +1593,7 @@
     "kind": "agent",
     "model": "sonnet",
     "prompts": {
-     "agent": "2b5eb4f024"
+     "agent": "v1 (2b5eb4f024)"
     },
     "input": "Box 5 goes to the study, next to A2",
     "lang": "en",
@@ -1679,7 +1679,7 @@
     "kind": "agent",
     "model": "sonnet",
     "prompts": {
-     "agent": "2b5eb4f024"
+     "agent": "v1 (2b5eb4f024)"
     },
     "input": "Rename A2 to chargers",
     "lang": "en",
@@ -1756,7 +1756,7 @@
     "kind": "agent",
     "model": "sonnet",
     "prompts": {
-     "agent": "2b5eb4f024"
+     "agent": "v1 (2b5eb4f024)"
     },
     "input": "What's in box 4?",
     "lang": "en",
@@ -1823,7 +1823,7 @@
     "kind": "agent",
     "model": "sonnet",
     "prompts": {
-     "agent": "2b5eb4f024"
+     "agent": "v1 (2b5eb4f024)"
     },
     "input": "7号箱现在放在厨房水槽下面了",
     "lang": "zh",
@@ -1903,7 +1903,7 @@
     "kind": "agent",
     "model": "sonnet",
     "prompts": {
-     "agent": "2b5eb4f024"
+     "agent": "v1 (2b5eb4f024)"
     },
     "input": "把3号箱改名叫工具箱",
     "lang": "zh",
@@ -1994,7 +1994,7 @@
     "kind": "agent",
     "model": "sonnet",
     "prompts": {
-     "agent": "2b5eb4f024"
+     "agent": "v1 (2b5eb4f024)"
     },
     "input": "把电钻移到5号箱",
     "lang": "zh",
@@ -2099,7 +2099,7 @@
     "kind": "agent",
     "model": "sonnet",
     "prompts": {
-     "agent": "2b5eb4f024"
+     "agent": "v1 (2b5eb4f024)"
     },
     "input": "往1号箱加两根蜡烛",
     "lang": "zh",
@@ -2183,7 +2183,7 @@
     "kind": "agent",
     "model": "sonnet",
     "prompts": {
-     "agent": "2b5eb4f024"
+     "agent": "v1 (2b5eb4f024)"
     },
     "input": "红箱子的围巾改成三条",
     "lang": "zh",
@@ -2250,7 +2250,7 @@
     "kind": "agent",
     "model": "sonnet",
     "prompts": {
-     "agent": "2b5eb4f024"
+     "agent": "v1 (2b5eb4f024)"
     },
     "input": "2号箱再加3节五号电池",
     "lang": "zh",
@@ -2332,7 +2332,7 @@
     "kind": "agent",
     "model": "sonnet",
     "prompts": {
-     "agent": "2b5eb4f024"
+     "agent": "v1 (2b5eb4f024)"
     },
     "input": "把2号箱的醒酒器删掉",
     "lang": "zh",
@@ -2421,7 +2421,7 @@
     "kind": "agent",
     "model": "sonnet",
     "prompts": {
-     "agent": "2b5eb4f024"
+     "agent": "v1 (2b5eb4f024)"
     },
     "input": "删掉9号箱",
     "lang": "zh",
@@ -2511,7 +2511,7 @@
     "kind": "agent",
     "model": "sonnet",
     "prompts": {
-     "agent": "2b5eb4f024"
+     "agent": "v1 (2b5eb4f024)"
     },
     "input": "清空5号箱",
     "lang": "zh",
@@ -2601,7 +2601,7 @@
     "kind": "agent",
     "model": "sonnet",
     "prompts": {
-     "agent": "2b5eb4f024"
+     "agent": "v1 (2b5eb4f024)"
     },
     "input": "把12号箱合并到B1",
     "lang": "zh",
@@ -2695,7 +2695,7 @@
     "kind": "agent",
     "model": "sonnet",
     "prompts": {
-     "agent": "2b5eb4f024"
+     "agent": "v1 (2b5eb4f024)"
     },
     "input": "3号箱的条码是4901234567890",
     "lang": "zh",
@@ -2774,7 +2774,7 @@
     "kind": "agent",
     "model": "sonnet",
     "prompts": {
-     "agent": "2b5eb4f024"
+     "agent": "v1 (2b5eb4f024)"
     },
     "input": "记一下2号箱在我现在的位置",
     "lang": "zh",
@@ -2840,7 +2840,7 @@
     "kind": "agent",
     "model": "sonnet",
     "prompts": {
-     "agent": "2b5eb4f024"
+     "agent": "v1 (2b5eb4f024)"
     },
     "input": "撤销刚才的操作",
     "lang": "zh",
@@ -2892,7 +2892,7 @@
     "kind": "agent",
     "model": "sonnet",
     "prompts": {
-     "agent": "2b5eb4f024"
+     "agent": "v1 (2b5eb4f024)"
     },
     "input": "把电池移到1号箱",
     "lang": "zh",
@@ -2990,7 +2990,7 @@
     "kind": "agent",
     "model": "sonnet",
     "prompts": {
-     "agent": "2b5eb4f024"
+     "agent": "v1 (2b5eb4f024)"
     },
     "input": "把帐篷移到7号箱,然后删掉1号箱",
     "lang": "zh",
@@ -3108,7 +3108,7 @@
     "kind": "agent",
     "model": "sonnet",
     "prompts": {
-     "agent": "2b5eb4f024"
+     "agent": "v1 (2b5eb4f024)"
     },
     "input": "新建13号箱,放在阁楼",
     "lang": "zh",
@@ -3195,7 +3195,7 @@
     "kind": "agent",
     "model": "sonnet",
     "prompts": {
-     "agent": "2b5eb4f024"
+     "agent": "v1 (2b5eb4f024)"
     },
     "input": "把灯和露营炉放到1号箱",
     "lang": "zh",
@@ -3293,7 +3293,7 @@
     "kind": "agent",
     "model": "sonnet",
     "prompts": {
-     "agent": "2b5eb4f024"
+     "agent": "v1 (2b5eb4f024)"
     },
     "input": "5号箱放到书房,A2旁边",
     "lang": "zh",
@@ -3379,7 +3379,7 @@
     "kind": "agent",
     "model": "sonnet",
     "prompts": {
-     "agent": "2b5eb4f024"
+     "agent": "v1 (2b5eb4f024)"
     },
     "input": "A2改名叫充电线箱",
     "lang": "zh",
@@ -3456,7 +3456,7 @@
     "kind": "agent",
     "model": "sonnet",
     "prompts": {
-     "agent": "2b5eb4f024"
+     "agent": "v1 (2b5eb4f024)"
     },
     "input": "4号箱里有什么?",
     "lang": "zh",

@@ -1,11 +1,8 @@
 {
  "set": "extraction",
  "stamp": "2026-10-22T153728Z",
- "provider": "claude_code",
- "model": "haiku",
- "prompt": {
-  "interpret": "8c50a69b15"
- },
+ "model": "claude_code / haiku",
+ "prompt": "interpret v1 (8c50a69b15)",
  "summary": {
   "n": 40,
   "exact_rate": 0.825,
@@ -123,7 +120,7 @@
    "error": null,
    "ms": 3400,
    "tokens": 390,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "haiku"
   },
   {
@@ -166,7 +163,7 @@
    "error": null,
    "ms": 3212,
    "tokens": 320,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "haiku"
   },
   {
@@ -217,7 +214,7 @@
    "error": null,
    "ms": 3357,
    "tokens": 397,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "haiku"
   },
   {
@@ -275,7 +272,7 @@
    "error": null,
    "ms": 2845,
    "tokens": 209,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "haiku"
   },
   {
@@ -319,7 +316,7 @@
    "error": null,
    "ms": 3345,
    "tokens": 367,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "haiku"
   },
   {
@@ -367,7 +364,7 @@
    "error": null,
    "ms": 3150,
    "tokens": 357,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "haiku"
   },
   {
@@ -419,7 +416,7 @@
    "error": null,
    "ms": 3370,
    "tokens": 276,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "haiku"
   },
   {
@@ -477,7 +474,7 @@
    "error": null,
    "ms": 3326,
    "tokens": 444,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "haiku"
   },
   {
@@ -516,7 +513,7 @@
    "error": null,
    "ms": 3212,
    "tokens": 343,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "haiku"
   },
   {
@@ -563,7 +560,7 @@
    "error": null,
    "ms": 2555,
    "tokens": 189,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "haiku"
   },
   {
@@ -613,7 +610,7 @@
    "error": null,
    "ms": 3138,
    "tokens": 363,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "haiku"
   },
   {
@@ -671,7 +668,7 @@
    "error": null,
    "ms": 3431,
    "tokens": 458,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "haiku"
   },
   {
@@ -721,7 +718,7 @@
    "error": null,
    "ms": 3069,
    "tokens": 362,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "haiku"
   },
   {
@@ -772,7 +769,7 @@
    "error": null,
    "ms": 3591,
    "tokens": 432,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "haiku"
   },
   {
@@ -822,7 +819,7 @@
    "error": null,
    "ms": 2502,
    "tokens": 189,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "haiku"
   },
   {
@@ -869,7 +866,7 @@
    "error": null,
    "ms": 3265,
    "tokens": 369,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "haiku"
   },
   {
@@ -910,7 +907,7 @@
    "error": null,
    "ms": 2585,
    "tokens": 267,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "haiku"
   },
   {
@@ -976,7 +973,7 @@
    "error": null,
    "ms": 3302,
    "tokens": 452,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "haiku"
   },
   {
@@ -1020,7 +1017,7 @@
    "error": null,
    "ms": 2626,
    "tokens": 252,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "haiku"
   },
   {
@@ -1067,7 +1064,7 @@
    "error": null,
    "ms": 2915,
    "tokens": 341,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "haiku"
   },
   {
@@ -1118,7 +1115,7 @@
    "error": null,
    "ms": 3983,
    "tokens": 548,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "haiku"
   },
   {
@@ -1162,7 +1159,7 @@
    "error": null,
    "ms": 3175,
    "tokens": 353,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "haiku"
   },
   {
@@ -1216,7 +1213,7 @@
    "error": null,
    "ms": 4364,
    "tokens": 588,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "haiku"
   },
   {
@@ -1271,7 +1268,7 @@
    "error": null,
    "ms": 3337,
    "tokens": 388,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "haiku"
   },
   {
@@ -1318,7 +1315,7 @@
    "error": null,
    "ms": 3615,
    "tokens": 437,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "haiku"
   },
   {
@@ -1368,7 +1365,7 @@
    "error": null,
    "ms": 3941,
    "tokens": 507,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "haiku"
   },
   {
@@ -1420,7 +1417,7 @@
    "error": null,
    "ms": 3627,
    "tokens": 424,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "haiku"
   },
   {
@@ -1478,7 +1475,7 @@
    "error": null,
    "ms": 3245,
    "tokens": 403,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "haiku"
   },
   {
@@ -1514,7 +1511,7 @@
    "error": null,
    "ms": 3406,
    "tokens": 402,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "haiku"
   },
   {
@@ -1561,7 +1558,7 @@
    "error": null,
    "ms": 3345,
    "tokens": 406,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "haiku"
   },
   {
@@ -1608,7 +1605,7 @@
    "error": null,
    "ms": 3257,
    "tokens": 408,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "haiku"
   },
   {
@@ -1663,7 +1660,7 @@
    "error": null,
    "ms": 3550,
    "tokens": 378,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "haiku"
   },
   {
@@ -1720,7 +1717,7 @@
    "error": null,
    "ms": 4078,
    "tokens": 500,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "haiku"
   },
   {
@@ -1770,7 +1767,7 @@
    "error": null,
    "ms": 3594,
    "tokens": 354,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "haiku"
   },
   {
@@ -1820,7 +1817,7 @@
    "error": null,
    "ms": 3509,
    "tokens": 418,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "haiku"
   },
   {
@@ -1864,7 +1861,7 @@
    "error": null,
    "ms": 3402,
    "tokens": 416,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "haiku"
   },
   {
@@ -1905,7 +1902,7 @@
    "error": null,
    "ms": 2973,
    "tokens": 292,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "haiku"
   },
   {
@@ -1969,7 +1966,7 @@
    "error": null,
    "ms": 6359,
    "tokens": 1072,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "haiku"
   },
   {
@@ -2014,7 +2011,7 @@
    "error": null,
    "ms": 2666,
    "tokens": 171,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "haiku"
   },
   {
@@ -2065,7 +2062,7 @@
    "error": null,
    "ms": 3594,
    "tokens": 455,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "haiku"
   }
  ]

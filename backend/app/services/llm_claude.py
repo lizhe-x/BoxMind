@@ -25,7 +25,8 @@ from pathlib import Path
 
 from ..config import settings
 from ..i18n import lang_name, tr
-from .llm import _ANSWER_SYSTEM, _INTERPRET_SYSTEM, _VISION_SYSTEM, LLM, _parse_json
+from .llm import LLM, _parse_json
+from .prompts import ANSWER, INTERPRET, VISION
 
 
 class ClaudeCodeError(RuntimeError):
@@ -92,14 +93,14 @@ class ClaudeCodeLLM(LLM):
 
     async def _interpret(self, text: str, known_labels: list[str], lang: str | None) -> dict:
         hint = self._label_hint(known_labels)
-        system = _INTERPRET_SYSTEM.format(some=tr(lang, "qty_some"))
+        system = INTERPRET.format(some=tr(lang, "qty_some"))
         parsed, tokens = await self._json(system, f"{hint}\n\nUser said: {text}", _INTERPRET_SCHEMA,
                                           settings.claude_model)
         parsed["_tokens"] = tokens
         return parsed
 
     async def recognize_image(self, image_b64: str, mime: str = "image/jpeg", lang: str | None = None) -> dict:
-        system = _VISION_SYSTEM.format(lang=lang_name(lang), some=tr(lang, "qty_some"))
+        system = VISION.format(lang=lang_name(lang), some=tr(lang, "qty_some"))
         path = self._work / f"photo-{uuid.uuid4().hex}.{_MIME_EXT.get(mime, 'jpg')}"
         path.write_bytes(base64.b64decode(image_b64))
         prompt = (f"Use the Read tool to look at the photo {path.name} in the current directory. Then identify "
@@ -143,7 +144,7 @@ class ClaudeCodeLLM(LLM):
                   f"Relevance hints (top vector-search hits): {relevant_hint}\n\n"
                   f"Question: {question}")
         args = self._args(settings.claude_model) + ["--output-format", "stream-json", "--verbose",
-                                                    "--include-partial-messages", "--system-prompt", _ANSWER_SYSTEM]
+                                                    "--include-partial-messages", "--system-prompt", ANSWER.text]
         streamed = False
         final: dict | None = None
         async for line in self._stream_lines(args, prompt):

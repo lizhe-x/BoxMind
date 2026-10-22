@@ -1,11 +1,8 @@
 {
  "set": "routing",
  "stamp": "2026-10-22T153544Z",
- "provider": "claude_code",
- "model": "sonnet",
- "prompt": {
-  "interpret": "8c50a69b15"
- },
+ "model": "claude_code / sonnet",
+ "prompt": "interpret v1 (8c50a69b15)",
  "summary": {
   "n": 60,
   "accuracy": 1.0,
@@ -80,7 +77,7 @@
    "error": null,
    "ms": 2713,
    "tokens": 185,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -108,7 +105,7 @@
    "error": null,
    "ms": 2810,
    "tokens": 175,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -140,7 +137,7 @@
    "error": null,
    "ms": 2833,
    "tokens": 185,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -176,7 +173,7 @@
    "error": null,
    "ms": 3014,
    "tokens": 202,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -208,7 +205,7 @@
    "error": null,
    "ms": 2899,
    "tokens": 184,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -240,7 +237,7 @@
    "error": null,
    "ms": 2857,
    "tokens": 187,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -277,7 +274,7 @@
    "error": null,
    "ms": 2928,
    "tokens": 186,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -313,7 +310,7 @@
    "error": null,
    "ms": 3131,
    "tokens": 206,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -341,7 +338,7 @@
    "error": null,
    "ms": 2729,
    "tokens": 165,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -373,7 +370,7 @@
    "error": null,
    "ms": 2862,
    "tokens": 186,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -405,7 +402,7 @@
    "error": null,
    "ms": 2918,
    "tokens": 192,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -437,7 +434,7 @@
    "error": null,
    "ms": 2773,
    "tokens": 186,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -469,7 +466,7 @@
    "error": null,
    "ms": 3003,
    "tokens": 190,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -505,7 +502,7 @@
    "error": null,
    "ms": 2787,
    "tokens": 204,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -537,7 +534,7 @@
    "error": null,
    "ms": 2765,
    "tokens": 184,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -569,7 +566,7 @@
    "error": null,
    "ms": 2846,
    "tokens": 189,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -606,7 +603,7 @@
    "error": null,
    "ms": 2735,
    "tokens": 186,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -642,7 +639,7 @@
    "error": null,
    "ms": 2840,
    "tokens": 208,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -670,7 +667,7 @@
    "error": null,
    "ms": 2777,
    "tokens": 168,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -702,7 +699,7 @@
    "error": null,
    "ms": 3022,
    "tokens": 188,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -725,7 +722,7 @@
    "error": null,
    "ms": 2606,
    "tokens": 143,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -753,7 +750,7 @@
    "error": null,
    "ms": 2895,
    "tokens": 143,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -776,7 +773,7 @@
    "error": null,
    "ms": 2599,
    "tokens": 143,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -799,7 +796,7 @@
    "error": null,
    "ms": 2865,
    "tokens": 143,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -822,7 +819,7 @@
    "error": null,
    "ms": 2668,
    "tokens": 143,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -849,7 +846,7 @@
    "error": null,
    "ms": 2573,
    "tokens": 146,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -872,7 +869,7 @@
    "error": null,
    "ms": 2731,
    "tokens": 144,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -900,7 +897,7 @@
    "error": null,
    "ms": 2599,
    "tokens": 143,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -927,7 +924,7 @@
    "error": null,
    "ms": 2589,
    "tokens": 143,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -950,7 +947,7 @@
    "error": null,
    "ms": 2481,
    "tokens": 143,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -973,7 +970,7 @@
    "error": null,
    "ms": 2579,
    "tokens": 144,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -1001,7 +998,7 @@
    "error": null,
    "ms": 2666,
    "tokens": 144,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -1024,7 +1021,7 @@
    "error": null,
    "ms": 2574,
    "tokens": 144,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -1047,7 +1044,7 @@
    "error": null,
    "ms": 2627,
    "tokens": 144,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -1070,7 +1067,7 @@
    "error": null,
    "ms": 2650,
    "tokens": 144,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -1097,7 +1094,7 @@
    "error": null,
    "ms": 2894,
    "tokens": 203,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -1120,7 +1117,7 @@
    "error": null,
    "ms": 2747,
    "tokens": 145,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -1148,7 +1145,7 @@
    "error": null,
    "ms": 3182,
    "tokens": 144,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -1175,7 +1172,7 @@
    "error": null,
    "ms": 2685,
    "tokens": 144,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -1198,7 +1195,7 @@
    "error": null,
    "ms": 2782,
    "tokens": 144,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -1225,7 +1222,7 @@
    "error": null,
    "ms": 2604,
    "tokens": 151,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -1253,7 +1250,7 @@
    "error": null,
    "ms": 2519,
    "tokens": 144,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -1280,7 +1277,7 @@
    "error": null,
    "ms": 2708,
    "tokens": 144,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -1307,7 +1304,7 @@
    "error": null,
    "ms": 2752,
    "tokens": 144,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -1334,7 +1331,7 @@
    "error": null,
    "ms": 2632,
    "tokens": 144,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -1361,7 +1358,7 @@
    "error": null,
    "ms": 2872,
    "tokens": 144,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -1388,7 +1385,7 @@
    "error": null,
    "ms": 3481,
    "tokens": 144,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -1415,7 +1412,7 @@
    "error": null,
    "ms": 2779,
    "tokens": 144,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -1438,7 +1435,7 @@
    "error": null,
    "ms": 2737,
    "tokens": 144,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -1464,7 +1461,7 @@
    "error": null,
    "ms": 2814,
    "tokens": 144,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -1491,7 +1488,7 @@
    "error": null,
    "ms": 2761,
    "tokens": 152,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -1519,7 +1516,7 @@
    "error": null,
    "ms": 2739,
    "tokens": 145,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -1546,7 +1543,7 @@
    "error": null,
    "ms": 2593,
    "tokens": 145,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -1573,7 +1570,7 @@
    "error": null,
    "ms": 2531,
    "tokens": 145,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -1600,7 +1597,7 @@
    "error": null,
    "ms": 2728,
    "tokens": 145,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -1627,7 +1624,7 @@
    "error": null,
    "ms": 2616,
    "tokens": 145,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -1654,7 +1651,7 @@
    "error": null,
    "ms": 2922,
    "tokens": 145,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -1681,7 +1678,7 @@
    "error": null,
    "ms": 2616,
    "tokens": 145,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -1704,7 +1701,7 @@
    "error": null,
    "ms": 2685,
    "tokens": 145,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -1730,7 +1727,7 @@
    "error": null,
    "ms": 3408,
    "tokens": 240,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   }
  ]

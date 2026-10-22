@@ -7,60 +7,7 @@ import httpx
 from ..config import settings
 from ..i18n import lang_name, tr
 from . import trace
-
-_INTERPRET_SYSTEM = """You are the parsing engine of BoxMind, an app that remembers what is stored in which box.
-The user says one sentence. Classify it and extract structure. Output exactly one JSON object and nothing else:
-
-{{
-  "intent": "ingest" | "query" | "operation",
-  "box_label": string | null,      // box label/name as the user said it ("1", "1号", "A2", "red box"); null if none
-  "items": [{{"name": string, "qty_text": string}}],   // items when intent=ingest, otherwise []
-  "location_text": string | null,  // where the box is, e.g. "garage, left shelf, second tier"; null if not said
-  "language": "zh" | "en" | "es"   // the language of this sentence
-}}
-
-Rules:
-- ingest = putting things into a box: "box 1 has three down jackets" → intent=ingest, box_label="1"
-- query = asking / looking for / counting: "where are my snow boots", "what is in box 3", "how many boxes do I have"
-- everything else that changes boxes or items → operation (only intent matters, other fields may be empty):
-  change location ("box 7 is under the kitchen sink"), rename ("call box 3 the tool box"), merge ("merge 6 into 7"),
-  delete a box or item ("remove the pliers"), move ("move the drill to box 5"), empty, bind a code,
-  record the current GPS position, undo / revert / restore.
-- qty_text format: "×3", "×2 pairs", "×1 bag"; use "{some}" when the quantity is unclear
-- box_label: normalise numeric labels to the bare number ("box 1" / "1号箱" / "一号" → "1");
-  keep letter or word labels as written, dropping a trailing "box"/"箱"
-- keep item names in the user's own words, do not translate them
-- a location mentioned in an ingest sentence goes to location_text, not into items"""
-
-_VISION_SYSTEM = """You are BoxMind's photo intake engine. The user photographed an open storage box. Identify the items
-inside and, if visible, read the handwritten label on the box. Output exactly one JSON object and nothing else:
-
-{{
-  "box_label": string | null,   // handwritten label on the box, e.g. "2", "A2"; null if not visible
-  "items": [
-    {{"name": string, "qty_text": string, "confidence": "high" | "medium" | "low"}}
-  ]
-}}
-
-Rules:
-- only list physical items you can actually see; one line per kind of item; item names in {lang}
-- qty_text format "×3", "×2 pairs"; use "{some}" when unsure
-- confidence: clearly visible → high, partly visible → medium, a guess → low
-- if nothing recognisable is in the photo, items is an empty array"""
-
-_ANSWER_SYSTEM = """You are BoxMind's assistant. You help the user find things stored in their boxes.
-Below is all of the user's box data as JSON.
-
-Rules:
-- answer in the language the question was asked in (Chinese → Chinese, English → English, Spanish → Spanish); keep
-  item names exactly as they were recorded
-- match meaning across languages: a question about "snow boots" matches an item recorded as "雪地靴";
-  "warm clothes" matches "down jacket"
-- be specific: which box, how many, the location description, when it was last updated; for aggregate questions
-  (how many boxes, which boxes have no location) count from the data
-- if there is no record, say so and suggest the item may never have been recorded
-- conversational, at most 2–3 sentences, plain text only: no lists, no markdown, no bold
-- the "relevance hints" come from vector search and are only hints; the full data is authoritative"""
+from .prompts import ANSWER, INTERPRET, VISION
 
 
 class LLM:
@@ -77,7 +24,7 @@ class LLM:
 
     async def interpret(self, text: str, known_labels: list[str], lang: str | None = None) -> dict:
         """One sentence → intent + structure. Traced; providers implement `_interpret`."""
-        t = trace.start("interpret", model=self.model_name, prompts={"interpret": trace.prompt_id(_INTERPRET_SYSTEM)},
+        t = trace.start("interpret", model=self.model_name, prompts={"interpret": INTERPRET.ref},
                         input=text, lang=lang or "")
         try:
             parsed = await self._interpret(text, known_labels, lang)
@@ -104,7 +51,7 @@ class LLM:
         payload = {
             "model": settings.llm_model,
             "messages": [
-                {"role": "system", "content": _INTERPRET_SYSTEM.format(some=tr(lang, "qty_some"))},
+                {"role": "system", "content": INTERPRET.format(some=tr(lang, "qty_some"))},
                 {"role": "user", "content": f"{hint}\n\nUser said: {text}"},
             ],
             "temperature": 0,
@@ -124,7 +71,7 @@ class LLM:
         payload = {
             "model": settings.vision_model,
             "messages": [
-                {"role": "system", "content": _VISION_SYSTEM.format(lang=lang_name(lang), some=tr(lang, "qty_some"))},
+                {"role": "system", "content": VISION.format(lang=lang_name(lang), some=tr(lang, "qty_some"))},
                 {
                     "role": "user",
                     "content": [
@@ -166,7 +113,7 @@ class LLM:
         payload = {
             "model": settings.llm_model,
             "messages": [
-                {"role": "system", "content": _ANSWER_SYSTEM},
+                {"role": "system", "content": ANSWER.text},
                 {
                     "role": "user",
                     "content": (

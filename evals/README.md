@@ -29,8 +29,21 @@ backend/.venv/bin/python evals/run.py --limit 5 --no-write    # smoke test, noth
 
 Every run prints the summary and the failing cases (for tools, with the agent's reply), writes
 `results/<set>-<stamp>.json` (per case: input, expected, model output or trace, latency, tokens, prompt id)
-and appends one row to [`RESULTS.md`](RESULTS.md). The prompt id is a hash of the prompt wording in
-`backend/app/services/llm.py` / `agent.py`, so a row pins exactly which prompt and model produced the numbers.
+and appends one row to [`RESULTS.md`](RESULTS.md), then regenerates the comparison matrix at the top of that
+file (latest run per set × model × prompt version; `evals/run.py --report` rebuilds it alone).
+
+## Prompt versions
+
+Every prompt lives in `backend/app/services/prompts.py` with a name, a version and a content hash; traces and
+result rows record `interpret v2 (212ab1240e)`, so a row pins exactly which wording and model produced the
+numbers. Editing a prompt without bumping its version fails `backend/tests/test_prompts.py`, and the CHANGELOG in
+that file says what changed and why, with the eval finding that motivated it. The loop is:
+
+1. a run shows a failure pattern → 2. edit the prompt, bump the version, add the changelog line →
+3. re-run the affected sets → 4. the matrix shows the old and new columns side by side.
+
+Model comparison here means `claude -p` with different models (sonnet, haiku, opus) on the same prompt
+version; the gateway provider takes `--provider gateway --model <id>` once it has a funded key.
 
 The DB-backed sets (retrieval, tools) need PostgreSQL + pgvector like the server. They use a dedicated database
 `boxmind_eval` next to the configured one (created on demand, emptied at the start of each run; override with
@@ -84,8 +97,15 @@ use it where two readings are both right ("down jackets" vs "down jacket"), not 
 
 Recorded in `RESULTS.md`; the point of the sets is that these were found by numbers, not by chance:
 
-- extraction: Chinese bare nouns without a measure word ("帐篷放在3号箱", "旧手机") come back as `若干` instead
-  of `×1` on both sonnet and haiku; all four sonnet failures are this one rule.
+- extraction, interpret v1: Chinese bare nouns without a measure word ("帐篷放在3号箱", "旧手机") come back as
+  `若干` instead of `×1` on both sonnet and haiku; all four sonnet failures are this one rule. interpret v2 adds
+  the rule "a single named item is ×1; `some` is for plurals and bulk words": exact-case rate sonnet 0.90 → 0.95,
+  haiku 0.82 → 0.88, opus 0.95. The two remaining sonnet/opus misses (充电线, 旧相册 as ×1) are nouns that are
+  plural by sense only, a judgment call the label makes one way; haiku additionally writes units in English
+  ("×1 set", "×1 pair") inside Chinese sentences, a candidate for v3.
+- routing: 60/60 on sonnet, haiku and opus, both prompt versions. The three-way split is not where the risk is.
+- tools: sonnet and opus 40/40, haiku 39/40 (it asks which "灯" is meant instead of moving the lantern, which is
+  a defensible reading); opus is also the fastest at p50 5.3 s per case against sonnet 9.6 s.
 - retrieval: the multilingual MiniLM index is near-perfect within a language (exact 1.00, en 0.94) but weak
   across languages for single words (zh → en 0.66: 电钻 → drill, 卷尺 → tape measure, 投影仪 → projector are
   all missed). This is the measured case for hybrid retrieval.

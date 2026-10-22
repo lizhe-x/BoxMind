@@ -200,9 +200,9 @@ def run_label(set_name: str, results: list[dict]) -> tuple[str, str]:
 
     provider = f"{settings.llm_provider} / {llm.model_name}"
     if set_name in INTERPRET_SETS:
-        return provider, "interpret@" + next((r.get("prompt") for r in results if r.get("prompt")), "?")
+        return provider, "interpret " + next((r.get("prompt") for r in results if r.get("prompt")), "?")
     prompts = next(((r.get("trace") or {}).get("prompts") for r in results if r.get("trace")), {}) or {}
-    return provider, "agent@" + prompts.get("agent", "?")
+    return provider, "agent " + prompts.get("agent", "?")
 
 
 def write_run(set_name: str, cases: list[dict], results: list[dict], summary: dict, stamp: str) -> Path:
@@ -224,6 +224,46 @@ def write_run(set_name: str, cases: list[dict], results: list[dict], summary: di
     return out
 
 
+HEADLINE = {"routing": ("accuracy", "acc"), "extraction": ("exact_rate", "exact"),
+            "retrieval": ("recall@8", "R@8"), "tools": ("pass_rate", "pass")}
+MATRIX_START, MATRIX_END = "<!-- matrix:start -->", "<!-- matrix:end -->"
+
+
+def build_matrix() -> str:
+    """Latest run per (set, model, prompt) from results/, as one markdown table per set: rows = model,
+    columns = prompt version, cell = headline metric and p50 latency. Regenerated after every run."""
+    latest: dict[str, dict[tuple[str, str], dict]] = {}
+    for path in sorted(RESULTS.glob("*.json")):
+        d = json.loads(path.read_text(encoding="utf-8"))
+        latest.setdefault(d["set"], {})[(d["model"], d["prompt"])] = d  # sorted by stamp → last wins
+    out = []
+    for set_name in SETS:
+        runs = latest.get(set_name)
+        if not runs:
+            continue
+        key, label = HEADLINE[set_name]
+        prompts = sorted({p for _, p in runs}, key=lambda p: p.split(" ")[1] if " " in p else p)
+        models = sorted({m for m, _ in runs})
+        out.append(f"**{set_name}** ({label}, p50 latency)\n")
+        out.append("| model | " + " | ".join(prompts) + " |")
+        out.append("|---|" + "---|" * len(prompts))
+        for m in models:
+            cells = []
+            for pr in prompts:
+                d = runs.get((m, pr))
+                cells.append(f"{d['summary'][key]:.2f} · {d['summary']['latency_ms_p50']} ms" if d else "")
+            out.append(f"| {m} | " + " | ".join(cells) + " |")
+        out.append("")
+    return "\n".join(out).rstrip("\n") + "\n"
+
+
+def write_matrix() -> None:
+    md = EVALS / "RESULTS.md"
+    text = md.read_text(encoding="utf-8")
+    a, b = text.index(MATRIX_START) + len(MATRIX_START), text.index(MATRIX_END)
+    md.write_text(text[:a] + "\n" + build_matrix() + text[b:], encoding="utf-8")
+
+
 def print_summary(set_name: str, summary: dict) -> None:
     print(f"\n== {set_name}: n={summary['n']} errors={summary['errors']} "
           f"p50={summary['latency_ms_p50']}ms p95={summary['latency_ms_p95']}ms tokens={summary['tokens_total']}")
@@ -239,13 +279,21 @@ def print_summary(set_name: str, summary: dict) -> None:
 
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("sets", nargs="*", default=list(SETS), choices=SETS)
+    ap.add_argument("sets", nargs="*", metavar="SET", help=f"any of {', '.join(SETS)}; default: all four")
     ap.add_argument("--provider", choices=("claude_code", "gateway"))
     ap.add_argument("--model", help="model name for the chosen provider (claude: sonnet/haiku/opus; gateway: id)")
     ap.add_argument("--concurrency", type=int, default=3)
     ap.add_argument("--limit", type=int, default=0, help="only the first N cases of each set")
     ap.add_argument("--no-write", action="store_true", help="print only; do not touch results/ or RESULTS.md")
+    ap.add_argument("--report", action="store_true", help="only rebuild the comparison matrix in RESULTS.md")
     args = ap.parse_args(argv)
+    if args.report:
+        write_matrix()
+        print(build_matrix())
+        return 0
+    args.sets = args.sets or list(SETS)
+    if unknown := [x for x in args.sets if x not in SETS]:
+        ap.error(f"unknown set(s) {unknown}; choose from {', '.join(SETS)}")
 
     from ..config import settings
     if args.provider:
@@ -283,6 +331,8 @@ async def _run_sets(args: argparse.Namespace, stamp: str) -> int:
         if not args.no_write:
             print(f"   → {write_run(set_name, cases, results, summary, stamp).relative_to(ROOT)}")
         rc |= int(summary["errors"] > 0)
+    if not args.no_write:
+        write_matrix()
     return rc
 
 

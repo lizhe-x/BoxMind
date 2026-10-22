@@ -11,31 +11,13 @@ from ..i18n import lang_name, tr
 from ..models import User
 from . import agent_tools, trace
 from .llm import llm
-
-_SYSTEM = """You are BoxMind's storage assistant. The user gives instructions in natural language about their
-storage boxes (change a location, rename, add or remove items, move items, merge boxes, delete a box,
-bind a barcode, ...). Call the right tools to carry them out.
-
-Rules:
-- If it can be done, do it with tools. One sentence may need several steps (e.g. search where an item is,
-  then move it): chain tool calls.
-- If a reference is ambiguous (e.g. several boxes hold an item with that name) do not guess; ask one short
-  clarifying question in plain text instead of calling a tool.
-- Quantities are final values: if the user says "add 3 more" and the box has 2, send ×5.
-- When everything is done, report what you did in one short sentence.
-- Destructive operations (delete / merge / empty) are fine to call directly; the app asks the user to
-  confirm them, you do not need to ask.
-- Answer in {lang}. Keep item names exactly as the user wrote them.
-
-Snapshot of the user's boxes (to resolve references like "box 7", "Liam", "the kitchen box" and to compute
-quantities):
-"""
+from .prompts import AGENT
 
 MAX_STEPS = 6  # 最多 6 步,防失控
 
 
 async def run(db: Session, user: User, history: list[dict], message: str, gps: dict | None) -> dict:
-    t = trace.start("agent", model=llm.model_name, prompts={"agent": trace.prompt_id(_SYSTEM)},
+    t = trace.start("agent", model=llm.model_name, prompts={"agent": AGENT.ref},
                     input=message, lang=user.lang)
     try:
         return await _run(db, user, history, message, gps, t)
@@ -48,7 +30,7 @@ async def run(db: Session, user: User, history: list[dict], message: str, gps: d
 async def _run(db: Session, user: User, history: list[dict], message: str, gps: dict | None, t: trace.Trace) -> dict:
     boxes = agent_tools.all_boxes(db, user)
     index = json.dumps([agent_tools.box_brief(b) for b in boxes], ensure_ascii=False)
-    messages: list[dict] = [{"role": "system", "content": _SYSTEM.format(lang=lang_name(user.lang)) + index}]
+    messages: list[dict] = [{"role": "system", "content": AGENT.format(lang=lang_name(user.lang)) + index}]
     for m in history or []:
         if m.get("role") in ("user", "assistant") and m.get("content"):
             messages.append({"role": m["role"], "content": m["content"]})

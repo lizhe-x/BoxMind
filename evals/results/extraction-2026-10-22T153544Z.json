@@ -1,11 +1,8 @@
 {
  "set": "extraction",
  "stamp": "2026-10-22T153544Z",
- "provider": "claude_code",
- "model": "sonnet",
- "prompt": {
-  "interpret": "8c50a69b15"
- },
+ "model": "claude_code / sonnet",
+ "prompt": "interpret v1 (8c50a69b15)",
  "summary": {
   "n": 40,
   "exact_rate": 0.9,
@@ -101,7 +98,7 @@
    "error": null,
    "ms": 2868,
    "tokens": 185,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -144,7 +141,7 @@
    "error": null,
    "ms": 2845,
    "tokens": 175,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -195,7 +192,7 @@
    "error": null,
    "ms": 3085,
    "tokens": 185,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -253,7 +250,7 @@
    "error": null,
    "ms": 2873,
    "tokens": 202,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -297,7 +294,7 @@
    "error": null,
    "ms": 2845,
    "tokens": 184,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -345,7 +342,7 @@
    "error": null,
    "ms": 2700,
    "tokens": 184,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -397,7 +394,7 @@
    "error": null,
    "ms": 2758,
    "tokens": 186,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -455,7 +452,7 @@
    "error": null,
    "ms": 2883,
    "tokens": 206,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -494,7 +491,7 @@
    "error": null,
    "ms": 2654,
    "tokens": 164,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -541,7 +538,7 @@
    "error": null,
    "ms": 2909,
    "tokens": 186,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -591,7 +588,7 @@
    "error": null,
    "ms": 2965,
    "tokens": 194,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -649,7 +646,7 @@
    "error": null,
    "ms": 2821,
    "tokens": 205,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -699,7 +696,7 @@
    "error": null,
    "ms": 2806,
    "tokens": 188,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -750,7 +747,7 @@
    "error": null,
    "ms": 2802,
    "tokens": 185,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -800,7 +797,7 @@
    "error": null,
    "ms": 2796,
    "tokens": 186,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -847,7 +844,7 @@
    "error": null,
    "ms": 2838,
    "tokens": 185,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -888,7 +885,7 @@
    "error": null,
    "ms": 2802,
    "tokens": 167,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -954,7 +951,7 @@
    "error": null,
    "ms": 2945,
    "tokens": 210,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -998,7 +995,7 @@
    "error": null,
    "ms": 2678,
    "tokens": 169,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -1045,7 +1042,7 @@
    "error": null,
    "ms": 2798,
    "tokens": 190,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -1096,7 +1093,7 @@
    "error": null,
    "ms": 2881,
    "tokens": 192,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -1140,7 +1137,7 @@
    "error": null,
    "ms": 2713,
    "tokens": 186,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -1194,7 +1191,7 @@
    "error": null,
    "ms": 2838,
    "tokens": 190,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -1249,7 +1246,7 @@
    "error": null,
    "ms": 3009,
    "tokens": 204,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -1296,7 +1293,7 @@
    "error": null,
    "ms": 2768,
    "tokens": 184,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -1346,7 +1343,7 @@
    "error": null,
    "ms": 2711,
    "tokens": 189,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -1398,7 +1395,7 @@
    "error": null,
    "ms": 2763,
    "tokens": 186,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -1456,7 +1453,7 @@
    "error": null,
    "ms": 2877,
    "tokens": 208,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -1492,7 +1489,7 @@
    "error": null,
    "ms": 4071,
    "tokens": 168,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -1539,7 +1536,7 @@
    "error": null,
    "ms": 2808,
    "tokens": 188,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -1586,7 +1583,7 @@
    "error": null,
    "ms": 2855,
    "tokens": 197,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -1641,7 +1638,7 @@
    "error": null,
    "ms": 2984,
    "tokens": 208,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -1698,7 +1695,7 @@
    "error": null,
    "ms": 2971,
    "tokens": 190,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -1748,7 +1745,7 @@
    "error": null,
    "ms": 2898,
    "tokens": 190,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -1798,7 +1795,7 @@
    "error": null,
    "ms": 2760,
    "tokens": 191,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -1842,7 +1839,7 @@
    "error": null,
    "ms": 2688,
    "tokens": 185,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -1883,7 +1880,7 @@
    "error": null,
    "ms": 2846,
    "tokens": 165,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -1947,7 +1944,7 @@
    "error": null,
    "ms": 2847,
    "tokens": 209,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -1992,7 +1989,7 @@
    "error": null,
    "ms": 2790,
    "tokens": 170,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   },
   {
@@ -2043,7 +2040,7 @@
    "error": null,
    "ms": 2848,
    "tokens": 193,
-   "prompt": "8c50a69b15",
+   "prompt": "v1 (8c50a69b15)",
    "model": "sonnet"
   }
  ]
