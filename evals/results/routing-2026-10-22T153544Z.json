@@ -1,0 +1,1737 @@
+{
+ "set": "routing",
+ "stamp": "2026-10-22T153544Z",
+ "provider": "claude_code",
+ "model": "sonnet",
+ "prompt": {
+  "interpret": "8c50a69b15"
+ },
+ "summary": {
+  "n": 60,
+  "accuracy": 1.0,
+  "by_lang": {
+   "en": 1.0,
+   "zh": 1.0
+  },
+  "per_intent": {
+   "ingest": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0,
+    "support": 20
+   },
+   "query": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0,
+    "support": 20
+   },
+   "operation": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0,
+    "support": 20
+   }
+  },
+  "confusion": {
+   "ingest": {
+    "ingest": 20
+   },
+   "query": {
+    "query": 20
+   },
+   "operation": {
+    "operation": 20
+   }
+  },
+  "latency_ms_p50": 2752,
+  "latency_ms_p95": 3131,
+  "tokens_total": 9689,
+  "errors": 0
+ },
+ "failures": [],
+ "cases": [
+  {
+   "case": {
+    "id": "r001",
+    "lang": "en",
+    "text": "Box 1 has three down jackets and a headlamp",
+    "expect": {
+     "intent": "ingest"
+    }
+   },
+   "id": "r001",
+   "got": {
+    "intent": "ingest",
+    "box_label": "1",
+    "items": [
+     {
+      "name": "down jackets",
+      "qty_text": "×3"
+     },
+     {
+      "name": "headlamp",
+      "qty_text": "×1"
+     }
+    ],
+    "location_text": null,
+    "language": "en"
+   },
+   "error": null,
+   "ms": 2713,
+   "tokens": 185,
+   "prompt": "8c50a69b15",
+   "model": "sonnet"
+  },
+  {
+   "case": {
+    "id": "r002",
+    "lang": "en",
+    "text": "Put two pairs of snow boots in box 4, garage left shelf",
+    "expect": {
+     "intent": "ingest"
+    }
+   },
+   "id": "r002",
+   "got": {
+    "intent": "ingest",
+    "box_label": "4",
+    "items": [
+     {
+      "name": "snow boots",
+      "qty_text": "×2 pairs"
+     }
+    ],
+    "location_text": "garage left shelf",
+    "language": "en"
+   },
+   "error": null,
+   "ms": 2810,
+   "tokens": 175,
+   "prompt": "8c50a69b15",
+   "model": "sonnet"
+  },
+  {
+   "case": {
+    "id": "r003",
+    "lang": "en",
+    "text": "The red box has my winter scarves and a wool hat",
+    "expect": {
+     "intent": "ingest"
+    }
+   },
+   "id": "r003",
+   "got": {
+    "intent": "ingest",
+    "box_label": "red",
+    "items": [
+     {
+      "name": "winter scarves",
+      "qty_text": "some"
+     },
+     {
+      "name": "wool hat",
+      "qty_text": "×1"
+     }
+    ],
+    "location_text": null,
+    "language": "en"
+   },
+   "error": null,
+   "ms": 2833,
+   "tokens": 185,
+   "prompt": "8c50a69b15",
+   "model": "sonnet"
+  },
+  {
+   "case": {
+    "id": "r004",
+    "lang": "en",
+    "text": "Box A2: charger cables, an old phone, some batteries",
+    "expect": {
+     "intent": "ingest"
+    }
+   },
+   "id": "r004",
+   "got": {
+    "intent": "ingest",
+    "box_label": "A2",
+    "items": [
+     {
+      "name": "charger cables",
+      "qty_text": "some"
+     },
+     {
+      "name": "old phone",
+      "qty_text": "×1"
+     },
+     {
+      "name": "batteries",
+      "qty_text": "some"
+     }
+    ],
+    "location_text": null,
+    "language": "en"
+   },
+   "error": null,
+   "ms": 3014,
+   "tokens": 202,
+   "prompt": "8c50a69b15",
+   "model": "sonnet"
+  },
+  {
+   "case": {
+    "id": "r005",
+    "lang": "en",
+    "text": "Just packed the camping stove and a lantern into box 7",
+    "expect": {
+     "intent": "ingest"
+    }
+   },
+   "id": "r005",
+   "got": {
+    "intent": "ingest",
+    "box_label": "7",
+    "items": [
+     {
+      "name": "camping stove",
+      "qty_text": "×1"
+     },
+     {
+      "name": "lantern",
+      "qty_text": "×1"
+     }
+    ],
+    "location_text": null,
+    "language": "en"
+   },
+   "error": null,
+   "ms": 2899,
+   "tokens": 184,
+   "prompt": "8c50a69b15",
+   "model": "sonnet"
+  },
+  {
+   "case": {
+    "id": "r006",
+    "lang": "en",
+    "text": "New box 9 with kids' books and a puzzle",
+    "expect": {
+     "intent": "ingest"
+    }
+   },
+   "id": "r006",
+   "got": {
+    "intent": "ingest",
+    "box_label": "9",
+    "items": [
+     {
+      "name": "kids' books",
+      "qty_text": "some"
+     },
+     {
+      "name": "puzzle",
+      "qty_text": "×1"
+     }
+    ],
+    "location_text": null,
+    "language": "en"
+   },
+   "error": null,
+   "ms": 2857,
+   "tokens": 187,
+   "prompt": "8c50a69b15",
+   "model": "sonnet"
+  },
+  {
+   "case": {
+    "id": "r007",
+    "lang": "en",
+    "text": "Add a flashlight and two AA batteries to box 1",
+    "known_labels": [
+     "1",
+     "2",
+     "3"
+    ],
+    "expect": {
+     "intent": "ingest"
+    }
+   },
+   "id": "r007",
+   "got": {
+    "intent": "ingest",
+    "box_label": "1",
+    "items": [
+     {
+      "name": "flashlight",
+      "qty_text": "×1"
+     },
+     {
+      "name": "AA batteries",
+      "qty_text": "×2"
+     }
+    ],
+    "location_text": null,
+    "language": "en"
+   },
+   "error": null,
+   "ms": 2928,
+   "tokens": 186,
+   "prompt": "8c50a69b15",
+   "model": "sonnet"
+  },
+  {
+   "case": {
+    "id": "r008",
+    "lang": "en",
+    "text": "Kitchen box: a kettle, four mugs and a tea set",
+    "expect": {
+     "intent": "ingest"
+    }
+   },
+   "id": "r008",
+   "got": {
+    "intent": "ingest",
+    "box_label": "Kitchen",
+    "items": [
+     {
+      "name": "kettle",
+      "qty_text": "×1"
+     },
+     {
+      "name": "mugs",
+      "qty_text": "×4"
+     },
+     {
+      "name": "tea set",
+      "qty_text": "×1"
+     }
+    ],
+    "location_text": null,
+    "language": "en"
+   },
+   "error": null,
+   "ms": 3131,
+   "tokens": 206,
+   "prompt": "8c50a69b15",
+   "model": "sonnet"
+  },
+  {
+   "case": {
+    "id": "r009",
+    "lang": "en",
+    "text": "I put the tent in box 3 in the basement",
+    "expect": {
+     "intent": "ingest"
+    }
+   },
+   "id": "r009",
+   "got": {
+    "intent": "ingest",
+    "box_label": "3",
+    "items": [
+     {
+      "name": "tent",
+      "qty_text": "×1"
+     }
+    ],
+    "location_text": "basement",
+    "language": "en"
+   },
+   "error": null,
+   "ms": 2729,
+   "tokens": 165,
+   "prompt": "8c50a69b15",
+   "model": "sonnet"
+  },
+  {
+   "case": {
+    "id": "r010",
+    "lang": "en",
+    "text": "Box 12 contains the Christmas lights and a tree stand",
+    "expect": {
+     "intent": "ingest"
+    }
+   },
+   "id": "r010",
+   "got": {
+    "intent": "ingest",
+    "box_label": "12",
+    "items": [
+     {
+      "name": "Christmas lights",
+      "qty_text": "some"
+     },
+     {
+      "name": "tree stand",
+      "qty_text": "×1"
+     }
+    ],
+    "location_text": null,
+    "language": "en"
+   },
+   "error": null,
+   "ms": 2862,
+   "tokens": 186,
+   "prompt": "8c50a69b15",
+   "model": "sonnet"
+  },
+  {
+   "case": {
+    "id": "r011",
+    "lang": "zh",
+    "text": "3号箱放了两件羽绒服和一个头灯,在车库左边架子上",
+    "expect": {
+     "intent": "ingest"
+    }
+   },
+   "id": "r011",
+   "got": {
+    "intent": "ingest",
+    "box_label": "3",
+    "items": [
+     {
+      "name": "羽绒服",
+      "qty_text": "×2"
+     },
+     {
+      "name": "头灯",
+      "qty_text": "×1"
+     }
+    ],
+    "location_text": "车库左边架子上",
+    "language": "zh"
+   },
+   "error": null,
+   "ms": 2918,
+   "tokens": 192,
+   "prompt": "8c50a69b15",
+   "model": "sonnet"
+  },
+  {
+   "case": {
+    "id": "r012",
+    "lang": "zh",
+    "text": "1号箱里有帐篷和两个睡袋",
+    "expect": {
+     "intent": "ingest"
+    }
+   },
+   "id": "r012",
+   "got": {
+    "intent": "ingest",
+    "box_label": "1",
+    "items": [
+     {
+      "name": "帐篷",
+      "qty_text": "×1"
+     },
+     {
+      "name": "睡袋",
+      "qty_text": "×2"
+     }
+    ],
+    "location_text": null,
+    "language": "zh"
+   },
+   "error": null,
+   "ms": 2773,
+   "tokens": 186,
+   "prompt": "8c50a69b15",
+   "model": "sonnet"
+  },
+  {
+   "case": {
+    "id": "r013",
+    "lang": "zh",
+    "text": "红箱子装了冬天的围巾和一顶毛线帽",
+    "expect": {
+     "intent": "ingest"
+    }
+   },
+   "id": "r013",
+   "got": {
+    "intent": "ingest",
+    "box_label": "红",
+    "items": [
+     {
+      "name": "冬天的围巾",
+      "qty_text": "若干"
+     },
+     {
+      "name": "毛线帽",
+      "qty_text": "×1"
+     }
+    ],
+    "location_text": null,
+    "language": "zh"
+   },
+   "error": null,
+   "ms": 3003,
+   "tokens": 190,
+   "prompt": "8c50a69b15",
+   "model": "sonnet"
+  },
+  {
+   "case": {
+    "id": "r014",
+    "lang": "zh",
+    "text": "A2箱:充电线、旧手机、若干电池",
+    "expect": {
+     "intent": "ingest"
+    }
+   },
+   "id": "r014",
+   "got": {
+    "intent": "ingest",
+    "box_label": "A2",
+    "items": [
+     {
+      "name": "充电线",
+      "qty_text": "若干"
+     },
+     {
+      "name": "旧手机",
+      "qty_text": "若干"
+     },
+     {
+      "name": "电池",
+      "qty_text": "若干"
+     }
+    ],
+    "location_text": null,
+    "language": "zh"
+   },
+   "error": null,
+   "ms": 2787,
+   "tokens": 204,
+   "prompt": "8c50a69b15",
+   "model": "sonnet"
+  },
+  {
+   "case": {
+    "id": "r015",
+    "lang": "zh",
+    "text": "把露营炉和一盏灯放进7号箱了",
+    "expect": {
+     "intent": "ingest"
+    }
+   },
+   "id": "r015",
+   "got": {
+    "intent": "ingest",
+    "box_label": "7",
+    "items": [
+     {
+      "name": "露营炉",
+      "qty_text": "×1"
+     },
+     {
+      "name": "灯",
+      "qty_text": "×1"
+     }
+    ],
+    "location_text": null,
+    "language": "zh"
+   },
+   "error": null,
+   "ms": 2765,
+   "tokens": 184,
+   "prompt": "8c50a69b15",
+   "model": "sonnet"
+  },
+  {
+   "case": {
+    "id": "r016",
+    "lang": "zh",
+    "text": "新建9号箱,里面是孩子的书和一盒拼图",
+    "expect": {
+     "intent": "ingest"
+    }
+   },
+   "id": "r016",
+   "got": {
+    "intent": "ingest",
+    "box_label": "9",
+    "items": [
+     {
+      "name": "孩子的书",
+      "qty_text": "若干"
+     },
+     {
+      "name": "拼图",
+      "qty_text": "×1 盒"
+     }
+    ],
+    "location_text": null,
+    "language": "zh"
+   },
+   "error": null,
+   "ms": 2846,
+   "tokens": 189,
+   "prompt": "8c50a69b15",
+   "model": "sonnet"
+  },
+  {
+   "case": {
+    "id": "r017",
+    "lang": "zh",
+    "text": "往1号箱加一个手电筒和两节五号电池",
+    "known_labels": [
+     "1号",
+     "2号",
+     "3号"
+    ],
+    "expect": {
+     "intent": "ingest"
+    }
+   },
+   "id": "r017",
+   "got": {
+    "intent": "ingest",
+    "box_label": "1",
+    "items": [
+     {
+      "name": "手电筒",
+      "qty_text": "×1"
+     },
+     {
+      "name": "五号电池",
+      "qty_text": "×2"
+     }
+    ],
+    "location_text": null,
+    "language": "zh"
+   },
+   "error": null,
+   "ms": 2735,
+   "tokens": 186,
+   "prompt": "8c50a69b15",
+   "model": "sonnet"
+  },
+  {
+   "case": {
+    "id": "r018",
+    "lang": "zh",
+    "text": "厨房箱:一个水壶、四个马克杯和一套茶具",
+    "expect": {
+     "intent": "ingest"
+    }
+   },
+   "id": "r018",
+   "got": {
+    "intent": "ingest",
+    "box_label": "厨房",
+    "items": [
+     {
+      "name": "水壶",
+      "qty_text": "×1"
+     },
+     {
+      "name": "马克杯",
+      "qty_text": "×4"
+     },
+     {
+      "name": "茶具",
+      "qty_text": "×1 套"
+     }
+    ],
+    "location_text": null,
+    "language": "zh"
+   },
+   "error": null,
+   "ms": 2840,
+   "tokens": 208,
+   "prompt": "8c50a69b15",
+   "model": "sonnet"
+  },
+  {
+   "case": {
+    "id": "r019",
+    "lang": "zh",
+    "text": "帐篷放在地下室的3号箱里",
+    "expect": {
+     "intent": "ingest"
+    }
+   },
+   "id": "r019",
+   "got": {
+    "intent": "ingest",
+    "box_label": "3",
+    "items": [
+     {
+      "name": "帐篷",
+      "qty_text": "若干"
+     }
+    ],
+    "location_text": "地下室",
+    "language": "zh"
+   },
+   "error": null,
+   "ms": 2777,
+   "tokens": 168,
+   "prompt": "8c50a69b15",
+   "model": "sonnet"
+  },
+  {
+   "case": {
+    "id": "r020",
+    "lang": "zh",
+    "text": "12号箱是圣诞彩灯和树座",
+    "expect": {
+     "intent": "ingest"
+    }
+   },
+   "id": "r020",
+   "got": {
+    "intent": "ingest",
+    "box_label": "12",
+    "items": [
+     {
+      "name": "圣诞彩灯",
+      "qty_text": "若干"
+     },
+     {
+      "name": "树座",
+      "qty_text": "若干"
+     }
+    ],
+    "location_text": null,
+    "language": "zh"
+   },
+   "error": null,
+   "ms": 3022,
+   "tokens": 188,
+   "prompt": "8c50a69b15",
+   "model": "sonnet"
+  },
+  {
+   "case": {
+    "id": "r021",
+    "lang": "en",
+    "text": "Where are my snow boots?",
+    "expect": {
+     "intent": "query"
+    }
+   },
+   "id": "r021",
+   "got": {
+    "intent": "query",
+    "box_label": null,
+    "items": [],
+    "location_text": null,
+    "language": "en"
+   },
+   "error": null,
+   "ms": 2606,
+   "tokens": 143,
+   "prompt": "8c50a69b15",
+   "model": "sonnet"
+  },
+  {
+   "case": {
+    "id": "r022",
+    "lang": "en",
+    "text": "What's in box 3?",
+    "known_labels": [
+     "1",
+     "2",
+     "3"
+    ],
+    "expect": {
+     "intent": "query"
+    }
+   },
+   "id": "r022",
+   "got": {
+    "intent": "query",
+    "box_label": "3",
+    "items": [],
+    "location_text": null,
+    "language": "en"
+   },
+   "error": null,
+   "ms": 2895,
+   "tokens": 143,
+   "prompt": "8c50a69b15",
+   "model": "sonnet"
+  },
+  {
+   "case": {
+    "id": "r023",
+    "lang": "en",
+    "text": "How many boxes do I have?",
+    "expect": {
+     "intent": "query"
+    }
+   },
+   "id": "r023",
+   "got": {
+    "intent": "query",
+    "box_label": null,
+    "items": [],
+    "location_text": null,
+    "language": "en"
+   },
+   "error": null,
+   "ms": 2599,
+   "tokens": 143,
+   "prompt": "8c50a69b15",
+   "model": "sonnet"
+  },
+  {
+   "case": {
+    "id": "r024",
+    "lang": "en",
+    "text": "Which boxes have no location yet?",
+    "expect": {
+     "intent": "query"
+    }
+   },
+   "id": "r024",
+   "got": {
+    "intent": "query",
+    "box_label": null,
+    "items": [],
+    "location_text": null,
+    "language": "en"
+   },
+   "error": null,
+   "ms": 2865,
+   "tokens": 143,
+   "prompt": "8c50a69b15",
+   "model": "sonnet"
+  },
+  {
+   "case": {
+    "id": "r025",
+    "lang": "en",
+    "text": "Do I still have the camping stove somewhere?",
+    "expect": {
+     "intent": "query"
+    }
+   },
+   "id": "r025",
+   "got": {
+    "intent": "query",
+    "box_label": null,
+    "items": [],
+    "location_text": null,
+    "language": "en"
+   },
+   "error": null,
+   "ms": 2668,
+   "tokens": 143,
+   "prompt": "8c50a69b15",
+   "model": "sonnet"
+  },
+  {
+   "case": {
+    "id": "r026",
+    "lang": "en",
+    "text": "When did I last update the kitchen box?",
+    "known_labels": [
+     "1",
+     "kitchen"
+    ],
+    "expect": {
+     "intent": "query"
+    }
+   },
+   "id": "r026",
+   "got": {
+    "intent": "query",
+    "box_label": "kitchen",
+    "items": [],
+    "location_text": null,
+    "language": "en"
+   },
+   "error": null,
+   "ms": 2573,
+   "tokens": 146,
+   "prompt": "8c50a69b15",
+   "model": "sonnet"
+  },
+  {
+   "case": {
+    "id": "r027",
+    "lang": "en",
+    "text": "Which box is in the garage?",
+    "expect": {
+     "intent": "query"
+    }
+   },
+   "id": "r027",
+   "got": {
+    "intent": "query",
+    "box_label": null,
+    "items": [],
+    "location_text": "garage",
+    "language": "en"
+   },
+   "error": null,
+   "ms": 2731,
+   "tokens": 144,
+   "prompt": "8c50a69b15",
+   "model": "sonnet"
+  },
+  {
+   "case": {
+    "id": "r028",
+    "lang": "en",
+    "text": "Is the headlamp in box 1 or box 3?",
+    "known_labels": [
+     "1",
+     "2",
+     "3"
+    ],
+    "expect": {
+     "intent": "query"
+    }
+   },
+   "id": "r028",
+   "got": {
+    "intent": "query",
+    "box_label": null,
+    "items": [],
+    "location_text": null,
+    "language": "en"
+   },
+   "error": null,
+   "ms": 2599,
+   "tokens": 143,
+   "prompt": "8c50a69b15",
+   "model": "sonnet"
+  },
+  {
+   "case": {
+    "id": "r029",
+    "lang": "en",
+    "text": "List everything in the red box",
+    "known_labels": [
+     "red",
+     "blue"
+    ],
+    "expect": {
+     "intent": "query"
+    }
+   },
+   "id": "r029",
+   "got": {
+    "intent": "query",
+    "box_label": "red",
+    "items": [],
+    "location_text": null,
+    "language": "en"
+   },
+   "error": null,
+   "ms": 2589,
+   "tokens": 143,
+   "prompt": "8c50a69b15",
+   "model": "sonnet"
+  },
+  {
+   "case": {
+    "id": "r030",
+    "lang": "en",
+    "text": "How many AA batteries do I have in total?",
+    "expect": {
+     "intent": "query"
+    }
+   },
+   "id": "r030",
+   "got": {
+    "intent": "query",
+    "box_label": null,
+    "items": [],
+    "location_text": null,
+    "language": "en"
+   },
+   "error": null,
+   "ms": 2481,
+   "tokens": 143,
+   "prompt": "8c50a69b15",
+   "model": "sonnet"
+  },
+  {
+   "case": {
+    "id": "r031",
+    "lang": "zh",
+    "text": "雪地靴在哪?",
+    "expect": {
+     "intent": "query"
+    }
+   },
+   "id": "r031",
+   "got": {
+    "intent": "query",
+    "box_label": null,
+    "items": [],
+    "location_text": null,
+    "language": "zh"
+   },
+   "error": null,
+   "ms": 2579,
+   "tokens": 144,
+   "prompt": "8c50a69b15",
+   "model": "sonnet"
+  },
+  {
+   "case": {
+    "id": "r032",
+    "lang": "zh",
+    "text": "3号箱里有什么?",
+    "known_labels": [
+     "1号",
+     "2号",
+     "3号"
+    ],
+    "expect": {
+     "intent": "query"
+    }
+   },
+   "id": "r032",
+   "got": {
+    "intent": "query",
+    "box_label": "3",
+    "items": [],
+    "location_text": null,
+    "language": "zh"
+   },
+   "error": null,
+   "ms": 2666,
+   "tokens": 144,
+   "prompt": "8c50a69b15",
+   "model": "sonnet"
+  },
+  {
+   "case": {
+    "id": "r033",
+    "lang": "zh",
+    "text": "我一共有几个箱子?",
+    "expect": {
+     "intent": "query"
+    }
+   },
+   "id": "r033",
+   "got": {
+    "intent": "query",
+    "box_label": null,
+    "items": [],
+    "location_text": null,
+    "language": "zh"
+   },
+   "error": null,
+   "ms": 2574,
+   "tokens": 144,
+   "prompt": "8c50a69b15",
+   "model": "sonnet"
+  },
+  {
+   "case": {
+    "id": "r034",
+    "lang": "zh",
+    "text": "哪些箱子还没写位置?",
+    "expect": {
+     "intent": "query"
+    }
+   },
+   "id": "r034",
+   "got": {
+    "intent": "query",
+    "box_label": null,
+    "items": [],
+    "location_text": null,
+    "language": "zh"
+   },
+   "error": null,
+   "ms": 2627,
+   "tokens": 144,
+   "prompt": "8c50a69b15",
+   "model": "sonnet"
+  },
+  {
+   "case": {
+    "id": "r035",
+    "lang": "zh",
+    "text": "露营炉还在不在?",
+    "expect": {
+     "intent": "query"
+    }
+   },
+   "id": "r035",
+   "got": {
+    "intent": "query",
+    "box_label": null,
+    "items": [],
+    "location_text": null,
+    "language": "zh"
+   },
+   "error": null,
+   "ms": 2650,
+   "tokens": 144,
+   "prompt": "8c50a69b15",
+   "model": "sonnet"
+  },
+  {
+   "case": {
+    "id": "r036",
+    "lang": "zh",
+    "text": "厨房箱上次是什么时候更新的?",
+    "known_labels": [
+     "1号",
+     "厨房"
+    ],
+    "expect": {
+     "intent": "query"
+    }
+   },
+   "id": "r036",
+   "got": {
+    "intent": "query",
+    "box_label": "厨房",
+    "items": [],
+    "location_text": null,
+    "language": "zh"
+   },
+   "error": null,
+   "ms": 2894,
+   "tokens": 203,
+   "prompt": "8c50a69b15",
+   "model": "sonnet"
+  },
+  {
+   "case": {
+    "id": "r037",
+    "lang": "zh",
+    "text": "车库里放的是哪个箱子?",
+    "expect": {
+     "intent": "query"
+    }
+   },
+   "id": "r037",
+   "got": {
+    "intent": "query",
+    "box_label": null,
+    "items": [],
+    "location_text": "车库",
+    "language": "zh"
+   },
+   "error": null,
+   "ms": 2747,
+   "tokens": 145,
+   "prompt": "8c50a69b15",
+   "model": "sonnet"
+  },
+  {
+   "case": {
+    "id": "r038",
+    "lang": "zh",
+    "text": "头灯在1号箱还是3号箱?",
+    "known_labels": [
+     "1号",
+     "2号",
+     "3号"
+    ],
+    "expect": {
+     "intent": "query"
+    }
+   },
+   "id": "r038",
+   "got": {
+    "intent": "query",
+    "box_label": null,
+    "items": [],
+    "location_text": null,
+    "language": "zh"
+   },
+   "error": null,
+   "ms": 3182,
+   "tokens": 144,
+   "prompt": "8c50a69b15",
+   "model": "sonnet"
+  },
+  {
+   "case": {
+    "id": "r039",
+    "lang": "zh",
+    "text": "红箱子里的东西都列一下",
+    "known_labels": [
+     "红",
+     "蓝"
+    ],
+    "expect": {
+     "intent": "query"
+    }
+   },
+   "id": "r039",
+   "got": {
+    "intent": "query",
+    "box_label": "红",
+    "items": [],
+    "location_text": null,
+    "language": "zh"
+   },
+   "error": null,
+   "ms": 2685,
+   "tokens": 144,
+   "prompt": "8c50a69b15",
+   "model": "sonnet"
+  },
+  {
+   "case": {
+    "id": "r040",
+    "lang": "zh",
+    "text": "五号电池一共有多少节?",
+    "expect": {
+     "intent": "query"
+    }
+   },
+   "id": "r040",
+   "got": {
+    "intent": "query",
+    "box_label": null,
+    "items": [],
+    "location_text": null,
+    "language": "zh"
+   },
+   "error": null,
+   "ms": 2782,
+   "tokens": 144,
+   "prompt": "8c50a69b15",
+   "model": "sonnet"
+  },
+  {
+   "case": {
+    "id": "r041",
+    "lang": "en",
+    "text": "Box 7 is under the kitchen sink now",
+    "known_labels": [
+     "6",
+     "7"
+    ],
+    "expect": {
+     "intent": "operation"
+    }
+   },
+   "id": "r041",
+   "got": {
+    "intent": "operation",
+    "box_label": "7",
+    "items": [],
+    "location_text": "under the kitchen sink",
+    "language": "en"
+   },
+   "error": null,
+   "ms": 2604,
+   "tokens": 151,
+   "prompt": "8c50a69b15",
+   "model": "sonnet"
+  },
+  {
+   "case": {
+    "id": "r042",
+    "lang": "en",
+    "text": "Call box 3 the tool box",
+    "known_labels": [
+     "1",
+     "2",
+     "3"
+    ],
+    "expect": {
+     "intent": "operation"
+    }
+   },
+   "id": "r042",
+   "got": {
+    "intent": "operation",
+    "box_label": "3",
+    "items": [],
+    "location_text": null,
+    "language": "en"
+   },
+   "error": null,
+   "ms": 2519,
+   "tokens": 144,
+   "prompt": "8c50a69b15",
+   "model": "sonnet"
+  },
+  {
+   "case": {
+    "id": "r043",
+    "lang": "en",
+    "text": "Merge box 6 into box 7",
+    "known_labels": [
+     "6",
+     "7"
+    ],
+    "expect": {
+     "intent": "operation"
+    }
+   },
+   "id": "r043",
+   "got": {
+    "intent": "operation",
+    "box_label": "6",
+    "items": [],
+    "location_text": null,
+    "language": "en"
+   },
+   "error": null,
+   "ms": 2708,
+   "tokens": 144,
+   "prompt": "8c50a69b15",
+   "model": "sonnet"
+  },
+  {
+   "case": {
+    "id": "r044",
+    "lang": "en",
+    "text": "Remove the pliers from box 2",
+    "known_labels": [
+     "1",
+     "2"
+    ],
+    "expect": {
+     "intent": "operation"
+    }
+   },
+   "id": "r044",
+   "got": {
+    "intent": "operation",
+    "box_label": "2",
+    "items": [],
+    "location_text": null,
+    "language": "en"
+   },
+   "error": null,
+   "ms": 2752,
+   "tokens": 144,
+   "prompt": "8c50a69b15",
+   "model": "sonnet"
+  },
+  {
+   "case": {
+    "id": "r045",
+    "lang": "en",
+    "text": "Move the drill to box 5",
+    "known_labels": [
+     "4",
+     "5"
+    ],
+    "expect": {
+     "intent": "operation"
+    }
+   },
+   "id": "r045",
+   "got": {
+    "intent": "operation",
+    "box_label": "5",
+    "items": [],
+    "location_text": null,
+    "language": "en"
+   },
+   "error": null,
+   "ms": 2632,
+   "tokens": 144,
+   "prompt": "8c50a69b15",
+   "model": "sonnet"
+  },
+  {
+   "case": {
+    "id": "r046",
+    "lang": "en",
+    "text": "Empty box 4",
+    "known_labels": [
+     "4",
+     "5"
+    ],
+    "expect": {
+     "intent": "operation"
+    }
+   },
+   "id": "r046",
+   "got": {
+    "intent": "operation",
+    "box_label": "4",
+    "items": [],
+    "location_text": null,
+    "language": "en"
+   },
+   "error": null,
+   "ms": 2872,
+   "tokens": 144,
+   "prompt": "8c50a69b15",
+   "model": "sonnet"
+  },
+  {
+   "case": {
+    "id": "r047",
+    "lang": "en",
+    "text": "Delete box 9",
+    "known_labels": [
+     "8",
+     "9"
+    ],
+    "expect": {
+     "intent": "operation"
+    }
+   },
+   "id": "r047",
+   "got": {
+    "intent": "operation",
+    "box_label": "9",
+    "items": [],
+    "location_text": null,
+    "language": "en"
+   },
+   "error": null,
+   "ms": 3481,
+   "tokens": 144,
+   "prompt": "8c50a69b15",
+   "model": "sonnet"
+  },
+  {
+   "case": {
+    "id": "r048",
+    "lang": "en",
+    "text": "Remember where I am for box 2",
+    "known_labels": [
+     "1",
+     "2"
+    ],
+    "expect": {
+     "intent": "operation"
+    }
+   },
+   "id": "r048",
+   "got": {
+    "intent": "operation",
+    "box_label": "2",
+    "items": [],
+    "location_text": null,
+    "language": "en"
+   },
+   "error": null,
+   "ms": 2779,
+   "tokens": 144,
+   "prompt": "8c50a69b15",
+   "model": "sonnet"
+  },
+  {
+   "case": {
+    "id": "r049",
+    "lang": "en",
+    "text": "Undo that",
+    "expect": {
+     "intent": "operation"
+    }
+   },
+   "id": "r049",
+   "got": {
+    "intent": "operation",
+    "box_label": null,
+    "items": [],
+    "location_text": null,
+    "language": "en"
+   },
+   "error": null,
+   "ms": 2737,
+   "tokens": 144,
+   "prompt": "8c50a69b15",
+   "model": "sonnet"
+  },
+  {
+   "case": {
+    "id": "r050",
+    "lang": "en",
+    "text": "Change the scarves in the red box to three",
+    "known_labels": [
+     "red"
+    ],
+    "expect": {
+     "intent": "operation"
+    }
+   },
+   "id": "r050",
+   "got": {
+    "intent": "operation",
+    "box_label": "red",
+    "items": [],
+    "location_text": null,
+    "language": "en"
+   },
+   "error": null,
+   "ms": 2814,
+   "tokens": 144,
+   "prompt": "8c50a69b15",
+   "model": "sonnet"
+  },
+  {
+   "case": {
+    "id": "r051",
+    "lang": "zh",
+    "text": "7号箱现在放在厨房水槽下面了",
+    "known_labels": [
+     "6号",
+     "7号"
+    ],
+    "expect": {
+     "intent": "operation"
+    }
+   },
+   "id": "r051",
+   "got": {
+    "intent": "operation",
+    "box_label": "7",
+    "items": [],
+    "location_text": "厨房水槽下面",
+    "language": "zh"
+   },
+   "error": null,
+   "ms": 2761,
+   "tokens": 152,
+   "prompt": "8c50a69b15",
+   "model": "sonnet"
+  },
+  {
+   "case": {
+    "id": "r052",
+    "lang": "zh",
+    "text": "把3号箱改名叫工具箱",
+    "known_labels": [
+     "1号",
+     "2号",
+     "3号"
+    ],
+    "expect": {
+     "intent": "operation"
+    }
+   },
+   "id": "r052",
+   "got": {
+    "intent": "operation",
+    "box_label": "3",
+    "items": [],
+    "location_text": null,
+    "language": "zh"
+   },
+   "error": null,
+   "ms": 2739,
+   "tokens": 145,
+   "prompt": "8c50a69b15",
+   "model": "sonnet"
+  },
+  {
+   "case": {
+    "id": "r053",
+    "lang": "zh",
+    "text": "把6号箱合并到7号箱",
+    "known_labels": [
+     "6号",
+     "7号"
+    ],
+    "expect": {
+     "intent": "operation"
+    }
+   },
+   "id": "r053",
+   "got": {
+    "intent": "operation",
+    "box_label": "6",
+    "items": [],
+    "location_text": null,
+    "language": "zh"
+   },
+   "error": null,
+   "ms": 2593,
+   "tokens": 145,
+   "prompt": "8c50a69b15",
+   "model": "sonnet"
+  },
+  {
+   "case": {
+    "id": "r054",
+    "lang": "zh",
+    "text": "把钳子从2号箱拿掉",
+    "known_labels": [
+     "1号",
+     "2号"
+    ],
+    "expect": {
+     "intent": "operation"
+    }
+   },
+   "id": "r054",
+   "got": {
+    "intent": "operation",
+    "box_label": "2",
+    "items": [],
+    "location_text": null,
+    "language": "zh"
+   },
+   "error": null,
+   "ms": 2531,
+   "tokens": 145,
+   "prompt": "8c50a69b15",
+   "model": "sonnet"
+  },
+  {
+   "case": {
+    "id": "r055",
+    "lang": "zh",
+    "text": "把电钻移到5号箱",
+    "known_labels": [
+     "4号",
+     "5号"
+    ],
+    "expect": {
+     "intent": "operation"
+    }
+   },
+   "id": "r055",
+   "got": {
+    "intent": "operation",
+    "box_label": "5",
+    "items": [],
+    "location_text": null,
+    "language": "zh"
+   },
+   "error": null,
+   "ms": 2728,
+   "tokens": 145,
+   "prompt": "8c50a69b15",
+   "model": "sonnet"
+  },
+  {
+   "case": {
+    "id": "r056",
+    "lang": "zh",
+    "text": "清空4号箱",
+    "known_labels": [
+     "4号",
+     "5号"
+    ],
+    "expect": {
+     "intent": "operation"
+    }
+   },
+   "id": "r056",
+   "got": {
+    "intent": "operation",
+    "box_label": "4",
+    "items": [],
+    "location_text": null,
+    "language": "zh"
+   },
+   "error": null,
+   "ms": 2616,
+   "tokens": 145,
+   "prompt": "8c50a69b15",
+   "model": "sonnet"
+  },
+  {
+   "case": {
+    "id": "r057",
+    "lang": "zh",
+    "text": "删掉9号箱",
+    "known_labels": [
+     "8号",
+     "9号"
+    ],
+    "expect": {
+     "intent": "operation"
+    }
+   },
+   "id": "r057",
+   "got": {
+    "intent": "operation",
+    "box_label": "9",
+    "items": [],
+    "location_text": null,
+    "language": "zh"
+   },
+   "error": null,
+   "ms": 2922,
+   "tokens": 145,
+   "prompt": "8c50a69b15",
+   "model": "sonnet"
+  },
+  {
+   "case": {
+    "id": "r058",
+    "lang": "zh",
+    "text": "记一下2号箱在我现在的位置",
+    "known_labels": [
+     "1号",
+     "2号"
+    ],
+    "expect": {
+     "intent": "operation"
+    }
+   },
+   "id": "r058",
+   "got": {
+    "intent": "operation",
+    "box_label": "2",
+    "items": [],
+    "location_text": null,
+    "language": "zh"
+   },
+   "error": null,
+   "ms": 2616,
+   "tokens": 145,
+   "prompt": "8c50a69b15",
+   "model": "sonnet"
+  },
+  {
+   "case": {
+    "id": "r059",
+    "lang": "zh",
+    "text": "撤销刚才的操作",
+    "expect": {
+     "intent": "operation"
+    }
+   },
+   "id": "r059",
+   "got": {
+    "intent": "operation",
+    "box_label": null,
+    "items": [],
+    "location_text": null,
+    "language": "zh"
+   },
+   "error": null,
+   "ms": 2685,
+   "tokens": 145,
+   "prompt": "8c50a69b15",
+   "model": "sonnet"
+  },
+  {
+   "case": {
+    "id": "r060",
+    "lang": "zh",
+    "text": "红箱子里的围巾改成三条",
+    "known_labels": [
+     "红"
+    ],
+    "expect": {
+     "intent": "operation"
+    }
+   },
+   "id": "r060",
+   "got": {
+    "intent": "operation",
+    "box_label": "红",
+    "items": [],
+    "location_text": null,
+    "language": "zh"
+   },
+   "error": null,
+   "ms": 3408,
+   "tokens": 240,
+   "prompt": "8c50a69b15",
+   "model": "sonnet"
+  }
+ ]
+}

@@ -133,7 +133,7 @@ The AI orchestration is deliberately tested without depending on an external mod
 
 | Suite | Count | Coverage |
 |---|---:|---|
-| Backend pytest | 163 | Real PostgreSQL + pgvector, FastAPI, cascades, snapshots, undo, agent loop, malformed arguments, confirmation flow |
+| Backend pytest | 199 | Real PostgreSQL + pgvector, FastAPI, cascades, snapshots, undo, agent loop, malformed arguments, confirmation flow |
 | Frontend Vitest | 47 | State machine, routing, confirmation flow, camera/scan fallback, localization, API client and SSE parsing |
 
 The LLM gateway is replaced by a scripted client that records requests and replays tool calls. Embeddings use deterministic test vectors.
@@ -152,6 +152,18 @@ npm run build
 ```
 
 CI runs both suites on every push: [.github/workflows/ci.yml](.github/workflows/ci.yml).
+
+### Model evals
+
+Unit tests prove the loop does the right thing when the model says X; the golden sets in [`evals/`](evals/) measure
+whether the model says X. Every model-backed request opens a trace (model, prompt hash, tool calls, steps, latency,
+outcome) that the harness scores. Two sets so far, routing (60 cases) and extraction (40), half Chinese, half English;
+results per prompt version and model are appended to [`evals/RESULTS.md`](evals/RESULTS.md).
+
+```bash
+backend/.venv/bin/python evals/run.py            # both sets, provider and model from backend/.env
+backend/.venv/bin/python evals/run.py --model haiku
+```
 
 ## Run locally
 

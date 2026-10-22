@@ -6,6 +6,7 @@ import httpx
 
 from ..config import settings
 from ..i18n import lang_name, tr
+from . import trace
 
 _INTERPRET_SYSTEM = """You are the parsing engine of BoxMind, an app that remembers what is stored in which box.
 The user says one sentence. Classify it and extract structure. Output exactly one JSON object and nothing else:
@@ -70,9 +71,36 @@ class LLM:
         }
         self._url = f"{settings.llm_base_url}/chat/completions"
 
+    @property
+    def model_name(self) -> str:
+        return settings.llm_model
+
     async def interpret(self, text: str, known_labels: list[str], lang: str | None = None) -> dict:
-        hint = f"The user's existing box labels: {', '.join(known_labels)}" if known_labels \
+        """One sentence → intent + structure. Traced; providers implement `_interpret`."""
+        t = trace.start("interpret", model=self.model_name, prompts={"interpret": trace.prompt_id(_INTERPRET_SYSTEM)},
+                        input=text, lang=lang or "")
+        try:
+            parsed = await self._interpret(text, known_labels, lang)
+        except Exception as e:
+            t.error = str(e)
+            t.finish("error")
+            raise
+        parsed.setdefault("intent", "query")
+        parsed.setdefault("box_label", None)
+        parsed.setdefault("items", [])
+        parsed.setdefault("location_text", None)
+        parsed.setdefault("language", lang or "en")
+        t.tokens = int(parsed.get("_tokens") or 0)
+        t.finish("ok", parsed={k: v for k, v in parsed.items() if not k.startswith("_")})
+        return parsed
+
+    @staticmethod
+    def _label_hint(known_labels: list[str]) -> str:
+        return f"The user's existing box labels: {', '.join(known_labels)}" if known_labels \
             else "The user has no boxes yet"
+
+    async def _interpret(self, text: str, known_labels: list[str], lang: str | None) -> dict:
+        hint = self._label_hint(known_labels)
         payload = {
             "model": settings.llm_model,
             "messages": [
@@ -89,11 +117,6 @@ class LLM:
         content = data["choices"][0]["message"]["content"]
         usage = data.get("usage", {}).get("total_tokens", 0)
         parsed = _parse_json(content)
-        parsed.setdefault("intent", "query")
-        parsed.setdefault("box_label", None)
-        parsed.setdefault("items", [])
-        parsed.setdefault("location_text", None)
-        parsed.setdefault("language", lang or "en")
         parsed["_tokens"] = usage
         return parsed
 

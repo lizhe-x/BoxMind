@@ -84,17 +84,15 @@ class ClaudeCodeLLM(LLM):
         self._work.mkdir(parents=True, exist_ok=True)
 
     # ── public interface (same as LLM) ─────────────────────────────────
-    async def interpret(self, text: str, known_labels: list[str], lang: str | None = None) -> dict:
-        hint = f"The user's existing box labels: {', '.join(known_labels)}" if known_labels \
-            else "The user has no boxes yet"
+    @property
+    def model_name(self) -> str:
+        return settings.claude_model
+
+    async def _interpret(self, text: str, known_labels: list[str], lang: str | None) -> dict:
+        hint = self._label_hint(known_labels)
         system = _INTERPRET_SYSTEM.format(some=tr(lang, "qty_some"))
         parsed, tokens = await self._json(system, f"{hint}\n\nUser said: {text}", _INTERPRET_SCHEMA,
                                           settings.claude_model)
-        parsed.setdefault("intent", "query")
-        parsed.setdefault("box_label", None)
-        parsed.setdefault("items", [])
-        parsed.setdefault("location_text", None)
-        parsed.setdefault("language", lang or "en")
         parsed["_tokens"] = tokens
         return parsed
 

@@ -1,0 +1,60 @@
+{"id": "r001", "lang": "en", "text": "Box 1 has three down jackets and a headlamp", "expect": {"intent": "ingest"}}
+{"id": "r002", "lang": "en", "text": "Put two pairs of snow boots in box 4, garage left shelf", "expect": {"intent": "ingest"}}
+{"id": "r003", "lang": "en", "text": "The red box has my winter scarves and a wool hat", "expect": {"intent": "ingest"}}
+{"id": "r004", "lang": "en", "text": "Box A2: charger cables, an old phone, some batteries", "expect": {"intent": "ingest"}}
+{"id": "r005", "lang": "en", "text": "Just packed the camping stove and a lantern into box 7", "expect": {"intent": "ingest"}}
+{"id": "r006", "lang": "en", "text": "New box 9 with kids' books and a puzzle", "expect": {"intent": "ingest"}}
+{"id": "r007", "lang": "en", "text": "Add a flashlight and two AA batteries to box 1", "known_labels": ["1", "2", "3"], "expect": {"intent": "ingest"}}
+{"id": "r008", "lang": "en", "text": "Kitchen box: a kettle, four mugs and a tea set", "expect": {"intent": "ingest"}}
+{"id": "r009", "lang": "en", "text": "I put the tent in box 3 in the basement", "expect": {"intent": "ingest"}}
+{"id": "r010", "lang": "en", "text": "Box 12 contains the Christmas lights and a tree stand", "expect": {"intent": "ingest"}}
+{"id": "r011", "lang": "zh", "text": "3号箱放了两件羽绒服和一个头灯,在车库左边架子上", "expect": {"intent": "ingest"}}
+{"id": "r012", "lang": "zh", "text": "1号箱里有帐篷和两个睡袋", "expect": {"intent": "ingest"}}
+{"id": "r013", "lang": "zh", "text": "红箱子装了冬天的围巾和一顶毛线帽", "expect": {"intent": "ingest"}}
+{"id": "r014", "lang": "zh", "text": "A2箱:充电线、旧手机、若干电池", "expect": {"intent": "ingest"}}
+{"id": "r015", "lang": "zh", "text": "把露营炉和一盏灯放进7号箱了", "expect": {"intent": "ingest"}}
+{"id": "r016", "lang": "zh", "text": "新建9号箱,里面是孩子的书和一盒拼图", "expect": {"intent": "ingest"}}
+{"id": "r017", "lang": "zh", "text": "往1号箱加一个手电筒和两节五号电池", "known_labels": ["1号", "2号", "3号"], "expect": {"intent": "ingest"}}
+{"id": "r018", "lang": "zh", "text": "厨房箱:一个水壶、四个马克杯和一套茶具", "expect": {"intent": "ingest"}}
+{"id": "r019", "lang": "zh", "text": "帐篷放在地下室的3号箱里", "expect": {"intent": "ingest"}}
+{"id": "r020", "lang": "zh", "text": "12号箱是圣诞彩灯和树座", "expect": {"intent": "ingest"}}
+{"id": "r021", "lang": "en", "text": "Where are my snow boots?", "expect": {"intent": "query"}}
+{"id": "r022", "lang": "en", "text": "What's in box 3?", "known_labels": ["1", "2", "3"], "expect": {"intent": "query"}}
+{"id": "r023", "lang": "en", "text": "How many boxes do I have?", "expect": {"intent": "query"}}
+{"id": "r024", "lang": "en", "text": "Which boxes have no location yet?", "expect": {"intent": "query"}}
+{"id": "r025", "lang": "en", "text": "Do I still have the camping stove somewhere?", "expect": {"intent": "query"}}
+{"id": "r026", "lang": "en", "text": "When did I last update the kitchen box?", "known_labels": ["1", "kitchen"], "expect": {"intent": "query"}}
+{"id": "r027", "lang": "en", "text": "Which box is in the garage?", "expect": {"intent": "query"}}
+{"id": "r028", "lang": "en", "text": "Is the headlamp in box 1 or box 3?", "known_labels": ["1", "2", "3"], "expect": {"intent": "query"}}
+{"id": "r029", "lang": "en", "text": "List everything in the red box", "known_labels": ["red", "blue"], "expect": {"intent": "query"}}
+{"id": "r030", "lang": "en", "text": "How many AA batteries do I have in total?", "expect": {"intent": "query"}}
+{"id": "r031", "lang": "zh", "text": "雪地靴在哪?", "expect": {"intent": "query"}}
+{"id": "r032", "lang": "zh", "text": "3号箱里有什么?", "known_labels": ["1号", "2号", "3号"], "expect": {"intent": "query"}}
+{"id": "r033", "lang": "zh", "text": "我一共有几个箱子?", "expect": {"intent": "query"}}
+{"id": "r034", "lang": "zh", "text": "哪些箱子还没写位置?", "expect": {"intent": "query"}}
+{"id": "r035", "lang": "zh", "text": "露营炉还在不在?", "expect": {"intent": "query"}}
+{"id": "r036", "lang": "zh", "text": "厨房箱上次是什么时候更新的?", "known_labels": ["1号", "厨房"], "expect": {"intent": "query"}}
+{"id": "r037", "lang": "zh", "text": "车库里放的是哪个箱子?", "expect": {"intent": "query"}}
+{"id": "r038", "lang": "zh", "text": "头灯在1号箱还是3号箱?", "known_labels": ["1号", "2号", "3号"], "expect": {"intent": "query"}}
+{"id": "r039", "lang": "zh", "text": "红箱子里的东西都列一下", "known_labels": ["红", "蓝"], "expect": {"intent": "query"}}
+{"id": "r040", "lang": "zh", "text": "五号电池一共有多少节?", "expect": {"intent": "query"}}
+{"id": "r041", "lang": "en", "text": "Box 7 is under the kitchen sink now", "known_labels": ["6", "7"], "expect": {"intent": "operation"}}
+{"id": "r042", "lang": "en", "text": "Call box 3 the tool box", "known_labels": ["1", "2", "3"], "expect": {"intent": "operation"}}
+{"id": "r043", "lang": "en", "text": "Merge box 6 into box 7", "known_labels": ["6", "7"], "expect": {"intent": "operation"}}
+{"id": "r044", "lang": "en", "text": "Remove the pliers from box 2", "known_labels": ["1", "2"], "expect": {"intent": "operation"}}
+{"id": "r045", "lang": "en", "text": "Move the drill to box 5", "known_labels": ["4", "5"], "expect": {"intent": "operation"}}
+{"id": "r046", "lang": "en", "text": "Empty box 4", "known_labels": ["4", "5"], "expect": {"intent": "operation"}}
+{"id": "r047", "lang": "en", "text": "Delete box 9", "known_labels": ["8", "9"], "expect": {"intent": "operation"}}
+{"id": "r048", "lang": "en", "text": "Remember where I am for box 2", "known_labels": ["1", "2"], "expect": {"intent": "operation"}}
+{"id": "r049", "lang": "en", "text": "Undo that", "expect": {"intent": "operation"}}
+{"id": "r050", "lang": "en", "text": "Change the scarves in the red box to three", "known_labels": ["red"], "expect": {"intent": "operation"}}
+{"id": "r051", "lang": "zh", "text": "7号箱现在放在厨房水槽下面了", "known_labels": ["6号", "7号"], "expect": {"intent": "operation"}}
+{"id": "r052", "lang": "zh", "text": "把3号箱改名叫工具箱", "known_labels": ["1号", "2号", "3号"], "expect": {"intent": "operation"}}
+{"id": "r053", "lang": "zh", "text": "把6号箱合并到7号箱", "known_labels": ["6号", "7号"], "expect": {"intent": "operation"}}
+{"id": "r054", "lang": "zh", "text": "把钳子从2号箱拿掉", "known_labels": ["1号", "2号"], "expect": {"intent": "operation"}}
+{"id": "r055", "lang": "zh", "text": "把电钻移到5号箱", "known_labels": ["4号", "5号"], "expect": {"intent": "operation"}}
+{"id": "r056", "lang": "zh", "text": "清空4号箱", "known_labels": ["4号", "5号"], "expect": {"intent": "operation"}}
+{"id": "r057", "lang": "zh", "text": "删掉9号箱", "known_labels": ["8号", "9号"], "expect": {"intent": "operation"}}
+{"id": "r058", "lang": "zh", "text": "记一下2号箱在我现在的位置", "known_labels": ["1号", "2号"], "expect": {"intent": "operation"}}
+{"id": "r059", "lang": "zh", "text": "撤销刚才的操作", "expect": {"intent": "operation"}}
+{"id": "r060", "lang": "zh", "text": "红箱子里的围巾改成三条", "known_labels": ["红"], "expect": {"intent": "operation"}}

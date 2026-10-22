@@ -128,6 +128,8 @@ def assistant_msg(content: str | None = None, tool_calls: list[dict] | None = No
 class ScriptedLLM:
     """Stand-in for app.services.llm.LLM: replays scripted responses and records requests."""
 
+    model_name = "scripted"
+
     def __init__(self) -> None:
         self.tool_replies: list[dict] = []
         self.interpret_reply: dict = {
