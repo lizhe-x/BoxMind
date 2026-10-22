@@ -1,0 +1,29 @@
+{
+  "_comment": "Fixed household of 12 boxes / 60 items, mixed Chinese and English, loaded fresh for every retrieval and tool-call case. Item names are exact: cases refer to them verbatim.",
+  "boxes": [
+    {"label": "1", "location": "garage left shelf",
+     "items": [["羽绒服", "×2"], ["头灯", "×1"], ["tent", "×1"], ["sleeping bag", "×2"], ["保温杯", "×1"]]},
+    {"label": "2", "location": "bedroom closet top shelf",
+     "items": [["wine glasses", "×6"], ["decanter", "×1"], ["AA batteries", "×2"], ["桌布", "×2"], ["烛台", "×2"]]},
+    {"label": "3", "location": "basement",
+     "items": [["drill", "×1"], ["screws", "some"], ["tape measure", "×1"], ["钳子", "×1"], ["hammer", "×1"], ["screwdriver set", "×1"]]},
+    {"label": "4", "location": "garage right shelf",
+     "items": [["snow boots", "×2 pairs"], ["雪杖", "×2"], ["滑雪板", "×1副"], ["ski goggles", "×1"], ["滑雪服", "×1"]]},
+    {"label": "5", "location": null,
+     "items": [["打印机", "×1"], ["墨盒", "×2"], ["备用键盘", "×1"], ["鼠标", "×1"], ["HDMI cable", "×2"]]},
+    {"label": "6", "location": "kitchen cupboard",
+     "items": [["水壶", "×1"], ["马克杯", "×4"], ["茶具", "×1套"], ["砧板", "×1"], ["烤盘", "×2"]]},
+    {"label": "7", "location": "under the stairs",
+     "items": [["camping stove", "×1"], ["lantern", "×1"], ["折叠椅", "×2"], ["防潮垫", "×1"], ["帐篷地钉", "some"], ["野餐垫", "×1"]]},
+    {"label": "red", "location": "hall closet",
+     "items": [["winter scarves", "some"], ["wool hat", "×1"], ["手套", "×2双"], ["umbrella", "×1"]]},
+    {"label": "A2", "location": "study desk drawer",
+     "items": [["charger cables", "some"], ["旧手机", "×1"], ["AAA batteries", "some"]]},
+    {"label": "9", "location": null,
+     "items": [["kids' books", "some"], ["拼图", "×1"], ["乐高", "×1盒"], ["画笔", "some"], ["彩色铅笔", "×1盒"], ["跳绳", "×1"]]},
+    {"label": "12", "location": "attic",
+     "items": [["Christmas lights", "some"], ["tree stand", "×1"], ["圣诞装饰", "some"], ["礼品包装纸", "some"], ["圣诞树裙", "×1"]]},
+    {"label": "B1", "location": "attic",
+     "items": [["旧相册", "some"], ["projector", "×1"], ["相机", "×1"], ["三脚架", "×1"], ["幻灯片", "some"]]}
+  ]
+}

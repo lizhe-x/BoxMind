@@ -107,6 +107,12 @@ async def test_add_items_creates_box_when_missing(db: Session, user: User) -> No
     assert [(i.name, i.qty_text) for i in box.items] == [("blanket", "some")]
 
 
+async def test_add_items_with_nothing_to_add_creates_no_box(db: Session, user: User) -> None:
+    res = await agent_tools.execute(db, user, "add_items", {"box": "13", "items": []}, {})
+    assert res["ok"] is False
+    assert agent_tools.resolve_box(db, user, "13") is None  # found by the tool-call eval: a stray box was left behind
+
+
 async def test_add_items_rejects_empty_list(db: Session, user: User) -> None:
     res = await agent_tools.execute(db, user, "add_items", {"box": "3", "items": []}, {})
     assert res == {"ok": False, "error": "no items to add"}

@@ -158,20 +158,20 @@ async def _create_box(db, user, args, ctx):
 
 
 async def _add_items(db, user, args, ctx):
-    box = resolve_box(db, user, args["box"])
-    created = False
-    if not box:
-        name, _ = dedup_name(db, user, args["box"].strip())
-        box = boxes_service.create_box(db, user, name, source="text")
-        created = True
     some = tr(user.lang, "qty_some")
     items = [
         {"name": it["name"], "qty_text": it.get("qty_text") or some}
         for it in args.get("items", [])
         if it.get("name")
     ]
-    if not items:
+    if not items:  # checked first: an empty call must not leave a new box behind
         raise _ToolError(tr(user.lang, "no_items"))
+    box = resolve_box(db, user, args["box"])
+    created = False
+    if not box:
+        name, _ = dedup_name(db, user, args["box"].strip())
+        box = boxes_service.create_box(db, user, name, source="text")
+        created = True
     await boxes_service.add_items(db, box, items)
     db.commit()
     return {"ok": True, "box": box.label, "created_box": created, "added": [i["name"] for i in items]}

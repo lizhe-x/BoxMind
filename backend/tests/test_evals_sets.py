@@ -1,7 +1,7 @@
 """The golden files in evals/ must parse, validate and stay balanced; a bad case fails CI, not the eval run."""
 import pytest
 
-from app.evals import harness
+from app.evals import harness, world
 
 
 @pytest.mark.parametrize("set_name", harness.SETS)
@@ -18,6 +18,24 @@ def test_routing_set_covers_every_intent_evenly() -> None:
     cases = harness.load_cases("routing")
     counts = {i: sum(c["expect"]["intent"] == i for c in cases) for i in ("ingest", "query", "operation")}
     assert min(counts.values()) >= 15, counts
+
+
+def test_retrieval_and_tools_refer_to_world_items() -> None:
+    names = {name for b in world.read_world() for name, _ in b["items"]}
+    for case in harness.load_cases("retrieval"):
+        missing = set(case["expect"]["items"]) - names
+        assert not missing, f"{case['id']}: not in world: {missing}"
+    for case in harness.load_cases("tools"):
+        for spec in case["expect"].get("state", []):
+            for name in spec.get("lacks", []):
+                assert name in names, f"{case['id']}: lacks {name!r} not in world"
+
+
+def test_tools_set_exercises_the_confirm_gate_in_both_languages() -> None:
+    cases = harness.load_cases("tools")
+    gated = {c["lang"] for c in cases if c["expect"].get("confirm")}
+    assert gated == {"en", "zh"}
+    assert sum(bool(c["expect"].get("confirm")) for c in cases) >= 8
 
 
 def test_load_cases_reports_bad_lines(tmp_path) -> None:

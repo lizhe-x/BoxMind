@@ -59,17 +59,19 @@ _VISION_SCHEMA = {
 
 _TOOL_PROTOCOL = """
 
-Tools
------
-You cannot run anything yourself. To act, return tool calls and the app executes them and shows you the
-results in the next turn. Available tools (arguments are JSON objects following these schemas):
+App actions
+-----------
+The app can perform these actions for you. They are NOT tools of this session: you have no tools here and
+must not try to invoke anything. The only way to act is to name the actions in the `tool_calls` array of
+your JSON reply; the app runs them and shows you the results in the next turn. Actions (arguments are JSON
+objects following these schemas):
 {tools}
 
 Respond with exactly one JSON object:
 {{"content": string | null, "tool_calls": [{{"name": string, "arguments": object}}]}}
 - Need to act → fill tool_calls (several per turn are fine when they are independent); content may be null.
 - Nothing left to do, or a clarifying question → put the sentence in content and send an empty tool_calls array.
-- Never invent tool results; wait for them."""
+- Never invent results; wait for them. Never report an action as unavailable: every action listed above works."""
 
 _MIME_EXT = {"image/jpeg": "jpg", "image/png": "png", "image/webp": "webp", "image/heic": "heic", "image/gif": "gif"}
 

@@ -133,7 +133,7 @@ The AI orchestration is deliberately tested without depending on an external mod
 
 | Suite | Count | Coverage |
 |---|---:|---|
-| Backend pytest | 199 | Real PostgreSQL + pgvector, FastAPI, cascades, snapshots, undo, agent loop, malformed arguments, confirmation flow |
+| Backend pytest | 212 | Real PostgreSQL + pgvector, FastAPI, cascades, snapshots, undo, agent loop, malformed arguments, confirmation flow |
 | Frontend Vitest | 47 | State machine, routing, confirmation flow, camera/scan fallback, localization, API client and SSE parsing |
 
 The LLM gateway is replaced by a scripted client that records requests and replays tool calls. Embeddings use deterministic test vectors.
@@ -157,8 +157,10 @@ CI runs both suites on every push: [.github/workflows/ci.yml](.github/workflows/
 
 Unit tests prove the loop does the right thing when the model says X; the golden sets in [`evals/`](evals/) measure
 whether the model says X. Every model-backed request opens a trace (model, prompt hash, tool calls, steps, latency,
-outcome) that the harness scores. Two sets so far, routing (60 cases) and extraction (40), half Chinese, half English;
-results per prompt version and model are appended to [`evals/RESULTS.md`](evals/RESULTS.md).
+outcome) that the harness scores. Four sets, half Chinese, half English: routing (60 cases), extraction (40),
+retrieval over a fixture world (50, Recall@k and MRR) and tool calling through the whole agent loop (40: tools
+executed, confirm gate, arguments, resulting box state). Results per prompt version and model are appended to
+[`evals/RESULTS.md`](evals/RESULTS.md); the first runs found a provider protocol bug and a tool side-effect bug.
 
 ```bash
 backend/.venv/bin/python evals/run.py            # both sets, provider and model from backend/.env

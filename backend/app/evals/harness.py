@@ -1,7 +1,13 @@
 """Run golden sets against the live model layer and record the numbers.
 
-    python evals/run.py routing extraction [--provider claude_code|gateway] [--model sonnet] [--concurrency 3]
-                                           [--limit N] [--no-write]
+    python evals/run.py [routing] [extraction] [retrieval] [tools] [--provider claude_code|gateway] [--model sonnet]
+                        [--concurrency 3] [--limit N] [--no-write]
+
+routing / extraction call `llm.interpret`; retrieval calls the agent's `search_items` tool over the fixture
+world; tools runs the whole agent loop (`agent.run`) on a fresh copy of the world per case and checks the
+trace (tools executed, confirm gate, arguments) and the resulting box state. The DB-backed sets use a
+dedicated `boxmind_eval` database (created on demand next to the configured one; override with
+BOXMIND_EVAL_DATABASE_URL) and the real embedding model.
 
 Each run writes `evals/results/<set>-<stamp>.json` (per-case got/expected, latency, tokens, prompt ids) and
 appends one row to `evals/RESULTS.md`. Settings come from `backend/.env` like the server; `--provider` and
@@ -12,6 +18,7 @@ from __future__ import annotations
 import argparse
 import asyncio
 import json
+import os
 import sys
 import time
 from datetime import UTC, datetime
@@ -22,7 +29,9 @@ from . import score
 ROOT = Path(__file__).resolve().parents[3]
 EVALS = ROOT / "evals"
 RESULTS = EVALS / "results"
-SETS = ("routing", "extraction")
+SETS = ("routing", "extraction", "retrieval", "tools")
+INTERPRET_SETS = ("routing", "extraction")
+GPS = {"lat": 40.7128, "lng": -74.0060}  # "where I am" for set_box_gps cases
 
 
 def load_cases(set_name: str, path: Path | None = None) -> list[dict]:
@@ -47,7 +56,8 @@ def load_cases(set_name: str, path: Path | None = None) -> list[dict]:
     return cases
 
 
-async def run_cases(cases: list[dict], concurrency: int) -> list[dict]:
+# ── runners ─────────────────────────────────────────────────────────────
+async def run_interpret(cases: list[dict], concurrency: int) -> list[dict]:
     """Call `llm.interpret` for every case; never raises, errors land in the row."""
     from ..services import trace
     from ..services.llm import llm
@@ -74,12 +84,101 @@ async def run_cases(cases: list[dict], concurrency: int) -> list[dict]:
     return list(await asyncio.gather(*(one(c) for c in cases)))
 
 
+async def run_retrieval(cases: list[dict], stamp: str) -> list[dict]:
+    """One user with the world; every query goes through the agent's `search_items` tool."""
+    from ..db import SessionLocal
+    from ..services import agent_tools
+    from . import world
+
+    db = SessionLocal()
+    try:
+        user = world.new_user(db, f"eval-retrieval-{stamp}", "en")
+        await world.load_world(db, user)
+        rows = []
+        for case in cases:
+            t0 = time.monotonic()
+            row: dict = {"id": case["id"], "hits": [], "boxes": [], "error": None, "ms": 0}
+            try:
+                res = await agent_tools.execute(db, user, "search_items", {"query": case["text"]}, {})
+                row["hits"] = [r["item"] for r in res.get("results", [])]
+                row["boxes"] = [r["box_label"] for r in res.get("results", [])]
+                row["similarity"] = [r["similarity"] for r in res.get("results", [])]
+            except Exception as e:  # noqa: BLE001
+                row["error"] = f"{type(e).__name__}: {e}"
+            row["ms"] = int((time.monotonic() - t0) * 1000)
+            rows.append(row)
+        return rows
+    finally:
+        db.close()
+
+
+async def run_tools(cases: list[dict], concurrency: int, stamp: str) -> list[dict]:
+    """A fresh copy of the world per case (own user, own session), the full agent loop, then the state."""
+    from ..db import SessionLocal
+    from ..services import agent, trace
+    from . import world
+
+    sem = asyncio.Semaphore(max(1, concurrency))
+
+    async def one(case: dict) -> dict:
+        async with sem:
+            db = SessionLocal()
+            t0 = time.monotonic()
+            row: dict = {"id": case["id"], "trace": None, "result": None, "state": {}, "error": None, "ms": 0}
+            try:
+                user = world.new_user(db, f"eval-tools-{case['id']}-{stamp}", case["lang"])
+                await world.load_world(db, user)
+                with trace.collect() as traces:
+                    try:
+                        row["result"] = await agent.run(db, user, [], case["text"], GPS)
+                    except Exception as e:  # noqa: BLE001
+                        row["error"] = f"{type(e).__name__}: {e}"
+                        db.rollback()
+                if traces:
+                    row["trace"] = traces[0].to_dict()
+                db.expire_all()
+                for spec in case["expect"].get("state", []):
+                    row["state"][spec["box"]] = world.box_state(db, user, spec["box"])
+            finally:
+                db.close()
+            row["ms"] = int((time.monotonic() - t0) * 1000)
+            return row
+
+    return list(await asyncio.gather(*(one(c) for c in cases)))
+
+
+def prepare_database() -> None:
+    """Point the app at the dedicated eval database (creating it if needed) and reset it."""
+    from sqlalchemy import create_engine, text
+
+    from ..config import settings
+
+    url = os.environ.get("BOXMIND_EVAL_DATABASE_URL") or settings.database_url.rsplit("/", 1)[0] + "/boxmind_eval"
+    settings.database_url = url
+    admin_url, dbname = url.rsplit("/", 1)[0] + "/postgres", url.rsplit("/", 1)[1]
+    admin = create_engine(admin_url, isolation_level="AUTOCOMMIT")
+    with admin.connect() as conn:
+        if not conn.execute(text("SELECT 1 FROM pg_database WHERE datname = :n"), {"n": dbname}).scalar():
+            conn.execute(text(f'CREATE DATABASE "{dbname}"'))
+    admin.dispose()
+    from .. import db as app_db
+    from ..services import embeddings
+    from . import world
+
+    assert str(app_db.engine.url).endswith(dbname), "app.db was imported before the eval database was configured"
+    app_db.init_db()
+    world.reset_database(app_db.engine)
+    embeddings.warmup()
+
+
+# ── summary / output ────────────────────────────────────────────────────
 def summarize(set_name: str, cases: list[dict], results: list[dict]) -> dict:
-    fn = score.score_routing if set_name == "routing" else score.score_extraction
+    fn = {"routing": score.score_routing, "extraction": score.score_extraction,
+          "retrieval": score.score_retrieval, "tools": score.score_tools}[set_name]
     summary = fn(cases, results)
     summary["latency_ms_p50"] = _percentile([r["ms"] for r in results], 0.5)
     summary["latency_ms_p95"] = _percentile([r["ms"] for r in results], 0.95)
-    summary["tokens_total"] = sum(r.get("tokens", 0) for r in results)
+    summary["tokens_total"] = sum(r.get("tokens", 0) or (r.get("trace") or {}).get("tokens", 0) for r in results)
     summary["errors"] = sum(1 for r in results if r["error"])
     return summary
 
@@ -91,19 +190,33 @@ def _percentile(values: list[int], q: float) -> int:
     return s[min(len(s) - 1, int(round(q * (len(s) - 1))))]
 
 
-def write_run(set_name: str, provider: str, model: str, cases: list[dict], results: list[dict],
-              summary: dict, stamp: str) -> Path:
+def run_label(set_name: str, results: list[dict]) -> tuple[str, str]:
+    """(provider / model, prompt id) for the RESULTS.md row."""
+    from ..config import settings
+
+    if set_name == "retrieval":
+        return f"embedding / {settings.embedding_model.rsplit('/', 1)[-1]}", "-"
+    from ..services.llm import llm
+
+    provider = f"{settings.llm_provider} / {llm.model_name}"
+    if set_name in INTERPRET_SETS:
+        return provider, "interpret@" + next((r.get("prompt") for r in results if r.get("prompt")), "?")
+    prompts = next(((r.get("trace") or {}).get("prompts") for r in results if r.get("trace")), {}) or {}
+    return provider, "agent@" + prompts.get("agent", "?")
+
+
+def write_run(set_name: str, cases: list[dict], results: list[dict], summary: dict, stamp: str) -> Path:
     RESULTS.mkdir(parents=True, exist_ok=True)
-    prompt = next((r.get("prompt") for r in results if r.get("prompt")), "?")
+    model, prompt = run_label(set_name, results)
     out = RESULTS / f"{set_name}-{stamp}.json"
     payload = {
-        "set": set_name, "stamp": stamp, "provider": provider, "model": model, "prompt": {"interpret": prompt},
+        "set": set_name, "stamp": stamp, "model": model, "prompt": prompt,
         "summary": {k: v for k, v in summary.items() if k != "failures"},
         "failures": summary["failures"],
         "cases": [{"case": c, **r} for c, r in zip(cases, results, strict=True)],
     }
     out.write_text(json.dumps(payload, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
-    row = (f"| {stamp[:10]} | {set_name} | {provider} / {model} | interpret@{prompt} | {summary['n']} | "
+    row = (f"| {stamp[:10]} | {set_name} | {model} | {prompt} | {summary['n']} | "
            f"{score.summary_line(set_name, summary)} | p50 {summary['latency_ms_p50']} ms | "
            f"[json](results/{out.name}) |\n")
     md = EVALS / "RESULTS.md"
@@ -142,22 +255,33 @@ def main(argv: list[str] | None = None) -> int:
             settings.claude_model = args.model
         else:
             settings.llm_model = args.model
+    if any(s not in INTERPRET_SETS for s in args.sets):
+        prepare_database()
     from ..services import llm as llm_module
     llm_module.llm = llm_module._make()
-    provider, model = settings.llm_provider, llm_module.llm.model_name
     stamp = datetime.now(UTC).strftime("%Y-%m-%dT%H%M%SZ")
-    print(f"provider={provider} model={model} concurrency={args.concurrency}")
+    print(f"provider={settings.llm_provider} model={llm_module.llm.model_name} "
+          f"embedding={settings.embedding_model} concurrency={args.concurrency}")
 
+    return asyncio.run(_run_sets(args, stamp))  # one loop for every set: provider locks bind to it once
+
+
+async def _run_sets(args: argparse.Namespace, stamp: str) -> int:
     rc = 0
     for set_name in args.sets:
         cases = load_cases(set_name)
         if args.limit:
             cases = cases[:args.limit]
-        results = asyncio.run(run_cases(cases, args.concurrency))
+        if set_name in INTERPRET_SETS:
+            results = await run_interpret(cases, args.concurrency)
+        elif set_name == "retrieval":
+            results = await run_retrieval(cases, stamp)
+        else:
+            results = await run_tools(cases, args.concurrency, stamp)
         summary = summarize(set_name, cases, results)
         print_summary(set_name, summary)
         if not args.no_write:
-            print(f"   → {write_run(set_name, provider, model, cases, results, summary, stamp).relative_to(ROOT)}")
+            print(f"   → {write_run(set_name, cases, results, summary, stamp).relative_to(ROOT)}")
         rc |= int(summary["errors"] > 0)
     return rc
 
