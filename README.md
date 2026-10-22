@@ -133,7 +133,7 @@ The AI orchestration is deliberately tested without depending on an external mod
 
 | Suite | Count | Coverage |
 |---|---:|---|
-| Backend pytest | 216 | Real PostgreSQL + pgvector, FastAPI, cascades, snapshots, undo, agent loop, malformed arguments, confirmation flow |
+| Backend pytest | 233 | Real PostgreSQL + pgvector, FastAPI, cascades, snapshots, undo, agent loop, malformed arguments, confirmation flow |
 | Frontend Vitest | 47 | State machine, routing, confirmation flow, camera/scan fallback, localization, API client and SSE parsing |
 
 The LLM gateway is replaced by a scripted client that records requests and replays tool calls. Embeddings use deterministic test vectors.
@@ -163,7 +163,9 @@ executed, confirm gate, arguments, resulting box state). Results per prompt vers
 [`evals/RESULTS.md`](evals/RESULTS.md) as a model × prompt-version matrix. Prompts are versioned in
 `backend/app/services/prompts.py` (name, version, content hash, changelog; editing one without a version bump
 fails a test). The first runs found a provider protocol bug, a tool side-effect bug and a prompt rule that
-moved extraction from 0.90 to 0.95.
+moved extraction from 0.90 to 0.95. In production every model-backed request persists its trace (`agent_runs`)
+with thumbs feedback and undo as implicit negative feedback; `evals/export.py` turns failed runs into eval-case
+stubs. Item search is hybrid (pgvector + pg_trgm, reciprocal rank fusion) and the retrieval set measures it.
 
 ```bash
 backend/.venv/bin/python evals/run.py            # both sets, provider and model from backend/.env

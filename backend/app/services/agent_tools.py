@@ -7,9 +7,9 @@ from sqlalchemy import func, select
 from sqlalchemy.orm import Session, selectinload
 
 from ..i18n import tr
-from ..models import Box, Item, User
+from ..models import Box, User
 from ..normalize import normalize_label
-from . import boxes_service, embeddings
+from . import boxes_service, search
 
 
 # ── 解析与去重 ────────────────────────────────
@@ -131,18 +131,7 @@ def _need_box(db, user, ref):
 
 
 async def _search_items(db, user, args, ctx):
-    q = args.get("query", "")
-    qvec = (await embeddings.embed([q]))[0]
-    rows = db.execute(
-        select(Item.name, Item.qty_text, Box.label, Box.name, Item.embedding.cosine_distance(qvec).label("d"))
-        .join(Box, Item.box_id == Box.id)
-        .where(Box.user_id == user.id, Item.embedding.is_not(None))
-        .order_by("d").limit(8)
-    ).all()
-    return {"ok": True, "results": [
-        {"item": r.name, "qty": r.qty_text, "box_label": r.label, "box_name": r[3], "similarity": round(1 - r.d, 2)}
-        for r in rows
-    ]}
+    return {"ok": True, "results": await search.search_items(db, user, args.get("query", ""))}
 
 
 async def _get_box(db, user, args, ctx):

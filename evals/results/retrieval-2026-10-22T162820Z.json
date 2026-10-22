@@ -1,0 +1,2622 @@
+{
+ "set": "retrieval",
+ "stamp": "2026-10-22T162820Z",
+ "model": "embedding / multilingual-e5-large",
+ "prompt": "search hybrid",
+ "summary": {
+  "n": 50,
+  "recall@1": 0.2667,
+  "recall@3": 0.3263,
+  "recall@8": 0.4437,
+  "mrr": 0.4504,
+  "by_lang": {
+   "en": {
+    "n": 25,
+    "recall@8": 0.5873,
+    "mrr": 0.5424
+   },
+   "zh": {
+    "n": 25,
+    "recall@8": 0.3,
+    "mrr": 0.3583
+   }
+  },
+  "by_tag": {
+   "category": {
+    "n": 10,
+    "recall@8": 0.4517,
+    "mrr": 0.7833
+   },
+   "cross": {
+    "n": 24,
+    "recall@8": 0.1667,
+    "mrr": 0.0285
+   },
+   "exact": {
+    "n": 9,
+    "recall@8": 1.0,
+    "mrr": 1.0
+   },
+   "synonym": {
+    "n": 7,
+    "recall@8": 0.6667,
+    "mrr": 0.7143
+   }
+  },
+  "latency_ms_p50": 33,
+  "latency_ms_p95": 35,
+  "tokens_total": 0,
+  "errors": 0
+ },
+ "failures": [
+  {
+   "id": "q02",
+   "text": "雪地靴",
+   "problems": [
+    "missing from top 8: snow boots; got 雪杖, 滑雪服, 羽绒服, 保温杯, 圣诞树裙, 滑雪板, 圣诞装饰, 彩色铅笔"
+   ]
+  },
+  {
+   "id": "q04",
+   "text": "电钻",
+   "problems": [
+    "missing from top 8: drill; got 钳子, 跳绳, 头灯, 拼图, 鼠标, 旧手机, 水壶, 野餐垫"
+   ]
+  },
+  {
+   "id": "q05",
+   "text": "headlamp",
+   "problems": [
+    "missing from top 8: 头灯; got lantern, sleeping bag, umbrella, Christmas lights, tent, hammer, projector, HDMI cable"
+   ]
+  },
+  {
+   "id": "q06",
+   "text": "down jacket",
+   "problems": [
+    "missing from top 8: 羽绒服; got sleeping bag, winter scarves, snow boots, ski goggles, umbrella, wool hat, screwdriver set, tape measure"
+   ]
+  },
+  {
+   "id": "q07",
+   "text": "warm clothes",
+   "problems": [
+    "missing from top 8: 羽绒服; got sleeping bag, winter scarves, snow boots, umbrella, wool hat, ski goggles, tent, lantern"
+   ]
+  },
+  {
+   "id": "q08",
+   "text": "camping gear",
+   "problems": [
+    "missing from top 8: lantern; got sleeping bag, camping stove, ski goggles, tent, tape measure, snow boots, charger cables, screwdriver set"
+   ]
+  },
+  {
+   "id": "q11",
+   "text": "ink cartridges",
+   "problems": [
+    "missing from top 8: 墨盒; got charger cables, AA batteries, ski goggles, AAA batteries, wine glasses, winter scarves, snow boots, screwdriver set"
+   ]
+  },
+  {
+   "id": "q12",
+   "text": "keyboard",
+   "problems": [
+    "missing from top 8: 备用键盘; got lantern, drill, HDMI cable, projector, hammer, sleeping bag, umbrella, tape measure"
+   ]
+  },
+  {
+   "id": "q13",
+   "text": "mouse",
+   "problems": [
+    "missing from top 8: 鼠标; got drill, tent, projector, lantern, sleeping bag, umbrella, hammer, screws"
+   ]
+  },
+  {
+   "id": "q14",
+   "text": "kettle",
+   "problems": [
+    "missing from top 8: 水壶; got umbrella, tent, lantern, hammer, sleeping bag, decanter, projector, wine glasses"
+   ]
+  },
+  {
+   "id": "q15",
+   "text": "mugs",
+   "problems": [
+    "missing from top 8: 马克杯; got wine glasses, umbrella, ski goggles, 茶具, sleeping bag, screws, decanter, winter scarves"
+   ]
+  },
+  {
+   "id": "q16",
+   "text": "ski equipment",
+   "problems": [
+    "missing from top 8: 滑雪板, 雪杖; got ski goggles, tent, snow boots, sleeping bag, camping stove, winter scarves, HDMI cable, screwdriver set"
+   ]
+  },
+  {
+   "id": "q21",
+   "text": "tools",
+   "problems": [
+    "missing from top 8: screwdriver set, 钳子; got tent, drill, hammer, screws, tape measure, lantern, umbrella, sleeping bag"
+   ]
+  },
+  {
+   "id": "q23",
+   "text": "toys for kids",
+   "problems": [
+    "missing from top 8: 拼图, 乐高; got kids' books, ski goggles, screwdriver set, charger cables, winter scarves, Christmas lights, camping stove, sleeping bag"
+   ]
+  },
+  {
+   "id": "q26",
+   "text": "帐篷",
+   "problems": [
+    "missing from top 8: tent; got 帐篷地钉, 羽绒服, 跳绳, 相机, 滑雪服, 头灯, 旧相册, 钳子"
+   ]
+  },
+  {
+   "id": "q28",
+   "text": "红酒杯",
+   "problems": [
+    "missing from top 8: wine glasses; got 保温杯, 马克杯, 水壶, 茶具, 彩色铅笔, 画笔, 野餐垫, 防潮垫"
+   ]
+  },
+  {
+   "id": "q33",
+   "text": "锤子",
+   "problems": [
+    "missing from top 8: hammer; got 钳子, 砧板, 雪杖, 跳绳, 野餐垫, 手套, 拼图, 乐高"
+   ]
+  },
+  {
+   "id": "q34",
+   "text": "卷尺",
+   "problems": [
+    "missing from top 8: tape measure; got 砧板, 钳子, 桌布, 画笔, 防潮垫, 雪杖, 野餐垫, 幻灯片"
+   ]
+  },
+  {
+   "id": "q35",
+   "text": "露营用品",
+   "problems": [
+    "missing from top 8: tent, sleeping bag, camping stove, lantern, 折叠椅; got 野餐垫, 防潮垫, 羽绒服, 圣诞装饰, 滑雪服, 帐篷地钉, 彩色铅笔, 滑雪板"
+   ]
+  },
+  {
+   "id": "q36",
+   "text": "保暖的衣服",
+   "problems": [
+    "missing from top 8: winter scarves, wool hat; got 保温杯, 羽绒服, 滑雪服, 防潮垫, 圣诞树裙, 圣诞装饰, 野餐垫, 手套"
+   ]
+  },
+  {
+   "id": "q37",
+   "text": "滑雪装备",
+   "problems": [
+    "missing from top 8: 雪杖, ski goggles, snow boots; got 滑雪服, 滑雪板, 野餐垫, 圣诞装饰, 羽绒服, 帐篷地钉, 圣诞树裙, 彩色铅笔"
+   ]
+  },
+  {
+   "id": "q38",
+   "text": "圣诞节的东西",
+   "problems": [
+    "missing from top 8: Christmas lights, tree stand; got 圣诞装饰, 圣诞树裙, 羽绒服, 礼品包装纸, 滑雪服, 彩色铅笔, 保温杯, 画笔"
+   ]
+  },
+  {
+   "id": "q39",
+   "text": "投影仪",
+   "problems": [
+    "missing from top 8: projector; got 打印机, 相机, 幻灯片, 彩色铅笔, 画笔, 鼠标, 桌布, 跳绳"
+   ]
+  },
+  {
+   "id": "q40",
+   "text": "电池",
+   "problems": [
+    "missing from top 8: AA batteries, AAA batteries; got 相机, 打印机, 旧手机, 跳绳, 鼠标, 画笔, 彩色铅笔, 滑雪板"
+   ]
+  },
+  {
+   "id": "q41",
+   "text": "围巾",
+   "problems": [
+    "missing from top 8: winter scarves; got 羽绒服, 手套, 跳绳, 桌布, 画笔, 礼品包装纸, 头灯, 水壶"
+   ]
+  },
+  {
+   "id": "q42",
+   "text": "手机充电线",
+   "problems": [
+    "missing from top 8: charger cables; got 旧手机, 手套, 圣诞装饰, 鼠标, 彩色铅笔, 跳绳, 圣诞树裙, 帐篷地钉"
+   ]
+  },
+  {
+   "id": "q43",
+   "text": "孩子的玩具",
+   "problems": [
+    "missing from top 8: 拼图; got 圣诞装饰, 彩色铅笔, 乐高, 羽绒服, 野餐垫, 滑雪服, 旧手机, 礼品包装纸"
+   ]
+  },
+  {
+   "id": "q44",
+   "text": "灯",
+   "problems": [
+    "missing from top 8: lantern; got 头灯, 相机, 烛台, 画笔, 烤盘, 打印机, 水壶, 幻灯片"
+   ]
+  },
+  {
+   "id": "q45",
+   "text": "厨房用品",
+   "problems": [
+    "missing from top 8: 水壶, 马克杯, 砧板; got 茶具, 野餐垫, 圣诞装饰, 打印机, 画笔, 彩色铅笔, 羽绒服, 保温杯"
+   ]
+  },
+  {
+   "id": "q46",
+   "text": "雨伞",
+   "problems": [
+    "missing from top 8: umbrella; got 羽绒服, 手套, 水壶, 头灯, 滑雪服, 跳绳, 滑雪板, 画笔"
+   ]
+  },
+  {
+   "id": "q47",
+   "text": "螺丝刀",
+   "problems": [
+    "missing from top 8: screwdriver set; got 鼠标, 钳子, 画笔, 羽绒服, 彩色铅笔, 滑雪板, 相机, 砧板"
+   ]
+  },
+  {
+   "id": "q48",
+   "text": "tripod",
+   "problems": [
+    "missing from top 8: 三脚架; got tree stand, sleeping bag, tent, lantern, ski goggles, tape measure, umbrella, snow boots"
+   ]
+  },
+  {
+   "id": "q49",
+   "text": "毛线帽",
+   "problems": [
+    "missing from top 8: wool hat; got 羽绒服, 保温杯, 水壶, 圣诞树裙, 头灯, 马克杯, 滑雪服, 帐篷地钉"
+   ]
+  }
+ ],
+ "cases": [
+  {
+   "case": {
+    "id": "q01",
+    "lang": "en",
+    "tag": "exact",
+    "text": "snow boots",
+    "expect": {
+     "items": [
+      "snow boots"
+     ]
+    }
+   },
+   "id": "q01",
+   "hits": [
+    "snow boots",
+    "kids' books",
+    "ski goggles",
+    "winter scarves",
+    "sleeping bag",
+    "umbrella",
+    "screws",
+    "wool hat"
+   ],
+   "boxes": [
+    "4",
+    "9",
+    "4",
+    "red",
+    "1",
+    "red",
+    "3",
+    "red"
+   ],
+   "error": null,
+   "ms": 40,
+   "scores": [
+    0.0328,
+    0.0298,
+    0.0161,
+    0.0159,
+    0.0156,
+    0.0154,
+    0.0152,
+    0.0149
+   ]
+  },
+  {
+   "case": {
+    "id": "q02",
+    "lang": "zh",
+    "tag": "cross",
+    "text": "雪地靴",
+    "expect": {
+     "items": [
+      "snow boots"
+     ]
+    }
+   },
+   "id": "q02",
+   "hits": [
+    "雪杖",
+    "滑雪服",
+    "羽绒服",
+    "保温杯",
+    "圣诞树裙",
+    "滑雪板",
+    "圣诞装饰",
+    "彩色铅笔"
+   ],
+   "boxes": [
+    "4",
+    "4",
+    "1",
+    "1",
+    "12",
+    "4",
+    "12",
+    "9"
+   ],
+   "error": null,
+   "ms": 32,
+   "scores": [
+    0.0328,
+    0.0161,
+    0.0159,
+    0.0156,
+    0.0154,
+    0.0152,
+    0.0149,
+    0.0147
+   ]
+  },
+  {
+   "case": {
+    "id": "q03",
+    "lang": "en",
+    "tag": "exact",
+    "text": "where is the drill",
+    "expect": {
+     "items": [
+      "drill"
+     ]
+    }
+   },
+   "id": "q03",
+   "hits": [
+    "drill",
+    "screwdriver set",
+    "hammer",
+    "ski goggles",
+    "tree stand",
+    "tape measure",
+    "HDMI cable",
+    "camping stove"
+   ],
+   "boxes": [
+    "3",
+    "3",
+    "3",
+    "4",
+    "12",
+    "3",
+    "5",
+    "7"
+   ],
+   "error": null,
+   "ms": 34,
+   "scores": [
+    0.0328,
+    0.0161,
+    0.0159,
+    0.0156,
+    0.0154,
+    0.0152,
+    0.0149,
+    0.0147
+   ]
+  },
+  {
+   "case": {
+    "id": "q04",
+    "lang": "zh",
+    "tag": "cross",
+    "text": "电钻",
+    "expect": {
+     "items": [
+      "drill"
+     ]
+    }
+   },
+   "id": "q04",
+   "hits": [
+    "钳子",
+    "跳绳",
+    "头灯",
+    "拼图",
+    "鼠标",
+    "旧手机",
+    "水壶",
+    "野餐垫"
+   ],
+   "boxes": [
+    "3",
+    "9",
+    "1",
+    "9",
+    "5",
+    "A2",
+    "6",
+    "7"
+   ],
+   "error": null,
+   "ms": 34,
+   "scores": [
+    0.0164,
+    0.0161,
+    0.0159,
+    0.0156,
+    0.0154,
+    0.0152,
+    0.0149,
+    0.0147
+   ]
+  },
+  {
+   "case": {
+    "id": "q05",
+    "lang": "en",
+    "tag": "cross",
+    "text": "headlamp",
+    "expect": {
+     "items": [
+      "头灯"
+     ]
+    }
+   },
+   "id": "q05",
+   "hits": [
+    "lantern",
+    "sleeping bag",
+    "umbrella",
+    "Christmas lights",
+    "tent",
+    "hammer",
+    "projector",
+    "HDMI cable"
+   ],
+   "boxes": [
+    "7",
+    "1",
+    "red",
+    "12",
+    "1",
+    "3",
+    "B1",
+    "5"
+   ],
+   "error": null,
+   "ms": 33,
+   "scores": [
+    0.0164,
+    0.0161,
+    0.0159,
+    0.0156,
+    0.0154,
+    0.0152,
+    0.0149,
+    0.0147
+   ]
+  },
+  {
+   "case": {
+    "id": "q06",
+    "lang": "en",
+    "tag": "cross",
+    "text": "down jacket",
+    "expect": {
+     "items": [
+      "羽绒服"
+     ]
+    }
+   },
+   "id": "q06",
+   "hits": [
+    "sleeping bag",
+    "winter scarves",
+    "snow boots",
+    "ski goggles",
+    "umbrella",
+    "wool hat",
+    "screwdriver set",
+    "tape measure"
+   ],
+   "boxes": [
+    "1",
+    "red",
+    "4",
+    "4",
+    "red",
+    "red",
+    "3",
+    "3"
+   ],
+   "error": null,
+   "ms": 34,
+   "scores": [
+    0.0164,
+    0.0161,
+    0.0159,
+    0.0156,
+    0.0154,
+    0.0152,
+    0.0149,
+    0.0147
+   ]
+  },
+  {
+   "case": {
+    "id": "q07",
+    "lang": "en",
+    "tag": "synonym",
+    "text": "warm clothes",
+    "expect": {
+     "items": [
+      "羽绒服",
+      "winter scarves",
+      "wool hat"
+     ]
+    }
+   },
+   "id": "q07",
+   "hits": [
+    "sleeping bag",
+    "winter scarves",
+    "snow boots",
+    "umbrella",
+    "wool hat",
+    "ski goggles",
+    "tent",
+    "lantern"
+   ],
+   "boxes": [
+    "1",
+    "red",
+    "4",
+    "red",
+    "red",
+    "4",
+    "1",
+    "7"
+   ],
+   "error": null,
+   "ms": 33,
+   "scores": [
+    0.0164,
+    0.0161,
+    0.0159,
+    0.0156,
+    0.0154,
+    0.0152,
+    0.0149,
+    0.0147
+   ]
+  },
+  {
+   "case": {
+    "id": "q08",
+    "lang": "en",
+    "tag": "category",
+    "text": "camping gear",
+    "expect": {
+     "items": [
+      "tent",
+      "sleeping bag",
+      "camping stove",
+      "lantern"
+     ]
+    }
+   },
+   "id": "q08",
+   "hits": [
+    "sleeping bag",
+    "camping stove",
+    "ski goggles",
+    "tent",
+    "tape measure",
+    "snow boots",
+    "charger cables",
+    "screwdriver set"
+   ],
+   "boxes": [
+    "1",
+    "7",
+    "4",
+    "1",
+    "3",
+    "4",
+    "A2",
+    "3"
+   ],
+   "error": null,
+   "ms": 33,
+   "scores": [
+    0.0325,
+    0.0325,
+    0.0159,
+    0.0156,
+    0.0154,
+    0.0152,
+    0.0149,
+    0.0147
+   ]
+  },
+  {
+   "case": {
+    "id": "q09",
+    "lang": "en",
+    "tag": "exact",
+    "text": "batteries",
+    "expect": {
+     "items": [
+      "AA batteries",
+      "AAA batteries"
+     ]
+    }
+   },
+   "id": "q09",
+   "hits": [
+    "AA batteries",
+    "AAA batteries",
+    "snow boots",
+    "screws",
+    "charger cables",
+    "lantern",
+    "umbrella",
+    "Christmas lights"
+   ],
+   "boxes": [
+    "2",
+    "A2",
+    "4",
+    "3",
+    "A2",
+    "7",
+    "red",
+    "12"
+   ],
+   "error": null,
+   "ms": 32,
+   "scores": [
+    0.0328,
+    0.0323,
+    0.0159,
+    0.0156,
+    0.0154,
+    0.0152,
+    0.0149,
+    0.0147
+   ]
+  },
+  {
+   "case": {
+    "id": "q10",
+    "lang": "en",
+    "tag": "cross",
+    "text": "printer",
+    "expect": {
+     "items": [
+      "打印机"
+     ]
+    }
+   },
+   "id": "q10",
+   "hits": [
+    "projector",
+    "lantern",
+    "decanter",
+    "打印机",
+    "winter scarves",
+    "drill",
+    "tape measure",
+    "tent"
+   ],
+   "boxes": [
+    "B1",
+    "7",
+    "2",
+    "5",
+    "red",
+    "3",
+    "3",
+    "1"
+   ],
+   "error": null,
+   "ms": 30,
+   "scores": [
+    0.0318,
+    0.0313,
+    0.0307,
+    0.0164,
+    0.0161,
+    0.0159,
+    0.0156,
+    0.0152
+   ]
+  },
+  {
+   "case": {
+    "id": "q11",
+    "lang": "en",
+    "tag": "cross",
+    "text": "ink cartridges",
+    "expect": {
+     "items": [
+      "墨盒"
+     ]
+    }
+   },
+   "id": "q11",
+   "hits": [
+    "charger cables",
+    "AA batteries",
+    "ski goggles",
+    "AAA batteries",
+    "wine glasses",
+    "winter scarves",
+    "snow boots",
+    "screwdriver set"
+   ],
+   "boxes": [
+    "A2",
+    "2",
+    "4",
+    "A2",
+    "2",
+    "red",
+    "4",
+    "3"
+   ],
+   "error": null,
+   "ms": 34,
+   "scores": [
+    0.0323,
+    0.0164,
+    0.0161,
+    0.0156,
+    0.0154,
+    0.0152,
+    0.0149,
+    0.0147
+   ]
+  },
+  {
+   "case": {
+    "id": "q12",
+    "lang": "en",
+    "tag": "cross",
+    "text": "keyboard",
+    "expect": {
+     "items": [
+      "备用键盘"
+     ]
+    }
+   },
+   "id": "q12",
+   "hits": [
+    "lantern",
+    "drill",
+    "HDMI cable",
+    "projector",
+    "hammer",
+    "sleeping bag",
+    "umbrella",
+    "tape measure"
+   ],
+   "boxes": [
+    "7",
+    "3",
+    "5",
+    "B1",
+    "3",
+    "1",
+    "red",
+    "3"
+   ],
+   "error": null,
+   "ms": 33,
+   "scores": [
+    0.0164,
+    0.0161,
+    0.0159,
+    0.0156,
+    0.0154,
+    0.0152,
+    0.0149,
+    0.0147
+   ]
+  },
+  {
+   "case": {
+    "id": "q13",
+    "lang": "en",
+    "tag": "cross",
+    "text": "mouse",
+    "expect": {
+     "items": [
+      "鼠标"
+     ]
+    }
+   },
+   "id": "q13",
+   "hits": [
+    "drill",
+    "tent",
+    "projector",
+    "lantern",
+    "sleeping bag",
+    "umbrella",
+    "hammer",
+    "screws"
+   ],
+   "boxes": [
+    "3",
+    "1",
+    "B1",
+    "7",
+    "1",
+    "red",
+    "3",
+    "3"
+   ],
+   "error": null,
+   "ms": 34,
+   "scores": [
+    0.0164,
+    0.0161,
+    0.0159,
+    0.0156,
+    0.0154,
+    0.0152,
+    0.0149,
+    0.0147
+   ]
+  },
+  {
+   "case": {
+    "id": "q14",
+    "lang": "en",
+    "tag": "cross",
+    "text": "kettle",
+    "expect": {
+     "items": [
+      "水壶"
+     ]
+    }
+   },
+   "id": "q14",
+   "hits": [
+    "umbrella",
+    "tent",
+    "lantern",
+    "hammer",
+    "sleeping bag",
+    "decanter",
+    "projector",
+    "wine glasses"
+   ],
+   "boxes": [
+    "red",
+    "1",
+    "7",
+    "3",
+    "1",
+    "2",
+    "B1",
+    "2"
+   ],
+   "error": null,
+   "ms": 34,
+   "scores": [
+    0.0164,
+    0.0161,
+    0.0159,
+    0.0156,
+    0.0154,
+    0.0152,
+    0.0149,
+    0.0147
+   ]
+  },
+  {
+   "case": {
+    "id": "q15",
+    "lang": "en",
+    "tag": "cross",
+    "text": "mugs",
+    "expect": {
+     "items": [
+      "马克杯"
+     ]
+    }
+   },
+   "id": "q15",
+   "hits": [
+    "wine glasses",
+    "umbrella",
+    "ski goggles",
+    "茶具",
+    "sleeping bag",
+    "screws",
+    "decanter",
+    "winter scarves"
+   ],
+   "boxes": [
+    "2",
+    "red",
+    "4",
+    "6",
+    "1",
+    "3",
+    "2",
+    "red"
+   ],
+   "error": null,
+   "ms": 32,
+   "scores": [
+    0.0164,
+    0.0161,
+    0.0159,
+    0.0156,
+    0.0154,
+    0.0152,
+    0.0149,
+    0.0147
+   ]
+  },
+  {
+   "case": {
+    "id": "q16",
+    "lang": "en",
+    "tag": "category",
+    "text": "ski equipment",
+    "expect": {
+     "items": [
+      "滑雪板",
+      "雪杖",
+      "ski goggles"
+     ]
+    }
+   },
+   "id": "q16",
+   "hits": [
+    "ski goggles",
+    "tent",
+    "snow boots",
+    "sleeping bag",
+    "camping stove",
+    "winter scarves",
+    "HDMI cable",
+    "screwdriver set"
+   ],
+   "boxes": [
+    "4",
+    "1",
+    "4",
+    "1",
+    "7",
+    "red",
+    "5",
+    "3"
+   ],
+   "error": null,
+   "ms": 28,
+   "scores": [
+    0.0328,
+    0.0293,
+    0.0161,
+    0.0159,
+    0.0156,
+    0.0154,
+    0.0152,
+    0.0149
+   ]
+  },
+  {
+   "case": {
+    "id": "q17",
+    "lang": "en",
+    "tag": "category",
+    "text": "christmas decorations",
+    "expect": {
+     "items": [
+      "Christmas lights",
+      "tree stand",
+      "圣诞装饰"
+     ]
+    }
+   },
+   "id": "q17",
+   "hits": [
+    "Christmas lights",
+    "圣诞装饰",
+    "decanter",
+    "charger cables",
+    "winter scarves",
+    "wine glasses",
+    "tree stand",
+    "kids' books"
+   ],
+   "boxes": [
+    "12",
+    "12",
+    "2",
+    "A2",
+    "red",
+    "2",
+    "12",
+    "9"
+   ],
+   "error": null,
+   "ms": 33,
+   "scores": [
+    0.0328,
+    0.0161,
+    0.0161,
+    0.0159,
+    0.0156,
+    0.0154,
+    0.0152,
+    0.0149
+   ]
+  },
+  {
+   "case": {
+    "id": "q18",
+    "lang": "en",
+    "tag": "synonym",
+    "text": "old photos",
+    "expect": {
+     "items": [
+      "旧相册"
+     ]
+    }
+   },
+   "id": "q18",
+   "hits": [
+    "旧相册",
+    "wine glasses",
+    "sleeping bag",
+    "snow boots",
+    "ski goggles",
+    "kids' books",
+    "tape measure",
+    "Christmas lights"
+   ],
+   "boxes": [
+    "B1",
+    "2",
+    "1",
+    "4",
+    "4",
+    "9",
+    "3",
+    "12"
+   ],
+   "error": null,
+   "ms": 33,
+   "scores": [
+    0.0164,
+    0.0161,
+    0.0159,
+    0.0156,
+    0.0154,
+    0.0152,
+    0.0149,
+    0.0147
+   ]
+  },
+  {
+   "case": {
+    "id": "q19",
+    "lang": "en",
+    "tag": "cross",
+    "text": "camera",
+    "expect": {
+     "items": [
+      "相机"
+     ]
+    }
+   },
+   "id": "q19",
+   "hits": [
+    "HDMI cable",
+    "charger cables",
+    "umbrella",
+    "camping stove",
+    "projector",
+    "相机",
+    "lantern",
+    "hammer"
+   ],
+   "boxes": [
+    "5",
+    "A2",
+    "red",
+    "7",
+    "B1",
+    "B1",
+    "7",
+    "3"
+   ],
+   "error": null,
+   "ms": 33,
+   "scores": [
+    0.0308,
+    0.0292,
+    0.0164,
+    0.0164,
+    0.0161,
+    0.0159,
+    0.0156,
+    0.0154
+   ]
+  },
+  {
+   "case": {
+    "id": "q20",
+    "lang": "en",
+    "tag": "cross",
+    "text": "gloves",
+    "expect": {
+     "items": [
+      "手套"
+     ]
+    }
+   },
+   "id": "q20",
+   "hits": [
+    "winter scarves",
+    "ski goggles",
+    "wine glasses",
+    "umbrella",
+    "screws",
+    "snow boots",
+    "手套",
+    "sleeping bag"
+   ],
+   "boxes": [
+    "red",
+    "4",
+    "2",
+    "red",
+    "3",
+    "4",
+    "red",
+    "1"
+   ],
+   "error": null,
+   "ms": 30,
+   "scores": [
+    0.0323,
+    0.032,
+    0.0315,
+    0.0161,
+    0.0156,
+    0.0154,
+    0.0149,
+    0.0147
+   ]
+  },
+  {
+   "case": {
+    "id": "q21",
+    "lang": "en",
+    "tag": "category",
+    "text": "tools",
+    "expect": {
+     "items": [
+      "drill",
+      "hammer",
+      "screwdriver set",
+      "tape measure",
+      "钳子"
+     ]
+    }
+   },
+   "id": "q21",
+   "hits": [
+    "tent",
+    "drill",
+    "hammer",
+    "screws",
+    "tape measure",
+    "lantern",
+    "umbrella",
+    "sleeping bag"
+   ],
+   "boxes": [
+    "1",
+    "3",
+    "3",
+    "3",
+    "3",
+    "7",
+    "red",
+    "1"
+   ],
+   "error": null,
+   "ms": 34,
+   "scores": [
+    0.0309,
+    0.0164,
+    0.0161,
+    0.0159,
+    0.0156,
+    0.0154,
+    0.0152,
+    0.0149
+   ]
+  },
+  {
+   "case": {
+    "id": "q22",
+    "lang": "en",
+    "tag": "synonym",
+    "text": "phone charger",
+    "expect": {
+     "items": [
+      "charger cables"
+     ]
+    }
+   },
+   "id": "q22",
+   "hits": [
+    "charger cables",
+    "AA batteries",
+    "AAA batteries",
+    "HDMI cable",
+    "Christmas lights",
+    "projector",
+    "sleeping bag",
+    "ski goggles"
+   ],
+   "boxes": [
+    "A2",
+    "2",
+    "A2",
+    "5",
+    "12",
+    "B1",
+    "1",
+    "4"
+   ],
+   "error": null,
+   "ms": 33,
+   "scores": [
+    0.0328,
+    0.0161,
+    0.0159,
+    0.0156,
+    0.0154,
+    0.0152,
+    0.0149,
+    0.0147
+   ]
+  },
+  {
+   "case": {
+    "id": "q23",
+    "lang": "en",
+    "tag": "category",
+    "text": "toys for kids",
+    "expect": {
+     "items": [
+      "拼图",
+      "乐高",
+      "kids' books"
+     ]
+    }
+   },
+   "id": "q23",
+   "hits": [
+    "kids' books",
+    "ski goggles",
+    "screwdriver set",
+    "charger cables",
+    "winter scarves",
+    "Christmas lights",
+    "camping stove",
+    "sleeping bag"
+   ],
+   "boxes": [
+    "9",
+    "4",
+    "3",
+    "A2",
+    "red",
+    "12",
+    "7",
+    "1"
+   ],
+   "error": null,
+   "ms": 32,
+   "scores": [
+    0.0328,
+    0.0161,
+    0.0159,
+    0.0156,
+    0.0154,
+    0.0152,
+    0.0149,
+    0.0147
+   ]
+  },
+  {
+   "case": {
+    "id": "q24",
+    "lang": "en",
+    "tag": "exact",
+    "text": "umbrella",
+    "expect": {
+     "items": [
+      "umbrella"
+     ]
+    }
+   },
+   "id": "q24",
+   "hits": [
+    "umbrella",
+    "lantern",
+    "tent",
+    "hammer",
+    "sleeping bag",
+    "projector",
+    "snow boots",
+    "ski goggles"
+   ],
+   "boxes": [
+    "red",
+    "7",
+    "1",
+    "3",
+    "1",
+    "B1",
+    "4",
+    "4"
+   ],
+   "error": null,
+   "ms": 35,
+   "scores": [
+    0.0328,
+    0.0161,
+    0.0159,
+    0.0156,
+    0.0154,
+    0.0152,
+    0.0149,
+    0.0147
+   ]
+  },
+  {
+   "case": {
+    "id": "q25",
+    "lang": "en",
+    "tag": "synonym",
+    "text": "wine",
+    "expect": {
+     "items": [
+      "wine glasses",
+      "decanter"
+     ]
+    }
+   },
+   "id": "q25",
+   "hits": [
+    "wine glasses",
+    "winter scarves",
+    "tent",
+    "lantern",
+    "sleeping bag",
+    "umbrella",
+    "decanter",
+    "hammer"
+   ],
+   "boxes": [
+    "2",
+    "red",
+    "1",
+    "7",
+    "1",
+    "red",
+    "2",
+    "3"
+   ],
+   "error": null,
+   "ms": 32,
+   "scores": [
+    0.0328,
+    0.0306,
+    0.0161,
+    0.0159,
+    0.0156,
+    0.0154,
+    0.0152,
+    0.0149
+   ]
+  },
+  {
+   "case": {
+    "id": "q26",
+    "lang": "zh",
+    "tag": "cross",
+    "text": "帐篷",
+    "expect": {
+     "items": [
+      "tent"
+     ]
+    }
+   },
+   "id": "q26",
+   "hits": [
+    "帐篷地钉",
+    "羽绒服",
+    "跳绳",
+    "相机",
+    "滑雪服",
+    "头灯",
+    "旧相册",
+    "钳子"
+   ],
+   "boxes": [
+    "7",
+    "1",
+    "9",
+    "B1",
+    "4",
+    "1",
+    "B1",
+    "3"
+   ],
+   "error": null,
+   "ms": 34,
+   "scores": [
+    0.0328,
+    0.0161,
+    0.0159,
+    0.0156,
+    0.0154,
+    0.0152,
+    0.0149,
+    0.0147
+   ]
+  },
+  {
+   "case": {
+    "id": "q27",
+    "lang": "zh",
+    "tag": "cross",
+    "text": "睡袋",
+    "expect": {
+     "items": [
+      "sleeping bag"
+     ]
+    }
+   },
+   "id": "q27",
+   "hits": [
+    "手套",
+    "墨盒",
+    "桌布",
+    "羽绒服",
+    "茶具",
+    "礼品包装纸",
+    "跳绳",
+    "sleeping bag"
+   ],
+   "boxes": [
+    "red",
+    "5",
+    "2",
+    "1",
+    "6",
+    "12",
+    "9",
+    "1"
+   ],
+   "error": null,
+   "ms": 33,
+   "scores": [
+    0.0164,
+    0.0161,
+    0.0159,
+    0.0156,
+    0.0154,
+    0.0152,
+    0.0149,
+    0.0147
+   ]
+  },
+  {
+   "case": {
+    "id": "q28",
+    "lang": "zh",
+    "tag": "cross",
+    "text": "红酒杯",
+    "expect": {
+     "items": [
+      "wine glasses"
+     ]
+    }
+   },
+   "id": "q28",
+   "hits": [
+    "保温杯",
+    "马克杯",
+    "水壶",
+    "茶具",
+    "彩色铅笔",
+    "画笔",
+    "野餐垫",
+    "防潮垫"
+   ],
+   "boxes": [
+    "1",
+    "6",
+    "6",
+    "6",
+    "9",
+    "9",
+    "7",
+    "7"
+   ],
+   "error": null,
+   "ms": 33,
+   "scores": [
+    0.0164,
+    0.0161,
+    0.0159,
+    0.0156,
+    0.0154,
+    0.0152,
+    0.0149,
+    0.0147
+   ]
+  },
+  {
+   "case": {
+    "id": "q29",
+    "lang": "zh",
+    "tag": "exact",
+    "text": "头灯",
+    "expect": {
+     "items": [
+      "头灯"
+     ]
+    }
+   },
+   "id": "q29",
+   "hits": [
+    "头灯",
+    "幻灯片",
+    "画笔",
+    "烤盘",
+    "手套",
+    "跳绳",
+    "鼠标",
+    "水壶"
+   ],
+   "boxes": [
+    "1",
+    "B1",
+    "9",
+    "6",
+    "red",
+    "9",
+    "5",
+    "6"
+   ],
+   "error": null,
+   "ms": 33,
+   "scores": [
+    0.0328,
+    0.0161,
+    0.0159,
+    0.0156,
+    0.0154,
+    0.0152,
+    0.0149,
+    0.0147
+   ]
+  },
+  {
+   "case": {
+    "id": "q30",
+    "lang": "zh",
+    "tag": "exact",
+    "text": "打印机",
+    "expect": {
+     "items": [
+      "打印机"
+     ]
+    }
+   },
+   "id": "q30",
+   "hits": [
+    "打印机",
+    "相机",
+    "画笔",
+    "鼠标",
+    "桌布",
+    "旧手机",
+    "幻灯片",
+    "烤盘"
+   ],
+   "boxes": [
+    "5",
+    "B1",
+    "9",
+    "5",
+    "2",
+    "A2",
+    "B1",
+    "6"
+   ],
+   "error": null,
+   "ms": 34,
+   "scores": [
+    0.0328,
+    0.0161,
+    0.0159,
+    0.0156,
+    0.0154,
+    0.0152,
+    0.0149,
+    0.0147
+   ]
+  },
+  {
+   "case": {
+    "id": "q31",
+    "lang": "zh",
+    "tag": "exact",
+    "text": "鼠标在哪",
+    "expect": {
+     "items": [
+      "鼠标"
+     ]
+    }
+   },
+   "id": "q31",
+   "hits": [
+    "鼠标",
+    "备用键盘",
+    "乐高",
+    "旧手机",
+    "野餐垫",
+    "圣诞装饰",
+    "防潮垫",
+    "钳子"
+   ],
+   "boxes": [
+    "5",
+    "5",
+    "9",
+    "A2",
+    "7",
+    "12",
+    "7",
+    "3"
+   ],
+   "error": null,
+   "ms": 34,
+   "scores": [
+    0.0328,
+    0.0161,
+    0.0159,
+    0.0156,
+    0.0154,
+    0.0152,
+    0.0149,
+    0.0147
+   ]
+  },
+  {
+   "case": {
+    "id": "q32",
+    "lang": "zh",
+    "tag": "exact",
+    "text": "钳子",
+    "expect": {
+     "items": [
+      "钳子"
+     ]
+    }
+   },
+   "id": "q32",
+   "hits": [
+    "钳子",
+    "雪杖",
+    "砧板",
+    "防潮垫",
+    "滑雪板",
+    "鼠标",
+    "手套",
+    "跳绳"
+   ],
+   "boxes": [
+    "3",
+    "4",
+    "6",
+    "7",
+    "4",
+    "5",
+    "red",
+    "9"
+   ],
+   "error": null,
+   "ms": 32,
+   "scores": [
+    0.0328,
+    0.0161,
+    0.0159,
+    0.0156,
+    0.0154,
+    0.0152,
+    0.0149,
+    0.0147
+   ]
+  },
+  {
+   "case": {
+    "id": "q33",
+    "lang": "zh",
+    "tag": "cross",
+    "text": "锤子",
+    "expect": {
+     "items": [
+      "hammer"
+     ]
+    }
+   },
+   "id": "q33",
+   "hits": [
+    "钳子",
+    "砧板",
+    "雪杖",
+    "跳绳",
+    "野餐垫",
+    "手套",
+    "拼图",
+    "乐高"
+   ],
+   "boxes": [
+    "3",
+    "6",
+    "4",
+    "9",
+    "7",
+    "red",
+    "9",
+    "9"
+   ],
+   "error": null,
+   "ms": 32,
+   "scores": [
+    0.0164,
+    0.0161,
+    0.0159,
+    0.0156,
+    0.0154,
+    0.0152,
+    0.0149,
+    0.0147
+   ]
+  },
+  {
+   "case": {
+    "id": "q34",
+    "lang": "zh",
+    "tag": "cross",
+    "text": "卷尺",
+    "expect": {
+     "items": [
+      "tape measure"
+     ]
+    }
+   },
+   "id": "q34",
+   "hits": [
+    "砧板",
+    "钳子",
+    "桌布",
+    "画笔",
+    "防潮垫",
+    "雪杖",
+    "野餐垫",
+    "幻灯片"
+   ],
+   "boxes": [
+    "6",
+    "3",
+    "2",
+    "9",
+    "7",
+    "4",
+    "7",
+    "B1"
+   ],
+   "error": null,
+   "ms": 33,
+   "scores": [
+    0.0164,
+    0.0161,
+    0.0159,
+    0.0156,
+    0.0154,
+    0.0152,
+    0.0149,
+    0.0147
+   ]
+  },
+  {
+   "case": {
+    "id": "q35",
+    "lang": "zh",
+    "tag": "category",
+    "text": "露营用品",
+    "expect": {
+     "items": [
+      "tent",
+      "sleeping bag",
+      "camping stove",
+      "lantern",
+      "防潮垫",
+      "折叠椅"
+     ]
+    }
+   },
+   "id": "q35",
+   "hits": [
+    "野餐垫",
+    "防潮垫",
+    "羽绒服",
+    "圣诞装饰",
+    "滑雪服",
+    "帐篷地钉",
+    "彩色铅笔",
+    "滑雪板"
+   ],
+   "boxes": [
+    "7",
+    "7",
+    "1",
+    "12",
+    "4",
+    "7",
+    "9",
+    "4"
+   ],
+   "error": null,
+   "ms": 33,
+   "scores": [
+    0.0164,
+    0.0161,
+    0.0159,
+    0.0156,
+    0.0154,
+    0.0152,
+    0.0149,
+    0.0147
+   ]
+  },
+  {
+   "case": {
+    "id": "q36",
+    "lang": "zh",
+    "tag": "synonym",
+    "text": "保暖的衣服",
+    "expect": {
+     "items": [
+      "羽绒服",
+      "winter scarves",
+      "wool hat",
+      "手套"
+     ]
+    }
+   },
+   "id": "q36",
+   "hits": [
+    "保温杯",
+    "羽绒服",
+    "滑雪服",
+    "防潮垫",
+    "圣诞树裙",
+    "圣诞装饰",
+    "野餐垫",
+    "手套"
+   ],
+   "boxes": [
+    "1",
+    "1",
+    "4",
+    "7",
+    "12",
+    "12",
+    "7",
+    "red"
+   ],
+   "error": null,
+   "ms": 33,
+   "scores": [
+    0.0328,
+    0.0161,
+    0.0159,
+    0.0156,
+    0.0154,
+    0.0152,
+    0.0149,
+    0.0147
+   ]
+  },
+  {
+   "case": {
+    "id": "q37",
+    "lang": "zh",
+    "tag": "category",
+    "text": "滑雪装备",
+    "expect": {
+     "items": [
+      "滑雪板",
+      "雪杖",
+      "ski goggles",
+      "snow boots"
+     ]
+    }
+   },
+   "id": "q37",
+   "hits": [
+    "滑雪服",
+    "滑雪板",
+    "野餐垫",
+    "圣诞装饰",
+    "羽绒服",
+    "帐篷地钉",
+    "圣诞树裙",
+    "彩色铅笔"
+   ],
+   "boxes": [
+    "4",
+    "4",
+    "7",
+    "12",
+    "1",
+    "7",
+    "12",
+    "9"
+   ],
+   "error": null,
+   "ms": 33,
+   "scores": [
+    0.0325,
+    0.0325,
+    0.0159,
+    0.0156,
+    0.0154,
+    0.0152,
+    0.0149,
+    0.0147
+   ]
+  },
+  {
+   "case": {
+    "id": "q38",
+    "lang": "zh",
+    "tag": "category",
+    "text": "圣诞节的东西",
+    "expect": {
+     "items": [
+      "Christmas lights",
+      "tree stand",
+      "圣诞装饰"
+     ]
+    }
+   },
+   "id": "q38",
+   "hits": [
+    "圣诞装饰",
+    "圣诞树裙",
+    "羽绒服",
+    "礼品包装纸",
+    "滑雪服",
+    "彩色铅笔",
+    "保温杯",
+    "画笔"
+   ],
+   "boxes": [
+    "12",
+    "12",
+    "1",
+    "12",
+    "4",
+    "9",
+    "1",
+    "9"
+   ],
+   "error": null,
+   "ms": 34,
+   "scores": [
+    0.0328,
+    0.0323,
+    0.0159,
+    0.0156,
+    0.0154,
+    0.0152,
+    0.0149,
+    0.0147
+   ]
+  },
+  {
+   "case": {
+    "id": "q39",
+    "lang": "zh",
+    "tag": "cross",
+    "text": "投影仪",
+    "expect": {
+     "items": [
+      "projector"
+     ]
+    }
+   },
+   "id": "q39",
+   "hits": [
+    "打印机",
+    "相机",
+    "幻灯片",
+    "彩色铅笔",
+    "画笔",
+    "鼠标",
+    "桌布",
+    "跳绳"
+   ],
+   "boxes": [
+    "5",
+    "B1",
+    "B1",
+    "9",
+    "9",
+    "5",
+    "2",
+    "9"
+   ],
+   "error": null,
+   "ms": 32,
+   "scores": [
+    0.0164,
+    0.0161,
+    0.0159,
+    0.0156,
+    0.0154,
+    0.0152,
+    0.0149,
+    0.0147
+   ]
+  },
+  {
+   "case": {
+    "id": "q40",
+    "lang": "zh",
+    "tag": "synonym",
+    "text": "电池",
+    "expect": {
+     "items": [
+      "AA batteries",
+      "AAA batteries"
+     ]
+    }
+   },
+   "id": "q40",
+   "hits": [
+    "相机",
+    "打印机",
+    "旧手机",
+    "跳绳",
+    "鼠标",
+    "画笔",
+    "彩色铅笔",
+    "滑雪板"
+   ],
+   "boxes": [
+    "B1",
+    "5",
+    "A2",
+    "9",
+    "5",
+    "9",
+    "9",
+    "4"
+   ],
+   "error": null,
+   "ms": 33,
+   "scores": [
+    0.0164,
+    0.0161,
+    0.0159,
+    0.0156,
+    0.0154,
+    0.0152,
+    0.0149,
+    0.0147
+   ]
+  },
+  {
+   "case": {
+    "id": "q41",
+    "lang": "zh",
+    "tag": "cross",
+    "text": "围巾",
+    "expect": {
+     "items": [
+      "winter scarves"
+     ]
+    }
+   },
+   "id": "q41",
+   "hits": [
+    "羽绒服",
+    "手套",
+    "跳绳",
+    "桌布",
+    "画笔",
+    "礼品包装纸",
+    "头灯",
+    "水壶"
+   ],
+   "boxes": [
+    "1",
+    "red",
+    "9",
+    "2",
+    "9",
+    "12",
+    "1",
+    "6"
+   ],
+   "error": null,
+   "ms": 34,
+   "scores": [
+    0.0164,
+    0.0161,
+    0.0159,
+    0.0156,
+    0.0154,
+    0.0152,
+    0.0149,
+    0.0147
+   ]
+  },
+  {
+   "case": {
+    "id": "q42",
+    "lang": "zh",
+    "tag": "cross",
+    "text": "手机充电线",
+    "expect": {
+     "items": [
+      "charger cables"
+     ]
+    }
+   },
+   "id": "q42",
+   "hits": [
+    "旧手机",
+    "手套",
+    "圣诞装饰",
+    "鼠标",
+    "彩色铅笔",
+    "跳绳",
+    "圣诞树裙",
+    "帐篷地钉"
+   ],
+   "boxes": [
+    "A2",
+    "red",
+    "12",
+    "5",
+    "9",
+    "9",
+    "12",
+    "7"
+   ],
+   "error": null,
+   "ms": 33,
+   "scores": [
+    0.0164,
+    0.0164,
+    0.0161,
+    0.0159,
+    0.0156,
+    0.0154,
+    0.0152,
+    0.0149
+   ]
+  },
+  {
+   "case": {
+    "id": "q43",
+    "lang": "zh",
+    "tag": "category",
+    "text": "孩子的玩具",
+    "expect": {
+     "items": [
+      "拼图",
+      "乐高"
+     ]
+    }
+   },
+   "id": "q43",
+   "hits": [
+    "圣诞装饰",
+    "彩色铅笔",
+    "乐高",
+    "羽绒服",
+    "野餐垫",
+    "滑雪服",
+    "旧手机",
+    "礼品包装纸"
+   ],
+   "boxes": [
+    "12",
+    "9",
+    "9",
+    "1",
+    "7",
+    "4",
+    "A2",
+    "12"
+   ],
+   "error": null,
+   "ms": 34,
+   "scores": [
+    0.0164,
+    0.0161,
+    0.0159,
+    0.0156,
+    0.0154,
+    0.0152,
+    0.0149,
+    0.0147
+   ]
+  },
+  {
+   "case": {
+    "id": "q44",
+    "lang": "zh",
+    "tag": "synonym",
+    "text": "灯",
+    "expect": {
+     "items": [
+      "lantern",
+      "头灯"
+     ]
+    }
+   },
+   "id": "q44",
+   "hits": [
+    "头灯",
+    "相机",
+    "烛台",
+    "画笔",
+    "烤盘",
+    "打印机",
+    "水壶",
+    "幻灯片"
+   ],
+   "boxes": [
+    "1",
+    "B1",
+    "2",
+    "9",
+    "6",
+    "5",
+    "6",
+    "B1"
+   ],
+   "error": null,
+   "ms": 33,
+   "scores": [
+    0.0164,
+    0.0161,
+    0.0159,
+    0.0156,
+    0.0154,
+    0.0152,
+    0.0149,
+    0.0147
+   ]
+  },
+  {
+   "case": {
+    "id": "q45",
+    "lang": "zh",
+    "tag": "category",
+    "text": "厨房用品",
+    "expect": {
+     "items": [
+      "水壶",
+      "马克杯",
+      "茶具",
+      "砧板"
+     ]
+    }
+   },
+   "id": "q45",
+   "hits": [
+    "茶具",
+    "野餐垫",
+    "圣诞装饰",
+    "打印机",
+    "画笔",
+    "彩色铅笔",
+    "羽绒服",
+    "保温杯"
+   ],
+   "boxes": [
+    "6",
+    "7",
+    "12",
+    "5",
+    "9",
+    "9",
+    "1",
+    "1"
+   ],
+   "error": null,
+   "ms": 34,
+   "scores": [
+    0.0164,
+    0.0161,
+    0.0159,
+    0.0156,
+    0.0154,
+    0.0152,
+    0.0149,
+    0.0147
+   ]
+  },
+  {
+   "case": {
+    "id": "q46",
+    "lang": "zh",
+    "tag": "cross",
+    "text": "雨伞",
+    "expect": {
+     "items": [
+      "umbrella"
+     ]
+    }
+   },
+   "id": "q46",
+   "hits": [
+    "羽绒服",
+    "手套",
+    "水壶",
+    "头灯",
+    "滑雪服",
+    "跳绳",
+    "滑雪板",
+    "画笔"
+   ],
+   "boxes": [
+    "1",
+    "red",
+    "6",
+    "1",
+    "4",
+    "9",
+    "4",
+    "9"
+   ],
+   "error": null,
+   "ms": 32,
+   "scores": [
+    0.0164,
+    0.0161,
+    0.0159,
+    0.0156,
+    0.0154,
+    0.0152,
+    0.0149,
+    0.0147
+   ]
+  },
+  {
+   "case": {
+    "id": "q47",
+    "lang": "zh",
+    "tag": "cross",
+    "text": "螺丝刀",
+    "expect": {
+     "items": [
+      "screwdriver set"
+     ]
+    }
+   },
+   "id": "q47",
+   "hits": [
+    "鼠标",
+    "钳子",
+    "画笔",
+    "羽绒服",
+    "彩色铅笔",
+    "滑雪板",
+    "相机",
+    "砧板"
+   ],
+   "boxes": [
+    "5",
+    "3",
+    "9",
+    "1",
+    "9",
+    "4",
+    "B1",
+    "6"
+   ],
+   "error": null,
+   "ms": 34,
+   "scores": [
+    0.0164,
+    0.0161,
+    0.0159,
+    0.0156,
+    0.0154,
+    0.0152,
+    0.0149,
+    0.0147
+   ]
+  },
+  {
+   "case": {
+    "id": "q48",
+    "lang": "en",
+    "tag": "cross",
+    "text": "tripod",
+    "expect": {
+     "items": [
+      "三脚架"
+     ]
+    }
+   },
+   "id": "q48",
+   "hits": [
+    "tree stand",
+    "sleeping bag",
+    "tent",
+    "lantern",
+    "ski goggles",
+    "tape measure",
+    "umbrella",
+    "snow boots"
+   ],
+   "boxes": [
+    "12",
+    "1",
+    "1",
+    "7",
+    "4",
+    "3",
+    "red",
+    "4"
+   ],
+   "error": null,
+   "ms": 34,
+   "scores": [
+    0.0315,
+    0.0164,
+    0.0161,
+    0.0159,
+    0.0156,
+    0.0154,
+    0.0149,
+    0.0147
+   ]
+  },
+  {
+   "case": {
+    "id": "q49",
+    "lang": "zh",
+    "tag": "cross",
+    "text": "毛线帽",
+    "expect": {
+     "items": [
+      "wool hat"
+     ]
+    }
+   },
+   "id": "q49",
+   "hits": [
+    "羽绒服",
+    "保温杯",
+    "水壶",
+    "圣诞树裙",
+    "头灯",
+    "马克杯",
+    "滑雪服",
+    "帐篷地钉"
+   ],
+   "boxes": [
+    "1",
+    "1",
+    "6",
+    "12",
+    "1",
+    "6",
+    "4",
+    "7"
+   ],
+   "error": null,
+   "ms": 35,
+   "scores": [
+    0.0164,
+    0.0161,
+    0.0159,
+    0.0156,
+    0.0154,
+    0.0152,
+    0.0149,
+    0.0147
+   ]
+  },
+  {
+   "case": {
+    "id": "q50",
+    "lang": "en",
+    "tag": "exact",
+    "text": "HDMI cable",
+    "expect": {
+     "items": [
+      "HDMI cable"
+     ]
+    }
+   },
+   "id": "q50",
+   "hits": [
+    "HDMI cable",
+    "charger cables",
+    "tape measure",
+    "ski goggles",
+    "AAA batteries",
+    "sleeping bag",
+    "AA batteries",
+    "projector"
+   ],
+   "boxes": [
+    "5",
+    "A2",
+    "3",
+    "4",
+    "A2",
+    "1",
+    "2",
+    "B1"
+   ],
+   "error": null,
+   "ms": 34,
+   "scores": [
+    0.0328,
+    0.0323,
+    0.0159,
+    0.0156,
+    0.0154,
+    0.0152,
+    0.0149,
+    0.0147
+   ]
+  }
+ ]
+}

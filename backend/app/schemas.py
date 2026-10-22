@@ -95,6 +95,7 @@ class InterpretOut(BaseModel):
     location_text: str | None
     language: str
     next_label: str  # askbox 兜底用的推荐新编号,如 "4号"
+    run_id: str | None = None  # the recorded trace, for thumbs feedback (/api/runs/{id}/feedback)
 
 
 class IngestIn(BaseModel):

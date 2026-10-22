@@ -70,7 +70,7 @@ def fake_vector(text_: str) -> list[float]:
     return [x / norm for x in v]
 
 
-async def fake_embed(texts: list[str]) -> list[list[float]]:
+async def fake_embed(texts: list[str], query: bool = False) -> list[list[float]]:
     return [fake_vector(t) for t in texts]
 
 
@@ -154,7 +154,12 @@ class ScriptedLLM:
         return self.tool_replies.pop(0)
 
     async def interpret(self, text_: str, known_labels: list[str], lang: str | None = None) -> dict:
+        from app.services import trace
+
         self.interpret_calls.append((text_, list(known_labels), lang))
+        t = trace.start("interpret", model=self.model_name, prompts={"interpret": "v0 (scripted)"}, input=text_,
+                        lang=lang or "")
+        t.finish("ok", parsed=dict(self.interpret_reply))  # same shape as LLM.interpret records
         return dict(self.interpret_reply)
 
     async def recognize_image(self, image_b64: str, mime: str = "image/jpeg", lang: str | None = None) -> dict:

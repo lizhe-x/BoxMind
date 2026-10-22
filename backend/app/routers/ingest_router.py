@@ -7,7 +7,7 @@ from ..db import get_db
 from ..i18n import tr
 from ..models import Box, User
 from ..schemas import IngestIn, IngestOut, InterpretIn, InterpretOut
-from ..services import boxes_service
+from ..services import boxes_service, runs, trace
 from ..services.llm import llm
 
 router = APIRouter(prefix="/api", tags=["ingest"])
@@ -17,7 +17,11 @@ router = APIRouter(prefix="/api", tags=["ingest"])
 async def interpret(body: InterpretIn, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     """一段话 → 意图 + 结构化抽取。不入库、不计量。"""
     labels = db.scalars(select(Box.label).where(Box.user_id == user.id)).all()
-    parsed = await llm.interpret(body.text, list(labels), user.lang)
+    with trace.collect() as traces:
+        try:
+            parsed = await llm.interpret(body.text, list(labels), user.lang)
+        finally:
+            run_id = runs.record(db, user, traces[0]).id if traces else None
 
     box = None
     box_label = parsed.get("box_label")
@@ -44,6 +48,7 @@ async def interpret(body: InterpretIn, user: User = Depends(get_current_user), d
         location_text=parsed.get("location_text"),
         language=parsed.get("language", user.lang),
         next_label=boxes_service.next_num_label(db, user),
+        run_id=run_id,
     )
 
 

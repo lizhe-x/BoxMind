@@ -49,3 +49,6 @@ ios/BoxMindKit/Package.resolved
 xcuserdata/
 DerivedData/
 *.xcuserstate
+
+# exported production failures (contain real user text)
+evals/inbox/*.jsonl

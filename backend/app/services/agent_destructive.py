@@ -67,7 +67,7 @@ def _dump_box(box: Box) -> dict:
     }
 
 
-def _snapshot_before(db: Session, user: User, tool: str, args: dict) -> None:
+def _snapshot_before(db: Session, user: User, tool: str, args: dict, run_id: str | None = None) -> None:
     seen: set[str] = set()
     boxes = []
     for ref in _affected_refs(tool, args):
@@ -79,9 +79,9 @@ def _snapshot_before(db: Session, user: User, tool: str, args: dict) -> None:
     label = _op_label(user.lang, tool)
     snap = db.get(UndoSnapshot, user.id)
     if snap:
-        snap.label, snap.payload = label, payload
+        snap.label, snap.payload, snap.run_id = label, payload, run_id
     else:
-        db.add(UndoSnapshot(user_id=user.id, label=label, payload=payload))
+        db.add(UndoSnapshot(user_id=user.id, label=label, payload=payload, run_id=run_id))
     db.commit()
 
 
@@ -120,14 +120,16 @@ async def restore_last(db: Session, user: User) -> dict:
             if m:
                 m.box_id = bd["id"]
     label = snap.label
+    from . import runs
+    runs.mark_undone(db, snap.run_id)  # undo = implicit negative feedback on the run that proposed the operation
     db.delete(snap)
     db.commit()
     return {"ok": True, "summary": tr(user.lang, "undo_done", label=label)}
 
 
 # ── 执行 ────────────────────────────────────
-def execute(db: Session, user: User, tool: str, args: dict) -> dict:
-    _snapshot_before(db, user, tool, args)  # 执行前打快照
+def execute(db: Session, user: User, tool: str, args: dict, run_id: str | None = None) -> dict:
+    _snapshot_before(db, user, tool, args, run_id)  # 执行前打快照
     if tool == "delete_item":
         return _delete_item(db, user, args)
     if tool == "delete_box":

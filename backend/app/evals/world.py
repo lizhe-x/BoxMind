@@ -61,9 +61,10 @@ def box_state(db: Session, user: User, ref: str) -> dict:
 
 
 def reset_database(engine) -> None:
-    """Empty every table of the (dedicated) eval database."""
+    """Rebuild every table of the (dedicated) eval database, so a different embedding dimension just works."""
     from ..db import Base
 
+    Base.metadata.drop_all(engine)
+    Base.metadata.create_all(engine)
     with engine.begin() as conn:
-        names = ", ".join(t.name for t in reversed(Base.metadata.sorted_tables))
-        conn.execute(text(f"TRUNCATE {names} CASCADE"))
+        conn.execute(text("ALTER TABLE undo_snapshots ADD COLUMN IF NOT EXISTS run_id VARCHAR(32)"))

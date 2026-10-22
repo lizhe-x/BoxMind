@@ -102,7 +102,7 @@ async def run_retrieval(cases: list[dict], stamp: str) -> list[dict]:
                 res = await agent_tools.execute(db, user, "search_items", {"query": case["text"]}, {})
                 row["hits"] = [r["item"] for r in res.get("results", [])]
                 row["boxes"] = [r["box_label"] for r in res.get("results", [])]
-                row["similarity"] = [r["similarity"] for r in res.get("results", [])]
+                row["scores"] = [r["score"] for r in res.get("results", [])]
             except Exception as e:  # noqa: BLE001
                 row["error"] = f"{type(e).__name__}: {e}"
             row["ms"] = int((time.monotonic() - t0) * 1000)
@@ -195,7 +195,7 @@ def run_label(set_name: str, results: list[dict]) -> tuple[str, str]:
     from ..config import settings
 
     if set_name == "retrieval":
-        return f"embedding / {settings.embedding_model.rsplit('/', 1)[-1]}", "-"
+        return f"embedding / {settings.embedding_model.rsplit('/', 1)[-1]}", f"search {settings.search_mode}"
     from ..services.llm import llm
 
     provider = f"{settings.llm_provider} / {llm.model_name}"
@@ -284,6 +284,11 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--model", help="model name for the chosen provider (claude: sonnet/haiku/opus; gateway: id)")
     ap.add_argument("--concurrency", type=int, default=3)
     ap.add_argument("--limit", type=int, default=0, help="only the first N cases of each set")
+    ap.add_argument("--search", choices=("hybrid", "vector"), help="item search mode for retrieval / tools")
+    ap.add_argument("--embedding", help="fastembed model id for retrieval, e.g. intfloat/multilingual-e5-large")
+    ap.add_argument("--dim", type=int, help="its vector dimension (required with --embedding)")
+    ap.add_argument("--prefixes", choices=("none", "e5"), default=None,
+                    help="role prefixes the embedding model expects (e5: 'query: ' / 'passage: ')")
     ap.add_argument("--no-write", action="store_true", help="print only; do not touch results/ or RESULTS.md")
     ap.add_argument("--report", action="store_true", help="only rebuild the comparison matrix in RESULTS.md")
     args = ap.parse_args(argv)
@@ -303,13 +308,23 @@ def main(argv: list[str] | None = None) -> int:
             settings.claude_model = args.model
         else:
             settings.llm_model = args.model
+    if args.search:
+        settings.search_mode = args.search
+    if args.embedding:
+        if not args.dim:
+            ap.error("--embedding needs --dim")
+        settings.embedding_model, settings.embedding_dim = args.embedding, args.dim
+    if args.prefixes == "e5":
+        settings.embedding_query_prefix, settings.embedding_passage_prefix = "query: ", "passage: "
+    elif args.prefixes == "none":
+        settings.embedding_query_prefix = settings.embedding_passage_prefix = ""
     if any(s not in INTERPRET_SETS for s in args.sets):
         prepare_database()
     from ..services import llm as llm_module
     llm_module.llm = llm_module._make()
     stamp = datetime.now(UTC).strftime("%Y-%m-%dT%H%M%SZ")
     print(f"provider={settings.llm_provider} model={llm_module.llm.model_name} "
-          f"embedding={settings.embedding_model} concurrency={args.concurrency}")
+          f"embedding={settings.embedding_model} search={settings.search_mode} concurrency={args.concurrency}")
 
     return asyncio.run(_run_sets(args, stamp))  # one loop for every set: provider locks bind to it once
 

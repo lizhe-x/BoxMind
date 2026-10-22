@@ -9,10 +9,11 @@ from sqlalchemy.orm import Session, selectinload
 from ..auth import get_current_user
 from ..db import get_db
 from ..i18n import fmt_time, tr
-from ..models import Box, Item, User
+from ..models import Box, User
 from ..schemas import AskIn
-from ..services import boxes_service, embeddings
+from ..services import boxes_service, runs, search, trace
 from ..services.llm import llm
+from ..services.prompts import ANSWER
 
 router = APIRouter(prefix="/api", tags=["ask"])
 
@@ -41,26 +42,22 @@ async def ask(body: AskIn, user: User = Depends(get_current_user), db: Session =
         .where(Box.user_id == user.id).order_by(Box.updated_at.desc())
     ).all()
 
-    # 向量检索:跨语言语义命中提示
+    # 检索(向量 + 三元组融合):跨语言语义命中提示
     hint = tr(user.lang, "hint_none")
     total_items = sum(len(b.items) for b in boxes)
-    rows = []
+    hits = []
     if total_items:
-        qvec = (await embeddings.embed([body.question]))[0]
-        rows = db.execute(
-            select(Item.name, Box.label, Item.embedding.cosine_distance(qvec).label("d"))
-            .join(Box, Item.box_id == Box.id)
-            .where(Box.user_id == user.id, Item.embedding.is_not(None))
-            .order_by("d").limit(8)
-        ).all()
-        hint = "; ".join(tr(user.lang, "hint_item", name=r.name, label=r.label, sim=1 - r.d) for r in rows) or hint
+        hits = await search.search_items(db, user, body.question, limit=8)
+        hint = "; ".join(tr(user.lang, "hint_item", name=h["item"], label=h["box_label"],
+                            sim=h["similarity"] if h["similarity"] is not None else 1.0) for h in hits) or hint
 
     if total_items > MAX_CONTEXT_ITEMS:
-        hit_labels = {r.label for r in rows}
+        hit_labels = {h["box_label"] for h in hits}
         boxes = [b for b in boxes if b.label in hit_labels]
 
     context = _build_context(boxes, user.lang)
     user_id = user.id
+    t = trace.start("ask", model=llm.model_name, prompts={"answer": ANSWER.ref}, input=body.question, lang=user.lang)
 
     async def gen():
         full = ""
@@ -69,8 +66,13 @@ async def ask(body: AskIn, user: User = Depends(get_current_user), db: Session =
                 full += delta
                 yield f"event: delta\ndata: {json.dumps({'t': delta}, ensure_ascii=False)}\n\n"
         except Exception as e:  # noqa: BLE001 — 把错误下发给前端展示
+            t.error = str(e)
+            t.finish("error", text=full)
+            with _fresh_session() as s:
+                runs.record(s, s.get(User, user_id), t)
             yield f"event: error\ndata: {json.dumps({'message': str(e)}, ensure_ascii=False)}\n\n"
             return
+        t.finish("ok", text=full[:2000])
         # 回答中提到的箱子 → 可点卡片
         refs = []
         for b in boxes:
@@ -85,7 +87,9 @@ async def ask(body: AskIn, user: User = Depends(get_current_user), db: Session =
             u = s.get(User, user_id)
             boxes_service.log_usage(s, u, "query")
             s.commit()
-        yield f"event: done\ndata: {json.dumps({'boxes': refs, 'credits_left': -1}, ensure_ascii=False)}\n\n"
+            run_id = runs.record(s, u, t).id
+        yield (f"event: done\ndata: "
+               f"{json.dumps({'boxes': refs, 'credits_left': -1, 'run_id': run_id}, ensure_ascii=False)}\n\n")
 
     return StreamingResponse(gen(), media_type="text/event-stream",
                              headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"})

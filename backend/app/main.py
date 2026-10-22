@@ -15,6 +15,7 @@ from .routers import (
     boxes_router,
     ingest_router,
     me_router,
+    runs_router,
     tts_router,
     vision_router,
 )
@@ -52,6 +53,7 @@ app.include_router(vision_router.router)
 app.include_router(tts_router.router)
 app.include_router(agent_router.router)
 app.include_router(me_router.router)
+app.include_router(runs_router.router)
 
 
 # 用户媒体静态服务(uuid 文件名防猜;<img>/<audio> 可直接引用)

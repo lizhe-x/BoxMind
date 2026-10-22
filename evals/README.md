@@ -104,6 +104,16 @@ Recorded in `RESULTS.md`; the point of the sets is that these were found by numb
   plural by sense only, a judgment call the label makes one way; haiku additionally writes units in English
   ("×1 set", "×1 pair") inside Chinese sentences, a candidate for v3.
 - routing: 60/60 on sonnet, haiku and opus, both prompt versions. The three-way split is not where the risk is.
+- retrieval, hybrid search: with a trigram floor of 0.1 the trigram leg added noise ("printer" pulled in
+  "decanter" through a shared "ter") and R@1 fell 0.52 → 0.47; at 0.3 it adds only real substring / typo hits
+  and the set scores exactly as vector-only (R@8 0.80), so the win is the one the unit tests show
+  ("鼠标在哪" finds 鼠标), not a number on this set. Hybrid stays the default at 0.3.
+- retrieval, embedding models (same set, same world): MiniLM-L12 R@8 0.80 (en 0.94 / zh 0.66);
+  mpnet-base 0.82 (en 0.90 / zh 0.74, cross 0.83 but R@1 0.40 and synonym 0.81); multilingual-e5-large through
+  fastembed 0.52 with prefixes and 0.44 without, which is far below the model's reputation and points at the
+  ONNX export or pooling in that runtime rather than the model; to be checked with sentence-transformers before
+  it is judged. Decision: keep MiniLM; the Chinese → English single-word gap is still open and is the next
+  retrieval change to measure (`app/maintenance/reembed.py` switches the server when a model wins).
 - tools: sonnet and opus 40/40, haiku 39/40 (it asks which "灯" is meant instead of moving the lantern, which is
   a defensible reading); opus is also the fastest at p50 5.3 s per case against sonnet 9.6 s.
 - retrieval: the multilingual MiniLM index is near-perfect within a language (exact 1.00, en 0.94) but weak
@@ -115,6 +125,36 @@ Recorded in `RESULTS.md`; the point of the sets is that these were found by numb
   `llm_claude.py` (not a prompt-quality change; a protocol bug). Second run 1.00.
 - tools: `add_items` with an empty item list created the box before validating the list, leaving a stray box
   behind when the model probed with `items: []`. Fixed in `agent_tools.py` with a regression test.
+
+## Production traces and the way back
+
+Every model-backed request (`/api/agent`, `/api/interpret`, `/api/ask`, `/api/recognize`) persists its trace as
+a row in `agent_runs` (`backend/app/services/runs.py`): model, prompt version, tool calls with arguments and
+results, steps, latency, outcome, error. The response carries the `run_id`, and two signals attach to it:
+
+- explicit: `POST /api/runs/{id}/feedback {"value": 1 | -1, "note"?}` (thumbs up / down);
+- implicit: when the user confirms a destructive action the snapshot taken before it records the run that
+  proposed it, and an undo marks that run `undone`. Undo is a thumbs down the user did not have to type.
+
+`GET /api/runs?failed=true` lists a user's thumbs-down, undone, errored and step-capped runs. Then:
+
+```bash
+backend/.venv/bin/python evals/export.py --since 7d     # → evals/inbox/<stamp>-<set>.jsonl
+```
+
+turns those runs into case stubs for the matching set (interpret → routing or extraction, agent → tools), with
+the model's own answer prefilled as `expect` and a `_review` note. A human corrects the expectation and moves
+the line into the set; stubs are never merged automatically, because a failed run is evidence that the model's
+answer is wrong, so its answer cannot be the label. That closes the loop the sets exist for:
+production failure → new eval case → prompt change → re-run → deploy.
+
+## Retrieval: hybrid search and embedding models
+
+`backend/app/services/search.py` fuses pgvector cosine neighbours with pg_trgm trigram matches by reciprocal
+rank fusion (`BOXMIND_SEARCH_MODE=hybrid|vector`); the agent's `search_items` tool and `/api/ask` both use it.
+The retrieval set runs under either mode (`--search vector`) and under any fastembed model
+(`--embedding <id> --dim <n> [--prefixes e5]`; the eval database is rebuilt at the new dimension).
+Switching the server's model is `python -m app.maintenance.reembed --apply` after changing `backend/.env`.
 
 ## Scoring code
 

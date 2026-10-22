@@ -115,6 +115,7 @@ class UndoSnapshot(Base):
     user_id: Mapped[str] = mapped_column(ForeignKey("users.id"), primary_key=True)
     label: Mapped[str] = mapped_column(String(80))  # 操作描述,如 "合并箱子"
     payload: Mapped[str] = mapped_column(Text)       # 受影响箱子的完整 JSON 快照
+    run_id: Mapped[str | None] = mapped_column(String(32), nullable=True)  # the agent run that proposed the operation
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
 
 
@@ -126,3 +127,30 @@ class UsageLog(Base):
     action_type: Mapped[str] = mapped_column(String(32))  # ingest | query
     tokens_used: Mapped[int] = mapped_column(Integer, default=0)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
+
+
+class AgentRun(Base):
+    """One model-backed request (agent / interpret / ask / recognize): the persisted trace plus feedback.
+    See services/runs.py; evals/export.py turns failed rows into eval-case stubs."""
+    __tablename__ = "agent_runs"
+
+    id: Mapped[str] = mapped_column(String(32), primary_key=True, default=_uuid)
+    user_id: Mapped[str] = mapped_column(ForeignKey("users.id"), index=True)
+    kind: Mapped[str] = mapped_column(String(16))          # agent | interpret | ask | recognize
+    model: Mapped[str] = mapped_column(String(64), default="")
+    prompt: Mapped[str] = mapped_column(String(255), default="{}")   # JSON: {prompt name: "vN (hash)"}
+    input: Mapped[str] = mapped_column(Text, default="")
+    lang: Mapped[str] = mapped_column(String(8), default="")
+    tool_calls: Mapped[str] = mapped_column(Text, default="[]")      # JSON list of {name, args, ok, ms, error}
+    confirm: Mapped[str] = mapped_column(String(255), default="[]")  # JSON list of destructive tools gated
+    steps: Mapped[int] = mapped_column(Integer, default=0)
+    tokens: Mapped[int] = mapped_column(Integer, default=0)
+    latency_ms: Mapped[int] = mapped_column(Integer, default=0)
+    outcome: Mapped[str] = mapped_column(String(16), default="ok")   # ok | message | confirm | step_cap | error
+    error: Mapped[str | None] = mapped_column(Text, nullable=True)
+    output: Mapped[str] = mapped_column(Text, default="{}")          # JSON: parsed / text / actions
+    confirmed: Mapped[int] = mapped_column(Integer, default=0)       # confirm card accepted by the user
+    undone: Mapped[int] = mapped_column(Integer, default=0)          # the user undid what this run did
+    feedback: Mapped[int] = mapped_column(Integer, default=0)        # 1 thumbs up, -1 thumbs down
+    feedback_note: Mapped[str | None] = mapped_column(String(500), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now, index=True)

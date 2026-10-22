@@ -31,9 +31,14 @@ def _embed_local_sync(texts: list[str]) -> list[list[float]]:
     return [list(map(float, v)) for v in model.embed(texts)]
 
 
-async def embed(texts: list[str]) -> list[list[float]]:
+async def embed(texts: list[str], query: bool = False) -> list[list[float]]:
+    """Embed item names (`query=False`) or a search query (`query=True`); the role only matters for models
+    that take a prefix (settings.embedding_*_prefix)."""
     if not texts:
         return []
+    prefix = settings.embedding_query_prefix if query else settings.embedding_passage_prefix
+    if prefix:
+        texts = [prefix + t for t in texts]
     if settings.embedding_provider == "remote":
         async with httpx.AsyncClient(timeout=30) as client:
             r = await client.post(

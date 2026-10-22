@@ -28,9 +28,11 @@ The retrieval row has no model: it measures the embedding index.
 
 **retrieval** (R@8, p50 latency)
 
-| model | - |
-|---|---|
-| embedding / paraphrase-multilingual-MiniLM-L12-v2 | 0.80 · 3 ms |
+| model | - | search hybrid | search vector |
+|---|---|---|---|
+| embedding / multilingual-e5-large |  | 0.44 · 33 ms |  |
+| embedding / paraphrase-multilingual-MiniLM-L12-v2 | 0.80 · 3 ms | 0.80 · 4 ms | 0.80 · 3 ms |
+| embedding / paraphrase-multilingual-mpnet-base-v2 |  | 0.82 · 8 ms |  |
 
 **tools** (pass, p50 latency)
 
@@ -61,3 +63,9 @@ The retrieval row has no model: it measures the embedding index.
 | 2026-10-22 | routing | claude_code / opus | interpret v2 (212ab1240e) | 60 | acc 1.00 · en 1.00 · zh 1.00 · ingest F1 1.00 · query F1 1.00 · operation F1 1.00 | p50 2945 ms | [json](results/routing-2026-10-22T161402Z.json) |
 | 2026-10-22 | extraction | claude_code / opus | interpret v2 (212ab1240e) | 40 | exact 0.95 · en 1.00 · zh 0.90 · intent 1.00 · label 1.00 · location 1.00 · items P 1.00 R 1.00 · qty 0.98 | p50 3216 ms | [json](results/extraction-2026-10-22T161402Z.json) |
 | 2026-10-22 | tools | claude_code / opus | agent v1 (2b5eb4f024) | 40 | pass 1.00 · en 1.00 · zh 1.00 · tools 1.00 · confirm 1.00 · args 1.00 · state 1.00 · missed gate 0 · spurious gate 0 · steps 1.7 | p50 5310 ms | [json](results/tools-2026-10-22T161554Z.json) |
+| 2026-10-22 | retrieval | embedding / paraphrase-multilingual-MiniLM-L12-v2 | search hybrid | 50 | R@1 0.47 · R@3 0.72 · R@8 0.80 · MRR 0.71 · en 0.94 · zh 0.66 · category 0.68 · cross 0.75 · exact 1.00 · synonym 0.89 | p50 4 ms | [json](results/retrieval-2026-10-22T162627Z.json) |
+| 2026-10-22 | retrieval | embedding / paraphrase-multilingual-MiniLM-L12-v2 | search vector | 50 | R@1 0.52 · R@3 0.74 · R@8 0.80 · MRR 0.74 · en 0.94 · zh 0.66 · category 0.68 · cross 0.75 · exact 1.00 · synonym 0.89 | p50 3 ms | [json](results/retrieval-2026-10-22T162628Z.json) |
+| 2026-10-22 | retrieval | embedding / paraphrase-multilingual-mpnet-base-v2 | search hybrid | 50 | R@1 0.40 · R@3 0.65 · R@8 0.82 · MRR 0.68 · en 0.90 · zh 0.74 · category 0.64 · cross 0.83 · exact 1.00 · synonym 0.81 | p50 8 ms | [json](results/retrieval-2026-10-22T162700Z.json) |
+| 2026-10-22 | retrieval | embedding / multilingual-e5-large | search hybrid | 50 | R@1 0.30 · R@3 0.41 · R@8 0.52 · MRR 0.51 · en 0.62 · zh 0.42 · category 0.54 · cross 0.29 · exact 1.00 · synonym 0.67 | p50 22 ms | [json](results/retrieval-2026-10-22T162723Z.json) |
+| 2026-10-22 | retrieval | embedding / multilingual-e5-large | search hybrid | 50 | R@1 0.27 · R@3 0.33 · R@8 0.44 · MRR 0.45 · en 0.59 · zh 0.30 · category 0.45 · cross 0.17 · exact 1.00 · synonym 0.67 | p50 33 ms | [json](results/retrieval-2026-10-22T162820Z.json) |
+| 2026-10-22 | retrieval | embedding / paraphrase-multilingual-MiniLM-L12-v2 | search hybrid | 50 | R@1 0.52 · R@3 0.74 · R@8 0.80 · MRR 0.74 · en 0.94 · zh 0.66 · category 0.68 · cross 0.75 · exact 1.00 · synonym 0.89 | p50 4 ms | [json](results/retrieval-2026-10-22T162837Z.json) |

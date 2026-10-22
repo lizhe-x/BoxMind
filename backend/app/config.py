@@ -29,6 +29,11 @@ class Settings(BaseSettings):
     # Where fastembed keeps downloaded weights. Empty = fastembed's default (a temp dir
     # the OS may purge, which forces the ~500 MB download again).
     embedding_cache_dir: str = ""
+    # Some models want a role prefix on the text ("query: " / "passage: " for the e5 family). Empty = none.
+    embedding_query_prefix: str = ""
+    embedding_passage_prefix: str = ""
+    # Item search: "hybrid" = vector + trigram fused by RRF (services/search.py); "vector" = cosine only.
+    search_mode: str = "hybrid"
 
     jwt_secret: str = "boxmind-dev-secret-change-in-prod"
     free_credits: int = 50

@@ -4,6 +4,12 @@ import httpx
 from tests.conftest import ScriptedLLM, assistant_msg, tool_call
 
 
+def _sans_run(payload: dict) -> dict:
+    """Agent responses carry the recorded run id (see test_api_runs); the flow tests compare the rest."""
+    assert payload.get("run_id"), payload
+    return {k: v for k, v in payload.items() if k != "run_id"}
+
+
 def _create(client, auth, label, items=()):
     box = client.post("/api/boxes", json={"label": label}, headers=auth).json()
     for name, qty in items:
@@ -22,7 +28,7 @@ def test_agent_executes_and_replies(client, auth, llm: ScriptedLLM) -> None:
         assistant_msg("Box 7 is now on the balcony."),
     )
     r = client.post("/api/agent", json={"message": "box 7 is on the balcony", "history": [], "gps": None}, headers=auth)
-    assert r.status_code == 200 and r.json() == {"type": "message", "text": "Box 7 is now on the balcony."}
+    assert r.status_code == 200 and _sans_run(r.json()) == {"type": "message", "text": "Box 7 is now on the balcony."}
     assert client.get(f"/api/boxes/{box['id']}", headers=auth).json()["location_text"] == "balcony"
 
 
@@ -56,7 +62,7 @@ def test_agent_confirm_then_execute_then_undo(client, auth, llm: ScriptedLLM) ->
 
     llm.script(assistant_msg(None, [tool_call("undo_last", {})]), assistant_msg("Undone."))
     r = client.post("/api/agent", json={"message": "undo"}, headers=auth).json()
-    assert r == {"type": "message", "text": "Undone."}
+    assert _sans_run(r) == {"type": "message", "text": "Undone."}
     restored = client.get(f"/api/boxes/{box['id']}", headers=auth).json()
     assert [i["name"] for i in restored["items"]] == ["headlamp"]
 
