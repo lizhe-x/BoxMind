@@ -273,3 +273,14 @@ open ios/BoxMind.xcodeproj             # 在 Xcode 里选真机运行
   iPad 要求四个方向。改为 target 级 "1"(仅 iPhone),重新归档后 "Upload succeeded"。
 - 这个包的 `API_BASE_URL` 是 Funnel 的 `ts.net` 地址,只给 TestFlight 用;提交审核前换成 `api.boxmind.deskfox.ai`
   重新归档为 1.0 (2)。
+
+### 2026-10-22 · TestFlight 第一轮反馈 → 1.0 (2)
+
+- 语音一按就崩(1.0 (1)):`installTap` 闭包继承了 VoiceRecorder 的主线程隔离,CoreAudio 在实时队列调用时触发
+  Swift 6 的运行时隔离检查。闭包标 `@Sendable`。崩溃日志用 `idevicecrashreport` 从手机拉取,`atos` 配归档的 dSYM 解符号。
+- 只认英文:端侧转写器单语言且跟随界面语言。改为同一路麦克风同时喂最多两个转写器(界面语言 + 系统首选语言),
+  按平均转写置信度取胜者,启动时预下载两个模型。服务器端 ASR 地址拆成独立配置(OpenRouter 无语音转写)。
+- 录音结束卡死:`withTimeout` 用任务组实现,任务组必等所有子任务,而 `finalizeAndFinishThroughEndOfInput` 不理会取消,
+  两路并行时一路不返回就永远等。改为 continuation 竞速,慢的一路留在后台。
+- 箱子照片只能从相册选:加号改为菜单,"拍照"(系统相机)/"从相册选择"。
+- 以上均先以 Debug 包在 iPhone 16 Pro Max 上逐项验证,再归档 1.0 (2) 上传 TestFlight。

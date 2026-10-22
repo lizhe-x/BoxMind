@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024" role="img" aria-label="Box under the lens"><defs>
+<linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0B1020"/><stop offset="1" stop-color="#151C36"/></linearGradient>
+<linearGradient id="brand" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4D7CFE"/><stop offset="1" stop-color="#8B5CF6"/></linearGradient>
+<linearGradient id="brandDark" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2F55C9"/><stop offset="1" stop-color="#5B3AB8"/></linearGradient>
+<linearGradient id="rim" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#9DB3FF"/><stop offset="1" stop-color="#C2ADFF"/></linearGradient>
+<linearGradient id="void" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#05070F"/><stop offset="1" stop-color="#1A2140"/></linearGradient>
+<linearGradient id="amber" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFD27A"/><stop offset="1" stop-color="#FF9B3D"/></linearGradient>
+<linearGradient id="mint" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8CF5D2"/><stop offset="1" stop-color="#2FC79A"/></linearGradient>
+<radialGradient id="glow" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#FFB547" stop-opacity=".55"/><stop offset="1" stop-color="#FFB547" stop-opacity="0"/></radialGradient>
+<radialGradient id="glowBlue" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#7C9BFF" stop-opacity=".45"/><stop offset="1" stop-color="#7C9BFF" stop-opacity="0"/></radialGradient>
+</defs><rect width="1024" height="1024" fill="url(#bg)"/>
+<polygon points="190,520 640,520 720,440 270,440" fill="url(#rim)"/>
+<polygon points="640,520 720,440 720,830 640,910" fill="url(#brandDark)"/>
+<rect x="190" y="520" width="450" height="390" rx="18" fill="url(#brand)"/>
+<rect x="392" y="520" width="46" height="390" fill="#FFFFFF" fill-opacity=".14"/>
+<circle cx="690" cy="400" r="190" fill="url(#glow)"/>
+<circle cx="690" cy="400" r="178" fill="#0B1020" fill-opacity=".55" stroke="#F6EEDC" stroke-width="42"/>
+<line x1="818" y1="528" x2="930" y2="640" stroke="#F6EEDC" stroke-width="64" stroke-linecap="round"/>
+<polygon points="690,300 790,350 690,400 590,350" fill="url(#mint)"/>
+<polygon points="590,350 690,400 690,500 590,450" fill="#1FA07C"/>
+<polygon points="790,350 690,400 690,500 790,450" fill="#2FC79A"/>
+</svg>
