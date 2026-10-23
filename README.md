@@ -237,6 +237,7 @@ Current limitations:
 ## Documentation
 
 - [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) — iteration timeline and decision log: why the classifier became a router, the confirm-before-destroy protocol, merge semantics, how language is handled, the testing approach.
+- [docs/TODO.md](docs/TODO.md) — known issues and to-do from the architecture review: quantity arithmetic in code instead of the model (also fixes the ingest overwrite bug), untested context cap, snapshot size, speech misrecognition, indexes.
 - [docs/design/](docs/design/README.md) — the PRD v1.0 and the high-fidelity HTML prototype the app was built from, with a table of where the implementation deviates.
 - [docs/screenshots/](docs/screenshots/) — the images used above, captured from the running app.
 
