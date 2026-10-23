@@ -149,4 +149,6 @@ AI features send the typed/spoken text, the photo, and the user's own box data t
    ```
    或把已导出的 `BoxMind.ipa` 用 Transporter 拖上去。
 5. **GitHub Pages**:仓库 Settings → Pages → Source "Deploy from a branch",Branch `main` / folder `/docs`,隐私政策地址即生效。
-6. TestFlight 内测通过后,在 ASC 填本文件的文案、截图、隐私标签、审核备注,提交审核。
+6. **ASC 已通过 API 填好(2026-10-22,build 1.0 (3) 已挂到 1.0 版本)**:分类、版权、内容版权声明、en-US / zh-Hans 的副标题、隐私政策 URL、描述、关键词、宣传文本、支持/营销 URL、年龄分级问卷(全部 None)、8 张 6.9" 截图(en-US,其他语言回退到主语言)。1.0 没有 What's New 字段。
+   脚本在会话 scratchpad(`asc_fill.py` / `asc_fill2.py`),文案改动后重跑即可覆盖。
+7. **还要在 ASC 网页上手动做的**:(a) App Information → App Privacy,按 §3 填隐私标签(API 不支持);(b) 1.0 版本页 → App Review Information,填联系人邮箱、电话,演示账号用 `backend/.env` 的 `BOXMIND_REVIEW_EMAIL` / `BOXMIND_REVIEW_CODE`,备注贴 §4;(c) 核对后点 Add for Review → Submit。
