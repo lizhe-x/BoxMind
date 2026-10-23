@@ -38,13 +38,15 @@ targets:
         TARGETED_DEVICE_FAMILY: "1"   # the project-level value is overridden by the target default (1,2); App Store rejects iPad + portrait-only
         PRODUCT_BUNDLE_IDENTIFIER: me.boxmind.app
         MARKETING_VERSION: "1.0"
-        CURRENT_PROJECT_VERSION: 2
+        CURRENT_PROJECT_VERSION: 3
         INFOPLIST_KEY_UILaunchScreen_Generation: YES
         SUPPORTED_INTERFACE_ORIENTATIONS_IPHONE: UIInterfaceOrientationPortrait
     info:
       path: BoxMind/Info.plist
       properties:
         CFBundleDisplayName: BoxMind
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)          # xcodegen regenerates this plist; keep the build number in settings
+        CFBundleShortVersionString: $(MARKETING_VERSION)
         CFBundleDevelopmentRegion: en
         CFBundleLocalizations: [en, zh-Hans]
         UILaunchScreen:
