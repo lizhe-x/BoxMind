@@ -151,4 +151,4 @@ AI features send the typed/spoken text, the photo, and the user's own box data t
 5. **GitHub Pages**:仓库 Settings → Pages → Source "Deploy from a branch",Branch `main` / folder `/docs`,隐私政策地址即生效。
 6. **ASC 已通过 API 填好(2026-10-22,build 1.0 (3) 已挂到 1.0 版本)**:分类、版权、内容版权声明、en-US / zh-Hans 的副标题、隐私政策 URL、描述、关键词、宣传文本、支持/营销 URL、年龄分级问卷(全部 None)、8 张 6.9" 截图(en-US,其他语言回退到主语言)。1.0 没有 What's New 字段。
    脚本在会话 scratchpad(`asc_fill.py` / `asc_fill2.py`),文案改动后重跑即可覆盖。
-7. **还要在 ASC 网页上手动做的**:(a) App Information → App Privacy,按 §3 填隐私标签(API 不支持);(b) ~~App Review Information~~ 已通过 API 填好(联系人照抄 CatchLine 的审核联系人,演示账号取自 `backend/.env`);(c) 核对后点 Add for Review → Submit。
+7. **还要在 ASC 网页上手动做的**:(a) App Information → App Privacy,按 §3 填隐私标签(API 不支持);(b) ~~App Review Information~~ 已通过 API 填好(联系人照抄 CatchLine 的审核联系人,演示账号取自 `backend/.env`);(c) ~~核对后点 Add for Review → Submit~~ **1.0 已于 2026-10-23 02:29 UTC 提交审核(API 创建 reviewSubmission;价格免费、全部地区可用也是 API 设的)**。审核期间保持 Mac mini、Postgres、Funnel 在线。
